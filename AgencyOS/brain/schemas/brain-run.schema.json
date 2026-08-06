@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "agencyos:brain-run",
+  "title": "Brain Run Summary",
+  "type": "object",
+  "required": ["businessId", "verdict", "confidence", "risk", "strategy", "planOk", "finalState"],
+  "properties": {
+    "businessId": { "type": "string" },
+    "verdict": { "enum": ["APPROVE", "REJECT", "ESCALATE", "PARK"] },
+    "confidence": { "type": "number" },
+    "risk": { "enum": ["low", "medium", "high"] },
+    "strategy": { "type": "string" },
+    "strategyScore": { "type": "number" },
+    "planOk": { "type": ["boolean", "null"] },
+    "finalState": { "type": "string" },
+    "estimatedRevenue": { "type": "number" },
+    "roi": { "type": "number" },
+    "headline": { "type": "string" }
+  }
+}

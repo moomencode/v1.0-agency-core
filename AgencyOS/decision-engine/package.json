@@ -1,0 +1,8 @@
+{
+  "name": "agencyos-decision-engine",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "description": "AgencyOS Phase 4.0.5 - rule-based decision engine for the Agency Brain"
+}

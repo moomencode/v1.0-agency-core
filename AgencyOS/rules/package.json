@@ -1,0 +1,8 @@
+{
+  "name": "agencyos-rules",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "description": "AgencyOS Phase 4.0.5 - shared rule primitives and registry"
+}

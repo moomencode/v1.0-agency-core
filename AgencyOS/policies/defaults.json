@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "description": "Editable Agency Brain policies - change values without code changes",
+  "policies": [
+    {
+      "id": "minOpportunity",
+      "label": "Minimum opportunity score",
+      "kind": "threshold",
+      "field": "scores.opportunity",
+      "op": "gte",
+      "value": 50,
+      "mandatory": true,
+      "reason": "opportunity score below {value}"
+    },
+    {
+      "id": "minReviewCount",
+      "label": "Minimum review count",
+      "kind": "threshold",
+      "field": "scores.reviews",
+      "op": "gte",
+      "value": 10,
+      "mandatory": false,
+      "reason": "only {actual} reviews (minimum {value})"
+    },
+    {
+      "id": "maxBuildCost",
+      "label": "Maximum estimated build cost",
+      "kind": "threshold",
+      "field": "estimates.devCost",
+      "op": "lte",
+      "value": 25000,
+      "mandatory": false,
+      "reason": "estimated build cost {actual} exceeds {value}"
+    },
+    {
+      "id": "minClosingProbability",
+      "label": "Minimum closing probability",
+      "kind": "threshold",
+      "field": "estimates.closingProbability",
+      "op": "gte",
+      "value": 0.35,
+      "mandatory": true,
+      "reason": "closing probability {actual} below {value}"
+    },
+    {
+      "id": "ignorePremiumWebsites",
+      "label": "Ignore businesses with premium websites",
+      "kind": "ignore",
+      "flag": "flags.premiumWebsite",
+      "expect": false,
+      "mandatory": true,
+      "reason": "business already has a premium website"
+    },
+    {
+      "id": "ignoreClosedBusinesses",
+      "label": "Ignore closed businesses",
+      "kind": "ignore",
+      "flag": "flags.closed",
+      "expect": false,
+      "mandatory": true,
+      "reason": "business is closed"
+    },
+    {
+      "id": "ignoreDuplicateBusinesses",
+      "label": "Ignore duplicate businesses",
+      "kind": "ignore",
+      "flag": "flags.duplicate",
+      "expect": false,
+      "mandatory": true,
+      "reason": "business is a duplicate record"
+    },
+    {
+      "id": "requireContact",
+      "label": "Require contact information",
+      "kind": "ignore",
+      "flag": "flags.missingContact",
+      "expect": false,
+      "mandatory": true,
+      "reason": "no contact information available"
+    }
+  ]
+}

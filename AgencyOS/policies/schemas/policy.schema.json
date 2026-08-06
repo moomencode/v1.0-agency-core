@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "agencyos:policy",
+  "title": "Policy Set",
+  "type": "object",
+  "required": ["policies"],
+  "properties": {
+    "version": { "type": "integer" },
+    "description": { "type": "string" },
+    "policies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "kind": { "enum": ["threshold", "ignore"] },
+          "field": { "type": "string" },
+          "flag": { "type": "string" },
+          "op": { "enum": ["gte", "lte", "gt", "lt", "eq"] },
+          "value": { "type": ["number", "boolean"] },
+          "expect": { "type": "boolean" },
+          "mandatory": { "type": "boolean" },
+          "reason": { "type": "string" }
+        }
+      }
+    }
+  }
+}

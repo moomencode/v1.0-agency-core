@@ -1,0 +1,11 @@
+{
+  "name": "@agencyos/planner",
+  "version": "1.0.0",
+  "description": "Agency Brain: strategy-to-execution-plan selection and gate preparation",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@agencyos/strategy": "1.0.0",
+    "@agencyos/execution-plans": "1.0.0"
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "id": "default",
+  "name": "Default agency pipeline",
+  "description": "Lead to archive: discovery, analysis, dossier, website generation, QA, proposal, CRM, archive",
+  "steps": [
+    {
+      "id": "discovery",
+      "name": "Discovery",
+      "action": "discovery",
+      "state": "DISCOVERED",
+      "retry": { "max": 1, "backoffMs": 0 },
+      "timeoutMs": 60000
+    },
+    {
+      "id": "validation",
+      "name": "Validation",
+      "action": "validation",
+      "state": "VALIDATED",
+      "gate": "policiesPass",
+      "retry": { "max": 0, "backoffMs": 0 },
+      "timeoutMs": 60000
+    },
+    {
+      "id": "analysis",
+      "name": "Business Analysis",
+      "action": "analysis",
+      "state": "ANALYZED",
+      "retry": { "max": 1, "backoffMs": 0 },
+      "timeoutMs": 120000
+    },
+    {
+      "id": "dossier",
+      "name": "Business Dossier",
+      "action": "dossier",
+      "state": "ANALYZED",
+      "retry": { "max": 1, "backoffMs": 0 },
+      "timeoutMs": 120000
+    },
+    {
+      "id": "approval",
+      "name": "Approval",
+      "action": "approval",
+      "state": "APPROVED",
+      "gate": "decisionApprove",
+      "retry": { "max": 0, "backoffMs": 0 },
+      "timeoutMs": 60000
+    },
+    {
+      "id": "generation",
+      "name": "Website Generation",
+      "action": "website-generation",
+      "state": "GENERATED",
+      "retry": { "max": 2, "backoffMs": 0 },
+      "timeoutMs": 7200000
+    },
+    {
+      "id": "qa",
+      "name": "QA",
+      "action": "qa",
+      "state": "READY",
+      "retry": { "max": 2, "backoffMs": 0 },
+      "timeoutMs": 3600000
+    },
+    {
+      "id": "proposal",
+      "name": "Proposal",
+      "action": "proposal",
+      "state": "SENT",
+      "retry": { "max": 1, "backoffMs": 0 },
+      "timeoutMs": 3600000
+    },
+    {
+      "id": "followup",
+      "name": "CRM Follow-up",
+      "action": "crm",
+      "state": "CLIENT_RESPONSE",
+      "retry": { "max": 3, "backoffMs": 0 },
+      "timeoutMs": 172800000
+    },
+    {
+      "id": "close",
+      "name": "Close",
+      "action": "close",
+      "state": "CLOSED",
+      "retry": { "max": 0, "backoffMs": 0 },
+      "timeoutMs": 60000
+    },
+    {
+      "id": "archive",
+      "name": "Archive",
+      "action": "archive",
+      "state": "ARCHIVED",
+      "retry": { "max": 0, "backoffMs": 0 },
+      "timeoutMs": 60000
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "agencyos:state-machine",
+  "title": "State Machine Instance",
+  "type": "object",
+  "required": ["version", "id", "entityType", "current", "history", "attempts"],
+  "properties": {
+    "version": { "type": "integer" },
+    "id": { "type": "string" },
+    "entityType": { "type": "string" },
+    "current": { "type": "string" },
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "at"],
+        "properties": {
+          "from": { "type": ["string", "null"] },
+          "to": { "type": "string" },
+          "at": { "type": "string" },
+          "by": { "type": ["string", "null"] },
+          "reason": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "attempts": { "type": "object" },
+    "createdAt": { "type": "string" },
+    "updatedAt": { "type": "string" },
+    "timeoutTriggered": { "type": "boolean" },
+    "escalation": { "type": "array" }
+  }
+}

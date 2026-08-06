@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "strategies": [
+    {
+      "id": "premium",
+      "label": "Premium build",
+      "minScore": 70,
+      "planHint": "premium",
+      "params": { "pages": "full", "speed": "fast" },
+      "note": "High-value accounts: full site, priority pipeline, fast follow-up"
+    },
+    {
+      "id": "standard",
+      "label": "Standard build",
+      "minScore": 45,
+      "planHint": "default",
+      "params": { "pages": "standard", "speed": "normal" },
+      "note": "Mid-value accounts: standard plan"
+    },
+    {
+      "id": "light",
+      "label": "Light build",
+      "minScore": 0,
+      "planHint": "light",
+      "params": { "pages": "minimal", "speed": "normal" },
+      "note": "Low-value accounts: minimal site, batch processing"
+    }
+  ]
+}

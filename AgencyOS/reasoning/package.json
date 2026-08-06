@@ -1,0 +1,11 @@
+{
+  "name": "@agencyos/reasoning",
+  "version": "1.0.0",
+  "description": "Agency Brain: decision trace generation for the agency engine",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@agencyos/rules": "1.0.0",
+    "@agencyos/runtime": "1.0.0"
+  }
+}

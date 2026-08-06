@@ -62,6 +62,7 @@ AgencyOS/
 5. `schemas/` — the canonical data contracts
 6. `agents/*/README.md` — per-agent detail
 7. `reports/PHASE4_DISCOVERY_IMPLEMENTATION.md` — discovery engine report
+8. `reports/PHASE4_5_BRAIN_IMPLEMENTATION.md` — agency brain report
 ## Runtime, Communication, Memory, Artifacts, Validation & Scheduler (Phases 3.0 – 3.5)
 
 Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
@@ -119,3 +120,16 @@ Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
   priority ranking table. `discovery/smoke.mjs` (145 PASS) and
   `discovery/demo.mjs` (full market + targeted + custom source + reports).
   See `discovery/README.md`.
+- `brain/` — **agency brain — decision & orchestration layer** (Phase 4.0.5): turns
+  discovered businesses into executed engagements. Ten composable engines —
+  `rules/` (8 evaluation rules, 18 PASS), `context/` (deterministic fact base from any
+  discovery record, 32 PASS), `policies/` (8 JSON-editable guardrail policies, 25 PASS),
+  `state-machine/` (17 states, 39 PASS), `execution-plans/` (11-step default plan,
+  31 PASS), `metrics/` (18 PASS), `strategy/` (premium/standard/light, 19 PASS),
+  `decision-engine/` (verdicts APPROVE/REJECT/ESCALATE/PARK + estimates, 38 PASS),
+  `reasoning/` (decision traces, 29 PASS), `planner/` (strategy→plan mapping, 34 PASS) —
+  orchestrated by the `Brain` facade (45 PASS) wired to the Runtime
+  (EventBus / Validator / WorkflowRunner). Deterministic end-to-end:
+  same record → same decision → same plan outputs. `demo.mjs` runs a 6-business
+  market through the full pipeline. Docs: `SYSTEM_DESIGN.md`, `DECISION_ENGINE.md`,
+  `STATE_MACHINE.md`, `EXECUTION_PLANNER.md`, `POLICIES.md`, `ARCHITECTURE.md`.

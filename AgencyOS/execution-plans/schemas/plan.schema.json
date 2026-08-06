@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "agencyos:plan",
+  "title": "Execution Plan",
+  "type": "object",
+  "required": ["steps"],
+  "properties": {
+    "version": { "type": "integer" },
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "action", "state"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "action": { "type": "string" },
+          "state": { "type": "string" },
+          "gate": { "type": ["string", "null"] },
+          "retry": {
+            "type": "object",
+            "properties": {
+              "max": { "type": "number" },
+              "backoffMs": { "type": "number" }
+            }
+          },
+          "timeoutMs": { "type": "number" }
+        }
+      }
+    }
+  }
+}

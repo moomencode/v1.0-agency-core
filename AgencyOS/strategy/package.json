@@ -1,0 +1,8 @@
+{
+  "name": "agencyos-strategy",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "description": "AgencyOS Phase 4.0.5 - strategy selection for the Agency Brain"
+}

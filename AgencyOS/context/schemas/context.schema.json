@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "agencyos:context",
+  "title": "Brain Context",
+  "description": "Deterministic fact base derived from a business record for Brain decisions",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["version", "businessId", "scores", "presence", "flags", "weaknesses"],
+  "properties": {
+    "version": { "type": "integer" },
+    "businessId": { "type": "string" },
+    "name": { "type": ["string", "null"] },
+    "category": { "type": "string" },
+    "area": { "type": ["string", "null"] },
+    "scores": {
+      "type": "object",
+      "required": ["business", "opportunity"],
+      "properties": {
+        "business": { "type": "number" },
+        "opportunity": { "type": "number" },
+        "presence": { "type": "number" },
+        "brandQuality": { "type": "number" },
+        "reviews": { "type": "number" },
+        "rating": { "type": "number" }
+      }
+    },
+    "presence": {
+      "type": "object",
+      "required": ["websiteStatus", "seoPresent"],
+      "properties": {
+        "websiteStatus": { "enum": ["none", "ok", "broken", "slow"] },
+        "hasWebsite": { "type": "boolean" },
+        "seoPresent": { "type": "boolean" },
+        "socialActivity": { "type": "number" },
+        "contactComplete": { "type": "boolean" },
+        "missingContact": { "type": "boolean" },
+        "hasWhatsapp": { "type": "boolean" },
+        "hasBooking": { "type": "boolean" },
+        "photos": { "type": "number" },
+        "menus": { "type": "number" }
+      }
+    },
+    "flags": {
+      "type": "object",
+      "properties": {
+        "closed": { "type": "boolean" },
+        "duplicate": { "type": "boolean" },
+        "premiumWebsite": { "type": "boolean" },
+        "missingContact": { "type": "boolean" }
+      }
+    },
+    "weaknesses": { "type": "array", "items": { "type": "string" } },
+    "weaknessMajor": { "type": "number" },
+    "weaknessMinor": { "type": "number" },
+    "weaknessCount": { "type": "number" },
+    "sourceCount": { "type": "number" },
+    "estimates": { "type": ["object", "null"] },
+    "risk": { "type": ["string", "null"] },
+    "priority": { "type": ["object", "null"] },
+    "confidence": { "type": ["number", "null"] },
+    "createdAt": { "type": ["string", "null"] },
+    "tags": { "type": "array", "items": { "type": "string" } }
+  }
+}

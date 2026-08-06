@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "agencyos:decision",
+  "title": "Brain Decision",
+  "type": "object",
+  "required": ["decisionId", "businessId", "verdict", "risk", "confidence", "estimates", "priority"],
+  "properties": {
+    "version": { "type": "integer" },
+    "decisionId": { "type": "string" },
+    "businessId": { "type": "string" },
+    "verdict": { "enum": ["APPROVE", "REJECT", "ESCALATE", "PARK"] },
+    "risk": {
+      "type": "object",
+      "required": ["level"],
+      "properties": {
+        "level": { "enum": ["low", "medium", "high"] },
+        "reason": { "type": ["string", "null"] }
+      }
+    },
+    "confidence": { "type": "number" },
+    "estimates": {
+      "type": "object",
+      "required": ["websiteValue", "devCost", "salesValue", "roi", "closingProbability", "buildTimeMs"],
+      "properties": {
+        "websiteValue": { "type": "number" },
+        "devCost": { "type": "number" },
+        "salesValue": { "type": "number" },
+        "roi": { "type": "number" },
+        "closingProbability": { "type": "number" },
+        "buildTimeMs": { "type": "number" },
+        "pages": { "type": "number" }
+      }
+    },
+    "priority": {
+      "type": "object",
+      "required": ["business", "opportunity", "execution", "resource"],
+      "properties": {
+        "business": { "type": "object" },
+        "opportunity": { "type": "object" },
+        "execution": { "type": "object" },
+        "resource": { "type": "object" }
+      }
+    },
+    "qualificationScore": { "type": "number" },
+    "ruleResults": { "type": "array" },
+    "policySummary": { "type": ["object", "null"] },
+    "createdAt": { "type": "string" }
+  }
+}

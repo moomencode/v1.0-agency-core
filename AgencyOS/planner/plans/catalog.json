@@ -1,0 +1,8 @@
+{
+  "defaultPlan": "default",
+  "hints": {
+    "premium": "default",
+    "standard": "default",
+    "light": "default"
+  }
+}
