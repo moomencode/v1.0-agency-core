@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "documents": {
+    "business": { "id": "agencyos:dossier/business" },
+    "brand": { "id": "agencyos:dossier/brand" },
+    "contact": { "id": "agencyos:dossier/contact" },
+    "location": { "id": "agencyos:dossier/location" },
+    "hours": { "id": "agencyos:dossier/hours" },
+    "social": { "id": "agencyos:dossier/social" },
+    "website": { "id": "agencyos:dossier/website" },
+    "seo": { "id": "agencyos:dossier/seo" },
+    "reviews": { "id": "agencyos:dossier/reviews" },
+    "photos": { "id": "agencyos:dossier/photos" },
+    "services": { "id": "agencyos:dossier/services" },
+    "products": { "id": "agencyos:dossier/products" },
+    "pricing": { "id": "agencyos:dossier/pricing" },
+    "competitors": { "id": "agencyos:dossier/competitors" },
+    "strengths": { "id": "agencyos:dossier/strengths" },
+    "weaknesses": { "id": "agencyos:dossier/weaknesses" },
+    "opportunities": { "id": "agencyos:dossier/opportunities" },
+    "risks": { "id": "agencyos:dossier/risks" },
+    "recommendations": { "id": "agencyos:dossier/recommendations" },
+    "summary": { "id": "agencyos:dossier/summary" }
+  }
+}

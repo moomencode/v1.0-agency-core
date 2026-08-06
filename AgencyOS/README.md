@@ -63,6 +63,7 @@ AgencyOS/
 6. `agents/*/README.md` — per-agent detail
 7. `reports/PHASE4_DISCOVERY_IMPLEMENTATION.md` — discovery engine report
 8. `reports/PHASE4_5_BRAIN_IMPLEMENTATION.md` — agency brain report
+9. `reports/PHASE4_1_DOSSIER_IMPLEMENTATION.md` — business dossier engine report
 ## Runtime, Communication, Memory, Artifacts, Validation & Scheduler (Phases 3.0 – 3.5)
 
 Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
@@ -133,3 +134,19 @@ Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
   same record → same decision → same plan outputs. `demo.mjs` runs a 6-business
   market through the full pipeline. Docs: `SYSTEM_DESIGN.md`, `DECISION_ENGINE.md`,
   `STATE_MACHINE.md`, `EXECUTION_PLANNER.md`, `POLICIES.md`, `ARCHITECTURE.md`.
+- `dossier/` — **business dossier engine** (Phase 4.1): the structured knowledge layer.
+  Every engagement produces a dossier: 20 schema-validated JSON documents (business,
+  brand, contact, location, hours, social, website, seo, reviews, photos, services,
+  products, pricing, competitors, strengths, weaknesses, opportunities, risks,
+  recommendations, summary) + 5 rendered Markdown reports (executive, business-health,
+  digital-presence, opportunity, website-recommendation) from `{{template}}` files.
+  Pipeline: extractors → normalizers (Egyptian +20 E.164 phone, urls, coords+mapsUrl,
+  hours) → enrichers (brand, competitors, strengths, weaknesses, opportunities, risks,
+  recommendations, health/digital grades) → builders → validation → persist as
+  immutable versioned file sets (`storage/dossiers/<id>/v<N>/`) with a search index.
+  Reuses the brain decision layer (`requireApproved` gates builds), writes a
+  `business` memory entry per engagement for downstream phases, emits 5 dossier
+  events (started/validated/created/updated/reports_ready). Deterministic rebuilds.
+  `dossier/unit.mjs` (41 PASS) + `dossier/smoke.mjs` (75 PASS) + `dossier/demo.mjs`.
+  Docs: `README.md`, `Architecture.md`, `Data Flow.md`, `Schema Guide.md`,
+  `Extension Guide.md`.

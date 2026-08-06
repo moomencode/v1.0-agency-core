@@ -1,0 +1,13 @@
+{
+  "name": "@agencyos/dossier",
+  "version": "1.0.0",
+  "description": "AgencyOS Phase 4.1: Business Dossier Engine — single source of truth for every business",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@agencyos/runtime": "1.0.0",
+    "@agencyos/context": "1.0.0",
+    "@agencyos/decision-engine": "1.0.0",
+    "@agencyos/discovery": "1.0.0"
+  }
+}

@@ -1,9 +1,10 @@
 # AgencyOS — Architecture (`ARCHITECTURE.md`)
 
-## Module Inventory — Phase 4.0.5 (Agency Brain)
+## Module Inventory — Phase 4.1 (Business Dossier Engine)
 
 | module | responsibility | API version | smoke |
 |---|---|---|---|
+| `dossier/` | structured business knowledge: 20 documents + 5 reports, versioned | 1.0 | 75 PASS (+41 unit) |
 | `brain/` | facade + pipeline orchestration, Runtime wiring | 1.0 | 45 PASS |
 | `decision-engine/` | verdicts, estimates, risk, confidence, priorities | 1.0 | 38 PASS |
 | `reasoning/` | decision traces, rationale, evidence chains | 1.0 | 29 PASS |
@@ -16,22 +17,34 @@
 | `rules/` | rule registry + evaluation | 1.0 | 18 PASS |
 | `metrics/` | counters, sums, snapshot, persistence | 1.0 | 18 PASS |
 
-**Brain total: 328 PASS.** (Full regression across phases 3.0–4.0.5: 672+ PASS.)
+**Dossier total: 116 PASS. Brain total: 328 PASS. Full regression across
+phases 3.0–4.1: 863+ PASS.**
 
 ## Dependency Graph
 
 ```
+dossier/
+  ├── brain/            (prepareInput: context + estimates + decision)
+  ├── extractors/       (profile · digital · commerce facts)
+  ├── normalizers/      (phone +20 E.164 · email · url · coords · hours)
+  ├── enrichers/        (brand · competitors · strengths · weaknesses · opportunities · risks · recommendations · grades)
+  ├── builders/         (20 schema-validated documents)
+  ├── renderer/         (templates → 5 markdown reports)
+  ├── schemas/          (20 JSON schemas + dossier envelope)
+  ├── validation/       (per-document schema validation)
+  └── memory/           (business:<id> entries for downstream phases)
+
 brain/
- ├── context/            (build fact base)
- ├── decision-engine/    (estimates + verdict; uses rules/, consumes policies/)
- ├── reasoning/          (traces decision)
- ├── strategy/           (selects engagement type)
- ├── planner/            (routes strategy → execution plan; uses execution-plans/)
- ├── state-machine/      (instance lifecycle)
- ├── execution-plans/    (runs steps; uses state-machine/)
- ├── policies/           (gate evaluation)
- ├── metrics/            (observability)
- └── runtime/            (EventBus, Validator, WorkflowRunner — injected, never duplicated)
+  ├── context/            (build fact base)
+  ├── decision-engine/    (estimates + verdict; uses rules/, consumes policies/)
+  ├── reasoning/          (traces decision)
+  ├── strategy/           (selects engagement type)
+  ├── planner/            (routes strategy → execution plan; uses execution-plans/)
+  ├── state-machine/      (instance lifecycle)
+  ├── execution-plans/    (runs steps; uses state-machine/)
+  ├── policies/           (gate evaluation)
+  ├── metrics/            (observability)
+  └── runtime/            (EventBus, Validator, WorkflowRunner — injected, never duplicated)
 
 rules/ ← decision-engine  (rule registry consumed by the decision rules)
 ```
@@ -49,6 +62,9 @@ via `context.estimates`; `planner/` delegates plan loading to
 | `brain.validator` | `Validator.validate(obj, schema, { schemaPath })` |
 | `brain.executeWorkflow(id, input)` | `WorkflowRunner.run(...)` (unavailable → `{status:'unavailable'}`) |
 | `new Brain({ executor })` | `createExecutor({ runId })` wires all of the above at once |
+| `dossier.engine` | `DossierEngine` reuses `Brain.runBusiness` for prepareInput; `requireApproved` gates builds |
+| dossier events | `dossier.started/validated/created/updated/reports_ready` on the same EventBus |
+| dossier memory | `memory.put('business', 'business:<id>', <id>, …)` — hand-off contract for Phase 4.2 |
 | metrics persistence | `storage/<root>/metrics.json` via `atomicWrite` (gitignored) |
 
 ## Future Extension Points (AI reasoning)
@@ -63,6 +79,9 @@ via `context.estimates`; `planner/` delegates plan loading to
   new plans are additive JSON.
 - `execution-plans` executors are injectable: real website generation, CRM,
   or outreach can be dropped in via `brain.registerExecutor(action, fn)`.
+- `dossier/` documents, categories, enrichers and report templates are all
+  additive JSON/code — see `dossier/Extension Guide.md`; `templates/*.md`
+  are editable without redeploys.
 
 ## Production Readiness
 
@@ -73,14 +92,15 @@ via `context.estimates`; `planner/` delegates plan loading to
 | observability | bus events, per-step results, metrics snapshot, reasoning traces |
 | resilience | retry policy per state, timeout actions, escalation records, gate failures are handled results |
 | configurability | policies, strategies, plan catalog, gates, executors all injectable |
-| test coverage | 11 suites, 328 brain assertions, all green |
+| test coverage | 19 suites, 863+ assertions, all green |
 | persistence | metrics + state summaries to `storage/` (gitignored) |
 | runtime footprint | zero runtime deps, Node 24 ESM only |
 
 ## Run It
 
 ```bash
-node AgencyOS/brain/smoke.mjs      # 45 PASS — facade end-to-end
-node AgencyOS/demo.mjs             # 6-business market through the pipeline
+node AgencyOS/dossier/demo.mjs       # dossier demo (20 documents, 5 reports)
+node AgencyOS/brain/smoke.mjs        # 45 PASS — facade end-to-end
+node AgencyOS/demo.mjs               # 6-business market through the pipeline
 # per-module: node AgencyOS/<module>/smoke.mjs
 ```
