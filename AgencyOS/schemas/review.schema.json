@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/review",
+  "title": "Review",
+  "type": "object",
+  "description": "Canonical Review document: the pipeline quality gate. Produced by QA.",
+  "required": [
+    "reviewId", "websiteId", "checkedAt",
+    "checks", "defects", "verdict", "summary", "approval"
+  ],
+  "properties": {
+    "reviewId": { "type": "string" },
+    "websiteId": { "type": "string" },
+    "engineVersion": { "type": "string" },
+    "checkedAt": { "type": "string", "format": "date-time" },
+    "checks": {
+      "type": "array",
+      "description": "One entry per mandatory check",
+      "items": {
+        "type": "object",
+        "required": ["id", "status"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": ["schema", "i18n", "menu", "seo", "assets", "build", "render", "a11y"]
+          },
+          "status": { "type": "string", "enum": ["pass", "warn", "fail"] },
+          "details": { "type": "string" }
+        }
+      },
+      "minItems": 8
+    },
+    "defects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["severity", "check", "location", "description", "owner"],
+        "properties": {
+          "severity": { "type": "string", "enum": ["error", "warning", "info"] },
+          "check": { "type": "string" },
+          "location": { "type": "string" },
+          "description": { "type": "string" },
+          "recommendation": { "type": "string" },
+          "owner": {
+            "type": "string",
+            "enum": ["business-analyzer", "content-writer", "website-builder", "deployment", "qa"]
+          }
+        }
+      }
+    },
+    "verdict": { "type": "string", "enum": ["pass", "pass_with_warnings", "fail"] },
+    "summary": {
+      "type": "object",
+      "required": ["errorCount", "warningCount"],
+      "properties": {
+        "errorCount": { "type": "integer" },
+        "warningCount": { "type": "integer" },
+        "notes": { "type": "string" }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "required": ["approved"],
+      "properties": {
+        "approved": { "type": "boolean" },
+        "approvedBy": { "type": "string" },
+        "approvedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

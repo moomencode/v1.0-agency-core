@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Runtime test data (debug / smoke / demo runs)
+storage/
+discovery-demo/

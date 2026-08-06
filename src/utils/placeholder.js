@@ -22,7 +22,7 @@ export function placeholderImage(width, height, text, bg = '122a20', fg = 'd4af3
         y="50%"
         dominant-baseline="middle"
         text-anchor="middle"
-        font-family="Poppins, Arial, sans-serif"
+        font-family="sans-serif"
         font-size="${fontSize}"
         fill="#${fg}"
       >${text}</text>

@@ -1,0 +1,54 @@
+{
+  "id": "website-builder",
+  "name": "WebsiteBuilder",
+  "version": "1.0.0",
+  "role": "Website configuration bundle generation",
+  "model": {
+    "primary": "reasoning",
+    "fallback": "fast-reasoning",
+    "temperature": 0.3,
+    "maxTokens": 8192
+  },
+  "tools": [
+    "storage-client",
+    "validation-client",
+    "engine-client",
+    "logging-client"
+  ],
+  "permissions": {
+    "readExternal": false,
+    "writeExternal": false,
+    "writeWebsiteDocs": true,
+    "writeEngineConfig": true
+  },
+  "engine": {
+    "root": "../Garcia2",
+    "configTemplate": "templates/website-config",
+    "sections": [
+      "navbar", "hero", "menu", "offers", "reservation", "gallery",
+      "location", "footer", "about", "services", "stats",
+      "testimonials", "faq", "orderOnline"
+    ],
+    "supportedTypes": [
+      "restaurant", "cafe", "bakery", "pizza", "burger", "dessert",
+      "hotel", "clinic", "gym", "barber", "beauty-salon"
+    ]
+  },
+  "limits": {
+    "maxSections": 10,
+    "maxPaletteTokens": 10
+  },
+  "retry": {
+    "maxAttempts": 3,
+    "backoff": "exponential",
+    "initialDelayMs": 1000
+  },
+  "timeoutSeconds": 180,
+  "contracts": {
+    "input": "agents/WebsiteBuilder/input.schema.json",
+    "output": "agents/WebsiteBuilder/output.schema.json"
+  },
+  "dependencies": {
+    "shared": ["memory", "logging", "validation", "retry", "caching"]
+  }
+}

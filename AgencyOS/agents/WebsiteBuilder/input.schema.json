@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/website-builder/input",
+  "title": "WebsiteBuilderInput",
+  "type": "object",
+  "description": "Everything WebsiteBuilder needs to compose the Website document.",
+  "required": ["dossier", "contentBundle", "request"],
+  "properties": {
+    "dossier": { "type": "object", "description": "BusinessAnalyzer output" },
+    "contentBundle": { "type": "object", "description": "ContentWriter output" },
+    "request": {
+      "type": "object",
+      "required": ["engineVersion"],
+      "properties": {
+        "engineVersion": { "type": "string" },
+        "sections": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Explicit section order override; otherwise chosen by intent"
+        },
+        "themeDirection": {
+          "type": "object",
+          "properties": {
+            "mood": {
+              "type": "string",
+              "enum": ["luxury", "warm", "fresh", "energetic", "minimal", "classic", "modern"]
+            },
+            "primaryColor": { "type": "string" },
+            "accentColor": { "type": "string" }
+          }
+        },
+        "includeSections": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "excludeSections": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "assets": {
+          "type": "object",
+          "description": "Manifest of assets the agency already collected",
+          "additionalProperties": {
+            "type": "string",
+            "description": "kind -> path or URL"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,49 @@
+{
+  "id": "business-analysis",
+  "name": "Business Analysis",
+  "trigger": "Qualified Lead persisted in CRM",
+  "actors": ["business-analyzer", "crm", "ops"],
+  "entryDocument": "qualified-lead",
+  "exitDocument": "business-dossier",
+  "steps": [
+    {
+      "id": "01",
+      "actor": "BusinessAnalyzer",
+      "action": "research and collect media",
+      "output": "business-dossier",
+      "gate": { "type": "none" }
+    },
+    {
+      "id": "02",
+      "actor": "BusinessAnalyzer",
+      "action": "confidence scoring per section",
+      "output": "dossier-confidence",
+      "gate": { "type": "post", "condition": "business-dossier.confidence != null" }
+    },
+    {
+      "id": "03",
+      "actor": "BusinessAnalyzer",
+      "action": "build needsVerification list",
+      "output": "verification-list",
+      "gate": { "type": "none" }
+    },
+    {
+      "id": "04",
+      "actor": "ops",
+      "action": "human verification of unclear facts",
+      "output": "verified-facts",
+      "gate": { "type": "none" }
+    },
+    {
+      "id": "05",
+      "actor": "CRM",
+      "action": "link business to lead",
+      "output": "crm-state",
+      "gate": { "type": "none" }
+    }
+  ],
+  "exitConditions": {
+    "success": "dossier with per-section confidence; unclear facts flagged needsVerification",
+    "fail": "research impossible - dossier incomplete; escalation to ops"
+  }
+}

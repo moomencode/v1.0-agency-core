@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/memory/entry",
+  "title": "MemoryEntry",
+  "description": "Canonical schema for every long-term memory entry. Entries are namespaced by memory type and scope, versioned immutably, and indexed by fingerprint for dedupe.",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "type",
+    "scope",
+    "key",
+    "content",
+    "fingerprint",
+    "version",
+    "createdAt"
+  ],
+  "properties": {
+    "schema": { "const": "https://agency.os/memory/entry" },
+    "id": { "type": "string", "minLength": 8 },
+    "type": {
+      "type": "string",
+      "enum": ["working", "project", "business", "brand", "customer", "agent", "workflow", "execution"]
+    },
+    "scope": {
+      "type": "string",
+      "description": "Ownership scope: 'global' or 'project:<id>', 'business:<id>', 'customer:<id>', 'agent:<id>', 'workflow:<id>', 'run:<id>'"
+    },
+    "key": { "type": "string", "minLength": 1 },
+    "content": { "description": "The memory payload; any JSON value" },
+    "fingerprint": { "type": "string", "minLength": 16 },
+    "version": { "type": "integer", "minimum": 1 },
+    "versions": {
+      "type": "array",
+      "description": "Immutable history; each entry holds current content plus past versions.",
+      "items": { "type": "object" }
+    },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "accessedAt": { "type": ["string", "null"], "format": "date-time" },
+    "ttlMs": { "type": "integer", "minimum": 1 },
+    "expiresAt": { "type": ["string", "null"], "format": "date-time" },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "source": { "type": "string" },
+        "workflowId": { "type": "string" },
+        "runId": { "type": "string" },
+        "agentId": { "type": "string" },
+        "sealed": { "type": "boolean" },
+        "summary": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

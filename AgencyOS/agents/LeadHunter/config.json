@@ -1,0 +1,49 @@
+{
+  "id": "lead-hunter",
+  "name": "LeadHunter",
+  "version": "1.0.0",
+  "role": "Lead discovery and qualification",
+  "model": {
+    "primary": "fast-reasoning",
+    "fallback": "fast",
+    "temperature": 0.2,
+    "maxTokens": 4096
+  },
+  "tools": [
+    "web-search",
+    "source-reader",
+    "crm-client",
+    "storage-client",
+    "logging-client"
+  ],
+  "permissions": {
+    "readExternal": true,
+    "writeExternal": false,
+    "contactProspects": false,
+    "modifyLeads": true
+  },
+  "limits": {
+    "maxCandidatesPerRun": 50,
+    "maxEvidenceLinks": 10,
+    "minEvidenceForQualify": 2
+  },
+  "scoring": {
+    "fitWeight": 0.5,
+    "sizeWeight": 0.2,
+    "urgencyWeight": 0.15,
+    "accessibilityWeight": 0.15
+  },
+  "retry": {
+    "maxAttempts": 3,
+    "backoff": "exponential",
+    "initialDelayMs": 1000
+  },
+  "timeoutSeconds": 120,
+  "contracts": {
+    "input": "schemas/lead.schema.json#/definitions/discoveryRequest",
+    "output": "schemas/lead.schema.json"
+  },
+  "dependencies": {
+    "shared": ["memory", "logging", "caching", "retry", "validation", "rate-limiting"]
+  }
+}

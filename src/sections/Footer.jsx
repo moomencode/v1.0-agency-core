@@ -1,118 +1,133 @@
 import React from 'react'
 import { Facebook, Instagram, MessageCircle, MapPin, Phone, Mail } from 'lucide-react'
-import darklogo from '../imgs/logo.png'
-import lightlogo from '../imgs/logo3.png'
 import { useTheme } from '../Context/ThemeContext'
+import { SITE } from '../core/site'
+import { themedImage } from '../core/assets'
+import { t } from '../core/i18n'
 
-const QUICK_LINKS = [
-  { label: 'Home', href: '#home' },
-  { label: 'Menu', href: '#menu' },
-  { label: 'Reservations', href: '#reservation' },
-  { label: 'Offers', href: '#offers' },
-  { label: 'About Us', href: '#home' },
-  { label: 'Contact', href: '#footer' },
-]
+const { footer, navigation, social, contact, brand, business } = SITE
+
+const QUICK_LINKS = footer?.quickLinks?.length
+  ? footer.quickLinks
+  : navigation?.items || []
 
 const SOCIALS = [
-  { icon: Facebook, href: 'https://www.facebook.com/Garcia.Restaurant.Cafe' },
-  { icon: Instagram, href: 'https://www.instagram.com/garciarestaurant/?hl=en' },
-  { icon: MessageCircle, href: 'https://api.whatsapp.com/message/N4NWMWKG6IPOH1?autoload=1&app_absent=0' },
-]
+  { icon: Facebook, key: 'facebook' },
+  { icon: Instagram, key: 'instagram' },
+  { icon: MessageCircle, key: 'whatsapp' },
+].filter((item) => social?.[item.key])
 
 export default function Footer() {
-  // ✅ التصحيح: استدعاء الـ Hook جوة الكومبوننت هنا
   const { theme } = useTheme()
+  const name = brand?.name || business?.name || ''
 
   return (
-    <footer id="footer" className="bg-garcia-900 border-t border-cream/10 pt-16 pb-8 px-5 md:px-10">
+    <footer id="footer" className="bg-base border-t border-ink/10 pt-20 md:pt-28 pb-8 px-5 md:px-10">
       <div className="max-w-7xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
         {/* Brand */}
         <div>
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-4 group">
             <img
-              src={theme === 'dark' ? darklogo : lightlogo}
-              alt="Garcia Logo"
-              className="w-14 h-14 rounded-full object-cover contrast-125 transition-transform duration-200 group-hover:scale-105"
+              src={themedImage(brand?.logo, theme)}
+              alt={brand?.logo?.alt || name || 'Logo'}
+              className="w-14 h-14 rounded-full object-cover contrast-125 transition-transform duration-500 ease-premium group-hover:scale-105"
               loading="eager"
             />
             <div>
-              <p className="text-cream font-serif font-semibold tracking-wide">GARCIA</p>
-              <p className="text-[10px] text-cream/60 tracking-[0.2em] uppercase font-sans">
-                Restaurant & Cafe
+              <p className="text-ink font-serif font-semibold tracking-wide">{brand?.shortName || name}</p>
+              <p className="text-[10px] text-ink/60 tracking-[0.2em] uppercase font-sans">
+                {brand?.tagline}
               </p>
             </div>
           </div>
-          <p className="text-cream/70 text-sm leading-relaxed font-sans">
-            Good food, good mood. We serve delicious meals made with love and the
-            finest ingredients.
-          </p>
-          <div className="flex gap-3 mt-5">
-            {SOCIALS.map(({ icon: Icon, href }, i) => (
-              <a
-                key={i}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 rounded-full border border-cream/20 flex items-center justify-center text-cream/60 hover:text-gold hover:border-gold transition-colors duration-300"
-              >
-                <Icon size={16} />
-              </a>
-            ))}
-          </div>
+          {footer?.brandDescription && (
+            <p className="text-ink/70 text-sm leading-relaxed font-sans">
+              {t(footer.brandDescription)}
+            </p>
+          )}
+          {SOCIALS.length > 0 && (
+            <div className="flex gap-3 mt-5">
+              {SOCIALS.map(({ icon: Icon, key }, i) => (
+                <a
+                  key={i}
+                  href={social[key]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-full border border-ink/20 flex items-center justify-center text-ink/60 hover:text-primary hover:border-primary transition-colors duration-300"
+                >
+                  <Icon size={16} />
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Quick links */}
-        <div>
-          <h4 className="text-cream font-sans font-semibold mb-4 text-sm tracking-wide uppercase">
-            Quick Links
-          </h4>
-          <ul className="space-y-2">
-            {QUICK_LINKS.map((link) => (
-              <li key={link.label}>
-                <a
-                  href={link.href}
-                  className="text-cream/60 text-sm hover:text-gold transition-colors duration-300 font-sans"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {QUICK_LINKS.length > 0 && (
+          <div>
+            <h4 className="text-ink font-sans font-semibold mb-4 text-sm tracking-wide uppercase">
+              {t(footer?.quickLinksTitle) || 'Quick Links'}
+            </h4>
+            <ul className="space-y-2">
+              {QUICK_LINKS.map((link) => (
+                <li key={link.href || link.label}>
+                  <a
+                    href={link.href}
+                    className="text-ink/60 text-sm hover:text-primary transition-colors duration-300 font-sans"
+                  >
+                    {t(link.label)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Contact */}
         <div>
-          <h4 className="text-cream font-sans font-semibold mb-4 text-sm tracking-wide uppercase">
-            Contact Us
+          <h4 className="text-ink font-sans font-semibold mb-4 text-sm tracking-wide uppercase">
+            {t(footer?.contactTitle) || 'Contact Us'}
           </h4>
-          <ul className="space-y-3 text-sm text-cream/70 font-sans">
-            <li className="flex items-start gap-2">
-              <MapPin className="text-gold shrink-0 mt-0.5" size={16} />
-              <span>5 Baghdad St, Heliopolis, Cairo, Egypt</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <Phone className="text-gold shrink-0" size={16} />
-              <span>+20 123 456 5678</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <Mail className="text-gold shrink-0" size={16} />
-              <span>info@garcia.com.eg</span>
-            </li>
+          <ul className="space-y-3 text-sm text-ink/70 font-sans">
+            {contact?.address && (
+              <li className="flex items-start gap-2">
+                <MapPin className="text-primary shrink-0 mt-0.5" size={16} />
+                <span>{t(contact.address)}</span>
+              </li>
+            )}
+            {contact?.phone && (
+              <li className="flex items-center gap-2">
+                <Phone className="text-primary shrink-0" size={16} />
+                <span>{t(contact.phone)}</span>
+              </li>
+            )}
+            {contact?.email && (
+              <li className="flex items-center gap-2">
+                <Mail className="text-primary shrink-0" size={16} />
+                <span>{t(contact.email)}</span>
+              </li>
+            )}
           </ul>
         </div>
 
         {/* Opening hours */}
-        <div>
-          <h4 className="text-cream font-sans font-semibold mb-4 text-sm tracking-wide uppercase">
-            Opening Hours
-          </h4>
-          <p className="text-cream/70 text-sm font-sans">Monday - Sunday</p>
-          <p className="text-gold text-sm font-semibold font-sans mt-1">6:00 AM - 1:00 AM</p>
-        </div>
+        {contact?.hours?.length > 0 && (
+          <div>
+            <h4 className="text-ink font-sans font-semibold mb-4 text-sm tracking-wide uppercase">
+              {t(footer?.hoursTitle) || 'Opening Hours'}
+            </h4>
+            {contact.hours.map((h, i) => (
+              <div key={i}>
+                <p className="text-ink/70 text-sm font-sans">{t(h.days)}</p>
+                <p className="text-primary text-sm font-semibold font-sans mt-1">{t(h.time)}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      <div className="max-w-7xl mx-auto border-t border-cream/10 mt-12 pt-6 text-center text-cream/40 text-xs font-sans">
-        © {new Date().getFullYear()} Garcia Restaurant & Cafe. All rights reserved.
+      <div className="max-w-7xl mx-auto border-t border-ink/10 mt-12 pt-6 text-center text-ink/40 text-xs font-sans">
+        © {new Date().getFullYear()} {name}. {t(footer?.rights) || 'All rights reserved.'}
       </div>
     </footer>
   )

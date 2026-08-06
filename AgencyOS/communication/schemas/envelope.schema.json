@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/communication/envelope",
+  "title": "CommunicationEnvelope",
+  "description": "Canonical envelope for every message in the AgencyOS communication layer. No message travels without this envelope; validation happens at the boundary (publish/emit/broadcast/enqueue) and invalid messages are never delivered.",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "type",
+    "topic",
+    "payload",
+    "meta"
+  ],
+  "properties": {
+    "schema": {
+      "const": "https://agency.os/communication/envelope"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 8,
+      "description": "Globally unique message id"
+    },
+    "type": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+([._][a-z0-9]+)*$",
+      "description": "Registered message type, e.g. agent.completed"
+    },
+    "topic": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+([._][a-z0-9]+)*$"
+    },
+    "payload": {
+      "description": "Payload conforms to the per-type payload schema in the message registry"
+    },
+    "meta": {
+      "type": "object",
+      "required": ["ts", "origin", "instanceId"],
+      "properties": {
+        "ts": { "type": "string", "format": "date-time" },
+        "origin": { "type": "string", "description": "Producer identity (agent id, workflow id, runtime, communication)" },
+        "instanceId": { "type": "string", "description": "Producing instance; stable across distributed replicas" },
+        "traceId": { "type": "string" },
+        "correlationId": { "type": "string" },
+        "priority": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "ttlMs": { "type": "integer", "minimum": 1 },
+        "delayMs": { "type": "integer", "minimum": 0 },
+        "deliveryCount": { "type": "integer", "minimum": 0 },
+        "state": { "type": "string", "enum": ["queued", "processing", "acked", "nacked", "expired", "dead"] }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

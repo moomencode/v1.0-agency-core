@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/website-builder/output",
+  "title": "Website",
+  "type": "object",
+  "description": "The complete website configuration bundle. Canonical: schemas/website.schema.json.",
+  "required": [
+    "websiteId", "businessId", "engineVersion",
+    "config", "assetManifest", "buildParams"
+  ],
+  "properties": {
+    "websiteId": { "type": "string" },
+    "businessId": { "type": "string" },
+    "engineVersion": { "type": "string" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "config": {
+      "type": "object",
+      "required": ["business", "brand", "theme", "seo", "contact", "navigation", "hero", "footer", "i18n"],
+      "properties": {
+        "business": { "type": "object" },
+        "brand": { "type": "object" },
+        "theme": { "type": "object" },
+        "seo": { "type": "object" },
+        "social": { "type": "object" },
+        "contact": { "type": "object" },
+        "navigation": { "type": "object" },
+        "hero": { "type": "object" },
+        "menu": { "type": "object" },
+        "offers": { "type": "object" },
+        "gallery": { "type": "object" },
+        "booking": { "type": "object" },
+        "features": { "type": "object" },
+        "services": { "type": "object" },
+        "stats": { "type": "object" },
+        "reviews": { "type": "object" },
+        "faq": { "type": "object" },
+        "footer": { "type": "object" },
+        "i18n": { "type": "object" }
+      }
+    },
+    "assetManifest": {
+      "type": "object",
+      "required": ["files", "kinds"],
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "kind", "source"],
+            "properties": {
+              "path": { "type": "string" },
+              "kind": {
+                "type": "string",
+                "enum": ["logo", "hero", "gallery", "food", "background", "icons", "videos"]
+              },
+              "source": { "type": "string", "description": "original URL or upload reference" },
+              "placeholder": { "type": "boolean", "default": false },
+              "checksum": { "type": "string" }
+            }
+          }
+        },
+        "kinds": {
+          "type": "object",
+          "additionalProperties": { "type": "integer" },
+          "description": "kind -> file count"
+        }
+      }
+    },
+    "buildParams": {
+      "type": "object",
+      "required": ["sections", "locale", "currency"],
+      "properties": {
+        "sections": { "type": "array", "items": { "type": "string" } },
+        "locale": { "type": "string" },
+        "languages": { "type": "array", "items": { "type": "string" } },
+        "currency": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "symbol": { "type": "string" },
+            "position": { "type": "string", "enum": ["before", "after"] },
+            "decimals": { "type": "integer" }
+          }
+        },
+        "phoneDigits": { "type": "integer" },
+        "buildCommand": { "type": "string" },
+        "previewCommand": { "type": "string" }
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "field": { "type": "string" },
+          "dossierValue": {},
+          "bundleValue": {},
+          "resolvedBy": { "type": "string" }
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

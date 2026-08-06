@@ -1,0 +1,68 @@
+{
+  "id": "full-pipeline",
+  "name": "Full Pipeline",
+  "trigger": "Operator starts a run for a target niche/market",
+  "actors": [
+    "lead-hunter", "business-analyzer", "content-writer",
+    "website-builder", "qa", "sales", "crm", "deployment", "analytics"
+  ],
+  "stages": [
+    {
+      "order": 1,
+      "workflow": "lead-discovery",
+      "entry": "raw mention",
+      "exit": "lead",
+      "gate": "lead.qualityScore >= 60"
+    },
+    {
+      "order": 2,
+      "workflow": "business-analysis",
+      "entry": "lead",
+      "exit": "business-dossier",
+      "gate": "business-dossier.confidence != null"
+    },
+    {
+      "order": 3,
+      "workflow": "website-generation",
+      "entry": "business-dossier",
+      "exit": "website",
+      "gate": "website.conflicts.length == 0"
+    },
+    {
+      "order": 4,
+      "workflow": "qa",
+      "entry": "website",
+      "exit": "review",
+      "gate": "review.verdict != fail"
+    },
+    {
+      "order": 5,
+      "workflow": "sales",
+      "entry": "review",
+      "exit": "proposal",
+      "gate": "proposal.status == ready"
+    },
+    {
+      "order": 6,
+      "workflow": "deployment",
+      "entry": "review",
+      "exit": "deployment-record",
+      "gate": "deployment-record.status == deployed"
+    },
+    {
+      "order": 7,
+      "workflow": "analytics",
+      "entry": "events",
+      "exit": "analytics-report",
+      "gate": "analytics-report.status == complete"
+    }
+  ],
+  "reworkLoops": [
+    { "from": "qa", "to": "website-generation", "condition": "review.verdict == fail" },
+    { "from": "deployment", "to": "qa", "condition": "deployment-record.status == failed" }
+  ],
+  "exitConditions": {
+    "success": "lead to launch completed; every stage gate passed",
+    "fail": "a stage gate failed and the run paused for rework"
+  }
+}

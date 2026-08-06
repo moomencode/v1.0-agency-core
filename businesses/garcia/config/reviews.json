@@ -1,0 +1,29 @@
+{
+  "heading": {
+    "eyebrow": "Testimonials",
+    "title": "What our guests say"
+  },
+  "items": [
+    {
+      "id": 1,
+      "name": "Ahmed Hassan",
+      "role": "Regular Guest",
+      "rating": 5,
+      "text": "Best restaurant in Heliopolis. The seafood linguine is unforgettable."
+    },
+    {
+      "id": 2,
+      "name": "Sara Mostafa",
+      "role": "Food Blogger",
+      "rating": 5,
+      "text": "Cozy atmosphere, great coffee and the dessert selection is divine."
+    },
+    {
+      "id": 3,
+      "name": "Omar Khaled",
+      "role": "Family Guest",
+      "rating": 4,
+      "text": "We celebrated my daughter's birthday here. Service was amazing."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "agencyos-communication",
+  "version": "3.1.0",
+  "description": "AgencyOS Phase 3.1 — agent communication layer: typed event bus, priority queues, timeouts, DLQ, acks, heartbeat, distributed-ready transports.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "smoke": "node smoke.mjs",
+    "demo": "node demo.mjs"
+  }
+}

@@ -1,0 +1,18 @@
+import { typedError } from '../runtime/errors.js';
+
+export const MEM_CODES = {
+  ENTRY_NOT_FOUND: 'E_MEM_ENTRY_NOT_FOUND',
+  VERSION_NOT_FOUND: 'E_MEM_VERSION_NOT_FOUND',
+  SNAPSHOT_NOT_FOUND: 'E_MEM_SNAPSHOT_NOT_FOUND',
+  TYPE_UNKNOWN: 'E_MEM_TYPE_UNKNOWN',
+  SCOPE_INVALID: 'E_MEM_SCOPE_INVALID',
+  SECRET_REJECTED: 'E_MEM_SECRET_REJECTED',
+  COMPRESSION_FAILED: 'E_MEM_COMPRESSION_FAILED',
+  INDEX_CORRUPT: 'E_MEM_INDEX_CORRUPT',
+  SEALED_ENTRY: 'E_MEM_SEALED_ENTRY',
+  STORE_CLOSED: 'E_MEM_STORE_CLOSED'
+};
+
+export function memError(code, message, meta = {}) {
+  return typedError(code, message, meta);
+}

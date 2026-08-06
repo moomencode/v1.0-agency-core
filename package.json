@@ -1,11 +1,17 @@
 {
-  "name": "garcia-restaurant",
+  "name": "business-website-engine",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "description": "Universal Business Website Engine — configuration-driven premium websites for any business type.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "qa": "node scripts/qa.mjs",
+    "sitemap": "node scripts/generate-sitemap.mjs",
+    "new:business": "node scripts/new-business.mjs",
+    "build:business": "node scripts/build-business.mjs",
+    "build:all": "npm run qa && npm run build && npm run sitemap"
   },
   "dependencies": {
     "framer-motion": "^6.5.1",

@@ -1,0 +1,33 @@
+{
+  "heading": {
+    "eyebrow": "By The Numbers",
+    "title": "Our stats"
+  },
+  "items": [
+    {
+      "id": "origin",
+      "value": 14,
+      "suffix": "+",
+      "label": "Coffee Origins"
+    },
+    {
+      "id": "guests",
+      "value": 40000,
+      "suffix": "+",
+      "label": "Cups Served"
+    },
+    {
+      "id": "rating",
+      "value": 4.9,
+      "suffix": "/5",
+      "label": "Average Rating",
+      "decimals": 1
+    },
+    {
+      "id": "years",
+      "value": 6,
+      "suffix": "",
+      "label": "Years of Craft"
+    }
+  ]
+}

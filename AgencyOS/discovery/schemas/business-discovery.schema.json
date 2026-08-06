@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/business-discovery",
+  "title": "BusinessDiscoveryRecord",
+  "type": "object",
+  "description": "Canonical Business Discovery record. Produced by the Business Discovery Engine (Phase 4.0).",
+  "required": ["id", "name", "category", "area", "sources", "weaknesses", "scores", "collectedAt"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "category": {
+      "type": "string",
+      "enum": ["restaurant", "cafe", "bakery", "pizza", "burger", "dessert", "hotel", "clinic", "gym", "barber", "beauty-salon", "other"]
+    },
+    "area": { "type": "string", "minLength": 1 },
+    "country": { "type": ["string", "null"] },
+    "address": { "type": ["string", "null"] },
+    "phone": { "type": ["string", "null"] },
+    "whatsapp": { "type": ["string", "null"] },
+    "rating": { "type": ["number", "null"], "minimum": 0, "maximum": 5 },
+    "reviews": { "type": ["number", "null"], "minimum": 0 },
+    "website": { "type": ["string", "null"] },
+    "instagram": { "type": ["string", "null"] },
+    "facebook": { "type": ["string", "null"] },
+    "email": { "type": ["string", "null"] },
+    "openingHours": { "type": "array", "items": { "type": "string" } },
+    "photos": { "type": "array", "items": { "type": "string" } },
+    "menus": { "type": "array", "items": { "type": "string" } },
+    "booking": { "type": ["string", "null"] },
+    "sources": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "probe": { "type": ["object", "null"] },
+    "weaknesses": { "type": "array" },
+    "scores": { "type": "object" },
+    "sourceSignals": { "type": "object" },
+    "collectedAt": { "type": "string" },
+    "updatedAt": { "type": "string" },
+    "savedAt": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

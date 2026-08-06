@@ -1,0 +1,120 @@
+{
+  "heading": {
+    "eyebrow": "Our Menu",
+    "title": "What are you craving?"
+  },
+  "categories": [
+    {
+      "id": "espresso",
+      "label": "Espresso",
+      "count": 8,
+      "image": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "brew",
+      "label": "Brewed Coffee",
+      "count": 6,
+      "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "pastries",
+      "label": "Pastries",
+      "count": 9,
+      "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "cold",
+      "label": "Cold Drinks",
+      "count": 7,
+      "image": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=600&q=80"
+    }
+  ],
+  "dishes": {
+    "espresso": [
+      {
+        "id": 1,
+        "name": "Flat White",
+        "description": "Double ristretto with silky steamed milk.",
+        "price": 95,
+        "image": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=400&q=80",
+        "badges": [],
+        "available": true
+      },
+      {
+        "id": 2,
+        "name": "Cortado",
+        "description": "Equal parts espresso and warm milk.",
+        "price": 80,
+        "image": "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=400&q=80",
+        "badges": [],
+        "available": true
+      }
+    ],
+    "brew": [
+      {
+        "id": 1,
+        "name": "Pour Over",
+        "description": "Hand-poured single origin, brewed to order.",
+        "price": 110,
+        "image": "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=400&q=80",
+        "badges": [],
+        "available": true
+      },
+      {
+        "id": 2,
+        "name": "French Press",
+        "description": "Full-bodied and rich, served in a press.",
+        "price": 90,
+        "image": "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=400&q=80",
+        "badges": [],
+        "available": true
+      }
+    ],
+    "pastries": [
+      {
+        "id": 1,
+        "name": "Butter Croissant",
+        "description": "Flaky, golden and baked fresh every morning.",
+        "price": 60,
+        "image": "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=400&q=80",
+        "badges": [],
+        "available": true
+      },
+      {
+        "id": 2,
+        "name": "Cinnamon Roll",
+        "description": "Warm, soft and glazed with cream cheese.",
+        "price": 75,
+        "image": "https://images.unsplash.com/photo-1509365465985-25d11c17e812?auto=format&fit=crop&w=400&q=80",
+        "badges": [],
+        "available": true
+      }
+    ],
+    "cold": [
+      {
+        "id": 1,
+        "name": "Iced Americano",
+        "description": "Double espresso over ice and cold water.",
+        "price": 70,
+        "image": "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=400&q=80",
+        "badges": [],
+        "available": true
+      },
+      {
+        "id": 2,
+        "name": "Cold Brew Tonic",
+        "description": "Cold brew, tonic and a twist of orange.",
+        "price": 105,
+        "image": "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=400&q=80",
+        "badges": [],
+        "available": true
+      }
+    ]
+  },
+  "itemsSuffix": "Drinks",
+  "addAria": "View item details",
+  "more": {
+    "label": "View Full Menu",
+    "href": "#menu"
+  }
+}

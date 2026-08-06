@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/workflows/full-pipeline",
+  "title": "FullPipelineWorkflow",
+  "type": "object",
+  "description": "End-to-end orchestration workflow definition.",
+  "required": ["id", "name", "trigger", "actors", "stages", "exitConditions"],
+  "properties": {
+    "id": { "const": "full-pipeline" },
+    "name": { "const": "Full Pipeline" },
+    "trigger": {
+      "type": "string",
+      "description": "Operator starts a run for a target niche/market"
+    },
+    "actors": {
+      "type": "array",
+      "const": [
+        "lead-hunter", "business-analyzer", "content-writer",
+        "website-builder", "qa", "sales", "crm", "deployment", "analytics"
+      ]
+    },
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["order", "workflow", "entry", "exit", "gate"],
+        "properties": {
+          "order": { "type": "integer" },
+          "workflow": {
+            "type": "string",
+            "enum": ["lead-discovery", "business-analysis", "website-generation", "qa", "sales", "deployment", "analytics"]
+          },
+          "entry": { "type": "string" },
+          "exit": { "type": "string" },
+          "gate": { "type": "string" }
+        }
+      }
+    },
+    "reworkLoops": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "condition": { "type": "string" }
+        }
+      }
+    },
+    "exitConditions": {
+      "type": "object",
+      "properties": {
+        "success": { "type": "string" },
+        "fail": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

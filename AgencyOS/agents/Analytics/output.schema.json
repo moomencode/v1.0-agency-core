@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/analytics/output",
+  "title": "AnalyticsReport",
+  "type": "object",
+  "description": "Periodic operational and site-health report.",
+  "required": [
+    "reportId", "periodType", "period", "status",
+    "performance", "quality", "funnel", "siteHealth"
+  ],
+  "properties": {
+    "reportId": { "type": "string" },
+    "periodType": { "type": "string", "enum": ["weekly", "monthly"] },
+    "period": {
+      "type": "object",
+      "required": ["from", "to"],
+      "properties": {
+        "from": { "type": "string", "format": "date-time" },
+        "to": { "type": "string", "format": "date-time" }
+      }
+    },
+    "status": { "type": "string", "enum": ["complete", "partial"] },
+    "performance": {
+      "type": "object",
+      "required": ["runs", "successRatePct"],
+      "properties": {
+        "runs": { "type": "integer" },
+        "successRatePct": { "type": "number" },
+        "avgDurationMs": { "type": "number" },
+        "byAgent": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "agent": { "type": "string" },
+              "runs": { "type": "integer" },
+              "successRatePct": { "type": "number" },
+              "avgDurationMs": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "required": ["defectsBySeverity", "verdictsByBusinessType"],
+      "properties": {
+        "defectsBySeverity": {
+          "type": "object",
+          "properties": {
+            "error": { "type": "integer" },
+            "warning": { "type": "integer" },
+            "info": { "type": "integer" }
+          }
+        },
+        "verdictsByBusinessType": { "type": "object" },
+        "qaAvg": { "type": "number" },
+        "sourceEvents": { "type": "integer" }
+      }
+    },
+    "funnel": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "stage": { "type": "string", "enum": ["leads", "qualified", "proposals", "wins"] },
+          "count": { "type": "integer" },
+          "conversionPct": { "type": "number" },
+          "dropOffPct": { "type": "number" }
+        }
+      }
+    },
+    "siteHealth": {
+      "type": "object",
+      "required": ["deployedSites"],
+      "properties": {
+        "deployedSites": { "type": "integer" },
+        "previewVerified": { "type": "integer" },
+        "flags": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "anomalies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["metric", "severity", "owner"],
+        "properties": {
+          "metric": { "type": "string" },
+          "expected": { "type": "string" },
+          "actual": { "type": "string" },
+          "severity": { "type": "string", "enum": ["low", "medium", "high"] },
+          "owner": { "type": "string" },
+          "detail": { "type": "string" }
+        }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "item": { "type": "string" },
+          "audience": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

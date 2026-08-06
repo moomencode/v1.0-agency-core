@@ -1,0 +1,33 @@
+{
+  "heading": {
+    "eyebrow": "By The Numbers",
+    "title": "Our stats"
+  },
+  "items": [
+    {
+      "id": "years",
+      "value": 12,
+      "suffix": "+",
+      "label": "Years of Experience"
+    },
+    {
+      "id": "dishes",
+      "value": 80,
+      "suffix": "+",
+      "label": "Menu Items"
+    },
+    {
+      "id": "guests",
+      "value": 25000,
+      "suffix": "+",
+      "label": "Happy Guests"
+    },
+    {
+      "id": "rating",
+      "value": 4.8,
+      "suffix": "/5",
+      "label": "Average Rating",
+      "decimals": 1
+    }
+  ]
+}

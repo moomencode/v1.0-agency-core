@@ -1,0 +1,43 @@
+{
+  "id": "qa",
+  "name": "QA",
+  "trigger": "Website doc emitted by Website Generation",
+  "actors": ["qa", "website-builder"],
+  "entryDocument": "website",
+  "exitDocument": "review",
+  "checks": ["schema", "i18n", "menu", "seo", "assets", "build", "render", "a11y"],
+  "steps": [
+    {
+      "id": "01",
+      "actor": "WebsiteBuilder",
+      "action": "render preview and screenshots",
+      "output": "preview",
+      "gate": { "type": "none" }
+    },
+    {
+      "id": "02",
+      "actor": "QA",
+      "action": "run the eight engine checks",
+      "output": "checks",
+      "gate": { "type": "none" }
+    },
+    {
+      "id": "03",
+      "actor": "QA",
+      "action": "severity and owner assignment",
+      "output": "defects",
+      "gate": { "type": "none" }
+    },
+    {
+      "id": "04",
+      "actor": "QA",
+      "action": "verdict and approval",
+      "output": "review",
+      "gate": { "type": "post", "condition": "review.verdict != fail" }
+    }
+  ],
+  "exitConditions": {
+    "success": "Review.approved true; downstream Sales and Deployment unblocked",
+    "fail": "defect report with owners; pipeline loops back to generation"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/social",
+  "title": "Social",
+  "type": "object",
+  "description": "Canonical Social document. Maps to the engine social.json config key.",
+  "required": ["handles"],
+  "properties": {
+    "handles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["platform", "url"],
+        "properties": {
+          "platform": {
+            "type": "string",
+            "enum": ["instagram", "facebook", "whatsapp", "tiktok", "snapchat", "x", "youtube", "linkedin"]
+          },
+          "url": { "type": "string", "format": "uri" },
+          "handle": { "type": "string" },
+          "followers": { "type": "integer" }
+        }
+      }
+    },
+    "default": {
+      "type": "string",
+      "description": "platform id used for primary CTAs"
+    }
+  },
+  "additionalProperties": false
+}

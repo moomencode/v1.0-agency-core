@@ -1,0 +1,23 @@
+{
+  "title": "Cafe Luna | Specialty Coffee House in Zamalek",
+  "description": "Cafe Luna — single-origin specialty coffee, artisan pastries and a warm corner in the heart of Zamalek, Cairo.",
+  "keywords": ["cafe", "coffee", "zamalek", "cairo", "specialty coffee", "Luna"],
+  "author": "Cafe Luna",
+  "robots": "index, follow",
+  "canonical": "https://cafe-luna.example.com",
+  "openGraph": {
+    "type": "website",
+    "locale": "en_US",
+    "siteName": "Cafe Luna",
+    "title": "Cafe Luna | Specialty Coffee House",
+    "description": "Single-origin specialty coffee and artisan pastries in Zamalek.",
+    "image": "/gallery/restaurant-1.jpg"
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "title": "Cafe Luna | Specialty Coffee House",
+    "description": "Single-origin specialty coffee and artisan pastries in Zamalek.",
+    "image": "/gallery/restaurant-1.jpg"
+  },
+  "schemaType": "CafeOrCoffeeShop"
+}

@@ -1,0 +1,45 @@
+{
+  "id": "content-writer",
+  "name": "ContentWriter",
+  "version": "1.0.0",
+  "role": "Website copywriting and localization",
+  "model": {
+    "primary": "creative",
+    "fallback": "reasoning",
+    "temperature": 0.7,
+    "maxTokens": 8192
+  },
+  "tools": [
+    "storage-client",
+    "validation-client",
+    "logging-client"
+  ],
+  "permissions": {
+    "readExternal": false,
+    "writeExternal": false,
+    "writeContentBundle": true
+  },
+  "limits": {
+    "maxCopyLengthPerField": {
+      "eyebrow": 60,
+      "title": 80,
+      "description": 220,
+      "heroTitle": 40,
+      "faqAnswer": 400
+    },
+    "maxLocalesPerField": 5
+  },
+  "retry": {
+    "maxAttempts": 2,
+    "backoff": "exponential",
+    "initialDelayMs": 1000
+  },
+  "timeoutSeconds": 180,
+  "contracts": {
+    "input": "agents/ContentWriter/input.schema.json",
+    "output": "agents/ContentWriter/output.schema.json"
+  },
+  "dependencies": {
+    "shared": ["memory", "logging", "validation", "retry"]
+  }
+}

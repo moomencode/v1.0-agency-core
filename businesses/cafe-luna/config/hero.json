@@ -1,0 +1,44 @@
+{
+  "eyebrow": "Welcome to",
+  "title": "LUNA",
+  "subtitle": "SPECIALTY COFFEE HOUSE",
+  "slogan": "Brewed with Passion",
+  "description": "Single-origin beans, artisan pastries and a warm corner to call yours. Experience the craft in the heart of Zamalek.",
+  "image": {
+    "dark": "/hero/dark-hero.jpg",
+    "light": "/hero/light-hero.jpg",
+    "alt": "Cafe Luna Ambiance"
+  },
+  "ctaPrimary": {
+    "label": "View Menu",
+    "href": "#menu",
+    "icon": "coffee"
+  },
+  "ctaSecondary": {
+    "label": "Book a Table",
+    "href": "#reservation",
+    "icon": "calendar-check"
+  },
+  "info": [
+    {
+      "icon": "map-pin",
+      "title": "12 Brazil St.",
+      "subtitle": "Zamalek, Cairo"
+    },
+    {
+      "icon": "clock",
+      "title": "Open Daily",
+      "subtitle": "7:00 AM - 12:00 AM"
+    },
+    {
+      "icon": "star",
+      "title": "4.9 Rating",
+      "subtitle": "(2100+ Reviews)"
+    },
+    {
+      "icon": "wifi",
+      "title": "Free Wi-Fi",
+      "subtitle": "Remote-work friendly"
+    }
+  ]
+}

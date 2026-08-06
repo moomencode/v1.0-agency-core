@@ -1,0 +1,49 @@
+{
+  "id": "website-generation",
+  "name": "Website Generation",
+  "trigger": "BusinessDossier with sufficient confidence",
+  "actors": ["content-writer", "website-builder"],
+  "entryDocument": "business-dossier",
+  "exitDocument": "website",
+  "steps": [
+    {
+      "id": "01",
+      "actor": "ContentWriter",
+      "action": "localized copy for all sections",
+      "output": "content-bundle",
+      "gate": { "type": "none" }
+    },
+    {
+      "id": "02",
+      "actor": "ContentWriter",
+      "action": "SEO titles and descriptions",
+      "output": "seo-block",
+      "gate": { "type": "none" }
+    },
+    {
+      "id": "03",
+      "actor": "WebsiteBuilder",
+      "action": "config assembly for engine keys",
+      "output": "config-bundle",
+      "gate": { "type": "post", "condition": "config-bundle.conflicts.length == 0" }
+    },
+    {
+      "id": "04",
+      "actor": "WebsiteBuilder",
+      "action": "asset manifest mapping",
+      "output": "asset-manifest",
+      "gate": { "type": "none" }
+    },
+    {
+      "id": "05",
+      "actor": "WebsiteBuilder",
+      "action": "engine contract validation",
+      "output": "website",
+      "gate": { "type": "none" }
+    }
+  ],
+  "exitConditions": {
+    "success": "Website doc with full config and manifest, zero conflicts",
+    "fail": "conflicted doc routed back for fixes"
+  }
+}

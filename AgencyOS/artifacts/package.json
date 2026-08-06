@@ -1,0 +1,10 @@
+{
+  "name": "agencyos-artifacts",
+  "version": "3.3.0",
+  "description": "AgencyOS Phase 3.3 — artifact generation pipeline: typed artifacts (reports, configs, SEO, proposals, contracts, PDF/HTML/Markdown/JSON/images), versioning, metadata, checksums, organized folders, automatic naming, cleanup.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "smoke": "node smoke.mjs"
+  }
+}

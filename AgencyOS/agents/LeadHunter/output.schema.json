@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/lead/lead",
+  "title": "Lead",
+  "type": "object",
+  "description": "A qualified or disqualified prospect produced by LeadHunter. Canonical: schemas/lead.schema.json.",
+  "required": [
+    "leadId", "business", "qualityScore", "scoreBreakdown",
+    "status", "evidence", "discoveryMetadata"
+  ],
+  "properties": {
+    "leadId": { "type": "string" },
+    "business": {
+      "type": "object",
+      "required": ["name", "type", "city", "country"],
+      "properties": {
+        "name": { "type": "string", "minLength": 2 },
+        "legalName": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": [
+            "restaurant", "cafe", "bakery", "pizza", "burger", "dessert",
+            "hotel", "clinic", "gym", "barber", "beauty-salon", "other"
+          ]
+        },
+        "city": { "type": "string" },
+        "region": { "type": "string" },
+        "country": { "type": "string" },
+        "size": {
+          "type": "string",
+          "enum": ["solo", "small", "medium", "large", "unknown"]
+        }
+      }
+    },
+    "contacts": {
+      "type": "object",
+      "properties": {
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "website": { "type": "string", "format": "uri" },
+        "sourceUrl": { "type": "string", "format": "uri" },
+        "verified": { "type": "boolean", "default": false }
+      }
+    },
+    "onlinePresence": {
+      "type": "object",
+      "properties": {
+        "hasWebsite": { "type": "boolean", "default": false },
+        "websiteUrl": { "type": "string", "format": "uri" },
+        "hasSocial": { "type": "boolean", "default": false },
+        "socials": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" }
+        },
+        "listings": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" }
+        },
+        "presenceScore": { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "qualityScore": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "scoreBreakdown": {
+      "type": "object",
+      "required": ["fit", "size", "urgency", "accessibility"],
+      "properties": {
+        "fit": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "size": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "urgency": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "accessibility": { "type": "integer", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "status": { "type": "string", "enum": ["new", "qualified", "disqualified", "merged"] },
+    "disqualificationReason": { "type": "string" },
+    "evidence": {
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "minItems": 1
+    },
+    "discoveryMetadata": {
+      "type": "object",
+      "required": ["source", "timestamp"],
+      "properties": {
+        "source": { "type": "string" },
+        "runId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "searchQuery": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

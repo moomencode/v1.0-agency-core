@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/contact",
+  "title": "Contact",
+  "type": "object",
+  "description": "Canonical Contact document. Maps to the engine contact.json config key.",
+  "required": ["phoneDigits"],
+  "properties": {
+    "phone": { "type": "string" },
+    "phoneDigits": { "type": "string", "pattern": "^[+0-9 ]+$", "description": "tel: link digits" },
+    "email": { "type": "string", "format": "email" },
+    "whatsapp": { "type": "string" },
+    "whatsappDigits": { "type": "string", "pattern": "^[0-9]+$" },
+    "address": { "type": "string" },
+    "city": { "type": "string" },
+    "mapsUrl": { "type": "string", "format": "uri" },
+    "hours": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "day": { "type": "string" },
+          "open": { "type": "string" },
+          "close": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

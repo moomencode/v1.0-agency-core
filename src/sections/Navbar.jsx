@@ -3,25 +3,20 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Menu as MenuIcon, X, ShoppingBag } from 'lucide-react'
 import Button from '../components/Button'
 import ThemeToggle from '../components/ThemeToggle'
-import logo from '../imgs/logo.png'
-import logo3 from '../imgs/logo3.png'
 import { useTheme } from '../Context/ThemeContext'
+import { SITE } from '../core/site'
+import { asset, themedImage } from '../core/assets'
+import { t } from '../core/i18n'
 
-const NAV_LINKS = [
-  { label: 'Home', href: '#home' },
-  { label: 'Menu', href: '#menu' },
-  { label: 'Reservations', href: '#reservation' },
-  { label: 'Offers', href: '#offers' },
-  { label: 'Gallery', href: '#gallery' },
-  { label: 'Contact', href: '#footer' },
-]
+const { navigation, brand, i18n } = SITE
+const NAV_LINKS = navigation?.items || []
+const CTA = navigation?.cta || {}
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const { theme } = useTheme()
 
-  // تحسين أداء حدث الـ scroll لعدم تقطيع الفريمات
   useEffect(() => {
     let ticking = false
     const onScroll = () => {
@@ -37,7 +32,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // منع سكرول الخلفية عند فتح المنيو
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
     return () => {
@@ -46,35 +40,41 @@ export default function Navbar() {
   }, [mobileOpen])
 
   const handleNavClick = (e, href) => {
+    if (!href) return
     e.preventDefault()
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+    const target = document.querySelector(href)
+    if (target) target.scrollIntoView({ behavior: 'smooth' })
     setMobileOpen(false)
   }
+
+  const isAnchor = (href) => href && href.startsWith('#')
+  const ctaHandler = CTA.href && isAnchor(CTA.href)
+    ? (e) => handleNavClick(e, CTA.href)
+    : undefined
 
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-colors duration-200 will-change-transform ${
         scrolled
-          ? 'bg-garcia-900 shadow-md border-b border-cream/10'
-          : 'bg-garcia-900/90'
+          ? 'bg-base shadow-md border-b border-ink/10'
+          : 'bg-base/90'
       }`}
     >
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-5 md:px-10 py-3">
         {/* Logo Section */}
         <a href="#home" onClick={(e) => handleNavClick(e, '#home')} className="flex items-center gap-2.5 sm:gap-3 group">
           <img
-            src={theme === 'dark' ? logo : logo3}
-            alt="Garcia Logo"
+            src={themedImage(brand?.logo, theme)}
+            alt={brand?.logo?.alt || brand?.name || 'Logo'}
             className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover contrast-125 transition-transform duration-200 group-hover:scale-105"
             loading="eager"
           />
           <div className="leading-tight">
-            <p className="text-cream font-serif font-semibold tracking-wider text-base md:text-lg">
-              GARCIA
+            <p className="text-ink font-serif font-semibold tracking-wider text-base md:text-lg">
+              {brand?.shortName || brand?.name}
             </p>
-            {/* 👈 تم إظهار الكلمة دائماً وتعديل الحجم للحفاظ على تناسق الهيدر في الموبايل */}
-            <p className="text-[8px] sm:text-[9px] text-cream/60 tracking-[0.2em] sm:tracking-[0.25em] uppercase font-sans">
-              Restaurant & Cafe
+            <p className="text-[8px] sm:text-[9px] text-ink/60 tracking-[0.2em] sm:tracking-[0.25em] uppercase font-sans">
+              {brand?.tagline}
             </p>
           </div>
         </a>
@@ -86,9 +86,9 @@ export default function Navbar() {
               <a
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="text-xs md:text-sm text-cream/70 hover:text-gold transition-colors duration-200 uppercase tracking-widest font-sans font-medium"
+                className="nav-link text-xs md:text-sm text-ink/70 hover:text-primary transition-colors duration-300 uppercase tracking-widest font-sans font-medium"
               >
-                {link.label}
+                {t(link.label)}
               </a>
             </li>
           ))}
@@ -97,18 +97,26 @@ export default function Navbar() {
         {/* CTA Button + Theme Toggle (desktop) */}
         <div className="hidden lg:flex items-center gap-4">
           <ThemeToggle />
-          <Button variant="outline" icon={ShoppingBag} className="!py-2 !px-5 text-xs tracking-wider uppercase">
-            Order Now
-          </Button>
+          {CTA.label && (
+            <Button
+              variant="outline"
+              icon={CTA.icon || ShoppingBag}
+              onClick={ctaHandler}
+              href={CTA.href && !isAnchor(CTA.href) ? CTA.href : undefined}
+              className="!py-2 !px-5 text-xs tracking-wider uppercase"
+            >
+              {t(CTA.label)}
+            </Button>
+          )}
         </div>
 
         {/* Mobile: toggle + hamburger */}
         <div className="flex items-center gap-3 lg:hidden">
           <ThemeToggle />
           <button
-            className="text-cream p-1 hover:text-gold transition-colors"
+            className="text-ink p-1 hover:text-primary transition-colors"
             onClick={() => setMobileOpen(true)}
-            aria-label="Open menu"
+            aria-label={t(i18n?.nav?.ariaOpen) || 'Open menu'}
           >
             <MenuIcon size={24} />
           </button>
@@ -119,7 +127,6 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <>
-            {/* Overlay بدون backdrop-blur لسرعة وسلاسة الاستجابة */}
             <motion.div
               key="overlay"
               initial={{ opacity: 0 }}
@@ -130,36 +137,35 @@ export default function Navbar() {
               className="fixed inset-0 bg-black/75 z-[90] lg:hidden"
             />
 
-            {/* Drawer */}
             <motion.div
               key="drawer"
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'tween', duration: 0.25, ease: 'easeOut' }}
-              className="fixed top-0 left-0 h-screen w-[85%] max-w-xs bg-garcia-900 border-r border-cream/10 z-[100] lg:hidden flex flex-col shadow-2xl"
+              className="fixed top-0 left-0 h-screen w-[85%] max-w-xs bg-base border-r border-ink/10 z-[100] lg:hidden flex flex-col shadow-2xl"
             >
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-5 border-b border-cream/10 shrink-0">
+              <div className="flex items-center justify-between px-6 py-5 border-b border-ink/10 shrink-0">
                 <div className="flex items-center gap-2.5">
                   <img
-                    src={theme === 'dark' ? logo : logo3}
-                    alt="Garcia Logo"
+                    src={themedImage(brand?.logo, theme)}
+                    alt={brand?.logo?.alt || brand?.name || 'Logo'}
                     className="w-10 h-10 rounded-full object-cover contrast-125"
                   />
                   <div className="leading-tight">
-                    <p className="text-cream font-serif font-semibold tracking-wider text-sm">
-                      GARCIA
+                    <p className="text-ink font-serif font-semibold tracking-wider text-sm">
+                      {brand?.shortName || brand?.name}
                     </p>
-                    <p className="text-[8px] text-cream/60 tracking-[0.2em] uppercase font-sans">
-                      Restaurant & Cafe
+                    <p className="text-[8px] text-ink/60 tracking-[0.2em] uppercase font-sans">
+                      {brand?.tagline}
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setMobileOpen(false)}
-                  className="text-cream/70 hover:text-gold transition-colors p-1"
-                  aria-label="Close menu"
+                  className="text-ink/70 hover:text-primary transition-colors p-1"
+                  aria-label={t(i18n?.nav?.ariaClose) || 'Close menu'}
                 >
                   <X size={22} />
                 </button>
@@ -172,20 +178,28 @@ export default function Navbar() {
                     <a
                       href={link.href}
                       onClick={(e) => handleNavClick(e, link.href)}
-                      className="text-cream/80 hover:text-gold uppercase text-sm tracking-widest font-sans block py-3.5 border-b border-cream/5 transition-colors duration-150"
+                      className="text-ink/80 hover:text-primary uppercase text-sm tracking-widest font-sans block py-3.5 border-b border-ink/5 transition-colors duration-300"
                     >
-                      {link.label}
+                      {t(link.label)}
                     </a>
                   </li>
                 ))}
               </ul>
 
               {/* Bottom CTA */}
-              <div className="px-6 py-6 border-t border-cream/10 bg-garcia-900 shrink-0">
-                <Button variant="outline" icon={ShoppingBag} className="w-full justify-center uppercase tracking-wider py-3 text-sm">
-                  Order Now
-                </Button>
-              </div>
+              {CTA.label && (
+                <div className="px-6 py-6 border-t border-ink/10 bg-base shrink-0">
+                  <Button
+                    variant="outline"
+                    icon={CTA.icon || ShoppingBag}
+                    onClick={ctaHandler}
+                    href={CTA.href && !isAnchor(CTA.href) ? CTA.href : undefined}
+                    className="w-full justify-center uppercase tracking-wider py-3 text-sm"
+                  >
+                    {t(CTA.label)}
+                  </Button>
+                </div>
+              )}
             </motion.div>
           </>
         )}

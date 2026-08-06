@@ -1,0 +1,18 @@
+{
+  "phone": "+20 123 456 5678",
+  "phoneRaw": "+201234565678",
+  "whatsapp": "+20 123 456 7890",
+  "email": "info@garcia.com.eg",
+  "address": "5 Baghdad St, Heliopolis, Cairo, Egypt",
+  "addressShort": "5 Baghdad St., Heliopolis, Cairo",
+  "area": "Korba, Heliopolis, Cairo",
+  "mapsUrl": "https://maps.google.com/?cid=3752467093177423514",
+  "mapsEmbed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3452.126861214343!2d31.323565!3d30.090558!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14583f6f54cb69cb%3A0x341370f0982ed69a!2sGarcia%20Restaurant%20%26%20Cafe!5e0!3m2!1sar!2seg!4v1700000000000!5m2!1sar!2seg",
+  "hours": [
+    {
+      "days": "Monday - Sunday",
+      "time": "6:00 AM - 1:00 AM"
+    }
+  ],
+  "hoursShort": "Daily: 09:00 AM \u2013 01:00 AM"
+}

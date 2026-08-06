@@ -1,0 +1,49 @@
+{
+  "id": "sales",
+  "name": "Sales",
+  "trigger": "Approved Review emitted by QA workflow",
+  "actors": ["sales", "qa", "crm", "ops"],
+  "entryDocument": "review",
+  "exitDocument": "proposal",
+  "steps": [
+    {
+      "id": "01",
+      "actor": "QA",
+      "action": "pass verdict evidence",
+      "output": "verdict-evidence",
+      "gate": { "type": "post", "condition": "review.verdict != fail" }
+    },
+    {
+      "id": "02",
+      "actor": "Sales",
+      "action": "scope and tier and timeline",
+      "output": "proposal-core",
+      "gate": { "type": "none" }
+    },
+    {
+      "id": "03",
+      "actor": "Sales",
+      "action": "deliverables and terms and outreach",
+      "output": "proposal",
+      "gate": { "type": "none" }
+    },
+    {
+      "id": "04",
+      "actor": "CRM",
+      "action": "deal create or update",
+      "output": "deal-state",
+      "gate": { "type": "none" }
+    },
+    {
+      "id": "05",
+      "actor": "ops",
+      "action": "send outreach (human)",
+      "output": "sent-record",
+      "gate": { "type": "none" }
+    }
+  ],
+  "exitConditions": {
+    "success": "Proposal ready; deal open with next action; outreach draft handed to ops",
+    "fail": "QA not passed - blocked with review id; no proposal"
+  }
+}

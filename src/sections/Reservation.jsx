@@ -3,10 +3,20 @@ import { motion } from 'framer-motion'
 import { CalendarDays, Clock, Users, Search, Phone } from 'lucide-react'
 import SectionHeading from '../components/SectionHeading'
 import Button from '../components/Button'
+import { SITE } from '../core/site'
+import { t } from '../core/i18n'
+
+const { booking, business, contact } = SITE
+const heading = booking?.heading || {}
+const fields = booking?.fields || {}
+const phoneDigits = business?.phoneDigits || 11
+const maxGuests = booking?.maxGuests || 20
 
 /**
  * Reservation.jsx
  * Table-booking form with full input validation.
+ * Labels, validation length and submit behavior are config-driven
+ * (config/booking.json + config/business.json + config/contact.json).
  */
 export default function Reservation() {
   const [form, setForm] = useState({ date: '', time: '', guests: '', phone: '' })
@@ -15,10 +25,9 @@ export default function Reservation() {
   const handleChange = (field) => (e) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }))
 
-  // هندلة رقم التليفون: أرقام بس + أقصى حد 11 رقم
   const handlePhoneChange = (e) => {
-    const value = e.target.value.replace(/\D/g, '') // مسح أي حرف أو رمز مش رقم
-    if (value.length <= 11) {
+    const value = e.target.value.replace(/\D/g, '')
+    if (value.length <= phoneDigits) {
       setForm((prev) => ({ ...prev, phone: value }))
       if (phoneError) setPhoneError('')
     }
@@ -27,21 +36,30 @@ export default function Reservation() {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    // التأكد من إن الرقم بالضبط 11 رقم
-    if (form.phone.length !== 11) {
-      setPhoneError('Please enter a valid 11-digit phone number')
+    if (form.phone.length !== phoneDigits) {
+      setPhoneError(t(booking?.phoneError) || `Please enter a valid ${phoneDigits}-digit phone number`)
       return
+    }
+
+    // Delivery channel is configurable: "whatsapp" opens a wa.me link,
+    // "console" keeps the original demo behavior.
+    if (booking?.method === 'whatsapp') {
+      const number = (booking.target || contact?.whatsapp || contact?.phoneRaw || '').replace(/\D/g, '')
+      const message = encodeURIComponent(
+        `Reservation request: ${form.date} at ${form.time} for ${form.guests} guests. Phone: ${form.phone}`
+      )
+      if (number) window.open(`https://wa.me/${number}?text=${message}`, '_blank', 'noopener')
     }
 
     // TODO: connect to real reservation API/backend.
     console.log('Reservation request:', form)
-    alert('Thanks! Your table request has been received. We will confirm via WhatsApp or phone call.')
+    alert(t(booking?.success) || 'Thanks! Your table request has been received.')
   }
 
   return (
-    <section id="reservation" className="py-20 px-5 md:px-10 bg-garcia-900">
+    <section id="reservation" className="py-24 md:py-32 px-5 md:px-10 bg-base">
       <div className="max-w-5xl mx-auto">
-        <SectionHeading eyebrow="Book Your Table" title="Book your table now" />
+        <SectionHeading eyebrow={t(heading.eyebrow)} title={t(heading.title)} />
 
         <motion.form
           onSubmit={handleSubmit}
@@ -49,43 +67,43 @@ export default function Reservation() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6 }}
-          className="bg-garcia-800/50 border border-cream/10 rounded-xl p-5 md:p-6 grid md:grid-cols-2 lg:grid-cols-4 gap-4 items-start"
+          className="bg-surface/50 border border-ink/10 rounded-xl p-5 md:p-6 grid md:grid-cols-2 lg:grid-cols-4 gap-4 items-start"
         >
           {/* Date field */}
-          <label className="flex items-center gap-3 border border-cream/20 rounded-lg px-4 py-3 focus-within:border-gold transition-colors w-full">
-            <CalendarDays className="text-gold shrink-0" size={18} />
+          <label className="flex items-center gap-3 border border-ink/20 rounded-lg px-4 py-3 focus-within:border-primary transition-colors w-full">
+            <CalendarDays className="text-primary shrink-0" size={18} />
             <input
               type="date"
               value={form.date}
               onChange={handleChange('date')}
-              className="bg-transparent w-full text-cream text-sm outline-none placeholder:text-cream-muted [color-scheme:dark]"
+              className="bg-transparent w-full text-ink text-sm outline-none placeholder:text-ink-muted [color-scheme:dark]"
               required
             />
           </label>
 
           {/* Time field */}
-          <label className="flex items-center gap-3 border border-cream/20 rounded-lg px-4 py-3 focus-within:border-gold transition-colors w-full">
-            <Clock className="text-gold shrink-0" size={18} />
+          <label className="flex items-center gap-3 border border-ink/20 rounded-lg px-4 py-3 focus-within:border-primary transition-colors w-full">
+            <Clock className="text-primary shrink-0" size={18} />
             <input
               type="time"
               value={form.time}
               onChange={handleChange('time')}
-              className="bg-transparent w-full text-cream text-sm outline-none placeholder:text-cream-muted [color-scheme:dark]"
+              className="bg-transparent w-full text-ink text-sm outline-none placeholder:text-ink-muted [color-scheme:dark]"
               required
             />
           </label>
 
           {/* Number of guests */}
-          <label className="flex items-center gap-3 border border-cream/20 rounded-lg px-4 py-3 focus-within:border-gold transition-colors w-full">
-            <Users className="text-gold shrink-0" size={18} />
+          <label className="flex items-center gap-3 border border-ink/20 rounded-lg px-4 py-3 focus-within:border-primary transition-colors w-full">
+            <Users className="text-primary shrink-0" size={18} />
             <input
               type="number"
               min="1"
-              max="20"
-              placeholder="Number of Guests"
+              max={maxGuests}
+              placeholder={t(fields.guestsPlaceholder)}
               value={form.guests}
               onChange={handleChange('guests')}
-              className="bg-transparent w-full text-cream text-sm outline-none placeholder:text-cream-muted"
+              className="bg-transparent w-full text-ink text-sm outline-none placeholder:text-ink-muted"
               required
             />
           </label>
@@ -94,16 +112,16 @@ export default function Reservation() {
           <div className="w-full flex flex-col">
             <label
               className={`flex items-center gap-3 border rounded-lg px-4 py-3 transition-colors ${
-                phoneError ? 'border-red-500/80' : 'border-cream/20 focus-within:border-gold'
+                phoneError ? 'border-red-500/80' : 'border-ink/20 focus-within:border-primary'
               }`}
             >
-              <Phone className="text-gold shrink-0" size={18} />
+              <Phone className="text-primary shrink-0" size={18} />
               <input
                 type="tel"
-                placeholder="Phone Number (11 digits)"
+                placeholder={t(fields.phonePlaceholder)}
                 value={form.phone}
                 onChange={handlePhoneChange}
-                className="bg-transparent w-full text-cream text-sm outline-none placeholder:text-cream-muted"
+                className="bg-transparent w-full text-ink text-sm outline-none placeholder:text-ink-muted"
                 required
               />
             </label>
@@ -115,13 +133,15 @@ export default function Reservation() {
           {/* Submit Button */}
           <div className="md:col-span-2 lg:col-span-4 mt-2">
             <Button variant="primary" icon={Search} type="submit" className="w-full">
-              Find a Table
+              {t(booking?.submit?.label) || 'Find a Table'}
             </Button>
           </div>
 
-          <p className="md:col-span-2 lg:col-span-4 text-center text-cream-muted text-xs mt-1">
-            You will receive a confirmation with WhatsApp or phone call.
-          </p>
+          {booking?.note && (
+            <p className="md:col-span-2 lg:col-span-4 text-center text-ink-muted text-xs mt-1">
+              {t(booking.note)}
+            </p>
+          )}
         </motion.form>
       </div>
     </section>

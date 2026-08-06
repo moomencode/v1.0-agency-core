@@ -1,0 +1,40 @@
+{
+  "id": "crm",
+  "name": "CRM",
+  "version": "1.0.0",
+  "role": "System of record for leads, deals and accounts",
+  "model": {
+    "primary": "fast",
+    "fallback": "fast",
+    "temperature": 0.0,
+    "maxTokens": 4096
+  },
+  "tools": [
+    "storage-client",
+    "logging-client"
+  ],
+  "permissions": {
+    "readExternal": false,
+    "writeExternal": false,
+    "mutateCrm": true,
+    "auditAll": true
+  },
+  "lifecycles": {
+    "lead": ["new", "qualified", "contacted", "proposed", "won", "lost", "merged", "disqualified"],
+    "deal": ["open", "negotiation", "won", "lost", "abandoned"]
+  },
+  "dedupeKeys": ["name", "city"],
+  "retry": {
+    "maxAttempts": 3,
+    "backoff": "exponential",
+    "initialDelayMs": 500
+  },
+  "timeoutSeconds": 60,
+  "contracts": {
+    "input": "agents/CRM/input.schema.json",
+    "output": "agents/CRM/output.schema.json"
+  },
+  "dependencies": {
+    "shared": ["memory", "logging", "validation", "error-handling", "retry"]
+  }
+}

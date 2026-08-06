@@ -1,0 +1,48 @@
+{
+  "id": "qa",
+  "name": "QA",
+  "version": "1.0.0",
+  "role": "Quality assurance and pipeline gate",
+  "model": {
+    "primary": "reasoning",
+    "fallback": "fast-reasoning",
+    "temperature": 0.1,
+    "maxTokens": 8192
+  },
+  "tools": [
+    "storage-client",
+    "validation-client",
+    "engine-client",
+    "screenshot-client",
+    "logging-client"
+  ],
+  "permissions": {
+    "readExternal": false,
+    "writeExternal": false,
+    "writeReviewDocs": true,
+    "gatePipeline": true
+  },
+  "gates": {
+    "blockOnSeverity": "error",
+    "requireChecks": [
+      "schema", "i18n", "menu", "seo", "assets", "build", "render", "a11y"
+    ]
+  },
+  "limits": {
+    "maxScreenshots": 12,
+    "viewport": "desktop"
+  },
+  "retry": {
+    "maxAttempts": 2,
+    "backoff": "linear",
+    "initialDelayMs": 2000
+  },
+  "timeoutSeconds": 300,
+  "contracts": {
+    "input": "agents/QA/input.schema.json",
+    "output": "agents/QA/output.schema.json"
+  },
+  "dependencies": {
+    "shared": ["memory", "logging", "validation", "retry", "error-handling"]
+  }
+}

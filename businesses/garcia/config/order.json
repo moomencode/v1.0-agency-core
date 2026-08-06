@@ -1,0 +1,20 @@
+{
+  "heading": "Order your favorite meals online",
+  "eyebrow": "Order Online",
+  "features": [
+    "No delivery fees on orders over 250 EGP",
+    "Fast & easy ordering",
+    "Track your order in real-time",
+    "Exclusive online offers"
+  ],
+  "cta": {
+    "label": "Order Now",
+    "href": "#menu"
+  },
+  "appImage": {
+    "label": "App preview",
+    "width": 280,
+    "height": 560
+  },
+  "qrLabel": "Scan to view our menu or your table"
+}

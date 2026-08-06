@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/deployment/input",
+  "title": "DeploymentInput",
+  "type": "object",
+  "description": "What Deployment receives to build and ship a website.",
+  "required": ["website", "review", "request"],
+  "properties": {
+    "website": {
+      "type": "object",
+      "description": "WebsiteBuilder output: config bundle + asset manifest"
+    },
+    "review": {
+      "type": "object",
+      "description": "QA output; approval required",
+      "required": ["approval", "verdict"],
+      "properties": {
+        "verdict": { "type": "string", "enum": ["pass", "pass_with_warnings", "fail"] },
+        "approval": {
+          "type": "object",
+          "properties": {
+            "approved": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "request": {
+      "type": "object",
+      "properties": {
+        "mode": { "type": "string", "enum": ["build", "build-preview", "deploy"], "default": "build-preview" },
+        "businessId": { "type": "string" },
+        "versionBump": { "type": "string", "enum": ["patch", "minor", "major"], "default": "patch" },
+        "dryRun": { "type": "boolean", "default": false }
+      }
+    }
+  },
+  "additionalProperties": false
+}

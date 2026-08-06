@@ -1,46 +1,47 @@
 import React from 'react'
+import { icon } from '../core/icons'
 
 /**
  * Button.jsx
- * Reusable CTA button with two visual variants matching the Garcia brand:
- *  - "primary": solid gold background (main CTAs like "Order Now")
- *  - "outline": transparent with cream border (secondary CTAs like "Reserve a Table")
+ * Reusable CTA button with two visual variants matching the site theme:
+ *  - "primary": solid primary background (main CTAs)
+ *  - "outline": transparent with ink border (secondary CTAs)
  *
  * Props:
  *  - children: button label/content
  *  - variant: "primary" | "outline"
- *  - icon: optional Lucide icon component to render before the label
+ *  - icon: Lucide icon component OR config icon name (e.g. "shopping-bag")
  *  - onClick: click handler
+ *  - href: renders as <a> when provided
  *  - className: optional extra classes
- *  - as: render as "button" (default) or "a" (link)
- *  - href: used when as="a"
  */
 export default function Button({
   children,
   variant = 'primary',
   icon: Icon,
   onClick,
-  className = '',
-  as = 'button',
   href,
+  className = '',
   ...rest
 }) {
+  const IconComponent = typeof Icon === 'string' ? icon(Icon) : Icon
+
   const base =
-    'inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md text-sm font-semibold tracking-wide transition-all duration-300 whitespace-nowrap'
+    'inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md text-sm font-semibold tracking-wide transition-all duration-500 ease-premium whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-base'
 
   const variants = {
     primary:
-      'bg-gold text-garcia-900 hover:bg-gold-light hover:shadow-gold active:scale-[0.98]',
+      'bg-primary text-base hover:bg-primary-light hover:shadow-primary active:scale-[0.97]',
     outline:
-      'border border-cream/40 text-cream hover:border-gold hover:text-gold active:scale-[0.98]',
+      'border border-ink/40 text-ink hover:border-primary hover:text-primary hover:shadow-primary/20 active:scale-[0.97]',
   }
 
-  const classes = `${base} ${variants[variant]} ${className}`
+  const classes = `${base} ${variants[variant] || variants.primary} ${className}`
 
-  if (as === 'a') {
+  if (href) {
     return (
       <a href={href} className={classes} {...rest}>
-        {Icon && <Icon size={16} />}
+        {IconComponent && <IconComponent size={16} />}
         {children}
       </a>
     )
@@ -48,7 +49,7 @@ export default function Button({
 
   return (
     <button onClick={onClick} className={classes} {...rest}>
-      {Icon && <Icon size={16} />}
+      {IconComponent && <IconComponent size={16} />}
       {children}
     </button>
   )

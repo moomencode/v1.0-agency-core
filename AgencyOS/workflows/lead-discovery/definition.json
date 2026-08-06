@@ -1,0 +1,42 @@
+{
+  "id": "lead-discovery",
+  "name": "Lead Discovery",
+  "trigger": "New raw prospect mention queued in storage",
+  "actors": ["lead-hunter", "crm"],
+  "entryDocument": "raw mention",
+  "exitDocument": "lead",
+  "steps": [
+    {
+      "id": "01",
+      "actor": "LeadHunter",
+      "action": "discover and verify and score",
+      "output": "discovery-record",
+      "gate": { "type": "none" }
+    },
+    {
+      "id": "02",
+      "actor": "LeadHunter",
+      "action": "qualify or disqualify decision",
+      "output": "lead",
+      "gate": { "type": "post", "condition": "lead.qualityScore >= 60" }
+    },
+    {
+      "id": "03",
+      "actor": "CRM",
+      "action": "create or merge lead and audit",
+      "output": "crm-state",
+      "gate": { "type": "none" }
+    },
+    {
+      "id": "04",
+      "actor": "LeadHunter",
+      "action": "update exclusion list",
+      "output": "dedupe-hints",
+      "gate": { "type": "none" }
+    }
+  ],
+  "exitConditions": {
+    "success": "qualified Lead persisted in CRM, ready for Business Analysis",
+    "fail": "disqualified Lead with evidence; exclusion list updated"
+  }
+}

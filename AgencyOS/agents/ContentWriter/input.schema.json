@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/content-writer/input",
+  "title": "ContentWriterInput",
+  "type": "object",
+  "description": "The dossier + scope that ContentWriter turns into copy.",
+  "required": ["dossier", "languages", "sectionScope"],
+  "properties": {
+    "dossier": {
+      "description": "BusinessAnalyzer output (business, brand, contact, menu, offers, gallery, reviews, seo, media)"
+    },
+    "languages": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 2 },
+      "minItems": 1
+    },
+    "sectionScope": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "hero", "menu", "offers", "booking", "gallery", "location",
+          "footer", "features", "services", "stats", "reviews", "faq", "seo", "i18n", "all"
+        ]
+      },
+      "default": ["all"]
+    },
+    "toneOverride": { "type": "string" },
+    "maxLengths": {
+      "type": "object",
+      "additionalProperties": { "type": "integer" },
+      "description": "Overrides for config.json field length limits"
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "previousFeedback": { "type": "array", "items": { "type": "string" } },
+        "clientPreferences": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "additionalProperties": false
+}

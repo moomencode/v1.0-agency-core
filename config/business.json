@@ -1,0 +1,23 @@
+{
+  "name": "Garcia Restaurant & Cafe",
+  "type": "restaurant",
+  "locale": "en",
+  "languages": ["en", "ar"],
+  "currency": {
+    "code": "EGP",
+    "symbol": "EGP",
+    "position": "after",
+    "decimals": 0
+  },
+  "phoneDigits": 11,
+  "sections": [
+    "navbar",
+    "hero",
+    "menu",
+    "offers",
+    "reservation",
+    "gallery",
+    "location",
+    "footer"
+  ]
+}

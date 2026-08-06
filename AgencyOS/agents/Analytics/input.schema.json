@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/analytics/input",
+  "title": "AnalyticsInput",
+  "type": "object",
+  "description": "What Analytics receives to build a report.",
+  "required": ["request"],
+  "properties": {
+    "request": {
+      "type": "object",
+      "required": ["periodType"],
+      "properties": {
+        "periodType": { "type": "string", "enum": ["weekly", "monthly"] },
+        "from": { "type": "string", "format": "date-time" },
+        "to": { "type": "string", "format": "date-time" },
+        "sections": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["performance", "quality", "funnel", "site-health"] }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": { "type": "object", "description": "Raw audit/run events" }
+    },
+    "crmSnapshot": { "type": "object", "description": "Lead/deal state for funnel metrics" },
+    "deployments": {
+      "type": "array",
+      "items": { "type": "object", "description": "DeploymentRecords in period" }
+    }
+  },
+  "additionalProperties": false
+}

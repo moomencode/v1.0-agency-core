@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/crm/output",
+  "title": "CRMResult",
+  "type": "object",
+  "description": "Result of a CRM operation: accepted state change or rejected event.",
+  "required": ["accepted", "entity", "action"],
+  "properties": {
+    "accepted": { "type": "boolean" },
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "description": "e.g. INVALID_TRANSITION, NOT_FOUND, DUPLICATE" },
+        "message": { "type": "string" }
+      }
+    },
+    "entity": { "type": "string", "enum": ["lead", "deal", "communication"] },
+    "entityId": { "type": "string" },
+    "action": { "type": "string", "enum": ["create", "transition", "merge", "query", "log"] },
+    "state": {
+      "type": "object",
+      "description": "Resulting record (for query: the result set)"
+    },
+    "duplicateOf": { "type": "string" },
+    "auditEntry": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "actor": { "type": "string" },
+        "action": { "type": "string" },
+        "entity": { "type": "string" },
+        "entityId": { "type": "string" },
+        "before": { "type": "object" },
+        "after": { "type": "object" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

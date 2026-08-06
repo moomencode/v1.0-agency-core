@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/workflows/lead-discovery",
+  "title": "LeadDiscoveryWorkflow",
+  "type": "object",
+  "description": "Lead qualification workflow definition.",
+  "required": ["id", "name", "trigger", "actors", "steps", "exitConditions"],
+  "properties": {
+    "id": { "const": "lead-discovery" },
+    "name": { "const": "Lead Discovery" },
+    "trigger": {
+      "type": "string",
+      "description": "New raw prospect mention queued in storage"
+    },
+    "actors": {
+      "type": "array",
+      "const": ["lead-hunter", "crm"]
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "actor", "action", "output", "gate"],
+        "properties": {
+          "id": { "type": "string" },
+          "actor": { "type": "string" },
+          "action": { "type": "string" },
+          "output": { "type": "string" },
+          "gate": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "condition": { "type": "string" }
+            }
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "exitConditions": {
+      "type": "object",
+      "properties": {
+        "success": { "type": "string" },
+        "fail": { "type": "string" }
+      }
+    },
+    "entryDocument": { "type": "string", "description": "Canonical schema of the entry document" },
+    "exitDocument": { "type": "string", "description": "Canonical schema of the exit document" }
+  },
+  "additionalProperties": false
+}

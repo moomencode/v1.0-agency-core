@@ -1,0 +1,15 @@
+{
+  "name": "Garcia Restaurant & Cafe",
+  "shortName": "GARCIA",
+  "tagline": "Restaurant & Cafe",
+  "slogan": "Good Food \u2022 Good Mood",
+  "description": "A place where great food, warm atmosphere and good times come together. Experience the authentic taste in the heart of Heliopolis.",
+  "logo": {
+    "dark": "/logo/logo.png",
+    "light": "/logo/logo3.png",
+    "favicon": "/logo/logo.png",
+    "alt": "Garcia Logo",
+    "rounded": true
+  },
+  "heroEyebrow": "Welcome to iconic"
+}

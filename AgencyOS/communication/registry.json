@@ -1,0 +1,281 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Message type registry. Every message type declares the topic it is routed on and the JSON Schema its payload must satisfy. publish/emit/broadcast/enqueue validate payloads against these schemas; invalid messages are rejected with E_COM_SCHEMA_INVALID and never delivered.",
+  "envelope": "schemas/envelope.schema.json",
+  "types": {
+    "run.started": {
+      "topic": "run.started",
+      "description": "A workflow run started.",
+      "payload": {
+        "type": "object",
+        "required": ["runId", "workflowId", "status", "seed"],
+        "properties": {
+          "runId": { "type": "string" },
+          "workflowId": { "type": "string" },
+          "status": { "type": "string" },
+          "seed": { "type": "string" },
+          "parentRunId": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "run.completed": {
+      "topic": "run.completed",
+      "payload": {
+        "type": "object",
+        "required": ["runId", "workflowId", "status"],
+        "properties": {
+          "runId": { "type": "string" },
+          "workflowId": { "type": "string" },
+          "status": { "type": "string" },
+          "durationMs": { "type": "number" }
+        }
+      }
+    },
+    "run.paused": { "topic": "run.paused", "payload": { "type": "object", "required": ["runId", "workflowId", "reason"], "properties": { "runId": { "type": "string" }, "workflowId": { "type": "string" }, "reason": { "type": "string" } } } },
+    "run.aborted": { "topic": "run.aborted", "payload": { "type": "object", "required": ["runId", "workflowId", "reason"], "properties": { "runId": { "type": "string" }, "workflowId": { "type": "string" }, "reason": { "type": "string" } } } },
+    "step.started": {
+      "topic": "step.started",
+      "payload": {
+        "type": "object",
+        "required": ["runId", "workflowId", "stepId", "actor"],
+        "properties": { "runId": { "type": "string" }, "workflowId": { "type": "string" }, "stepId": { "type": "string" }, "actor": { "type": "string" } }
+      }
+    },
+    "step.completed": {
+      "topic": "step.completed",
+      "payload": {
+        "type": "object",
+        "required": ["runId", "workflowId", "stepId", "actor", "status"],
+        "properties": {
+          "runId": { "type": "string" },
+          "workflowId": { "type": "string" },
+          "stepId": { "type": "string" },
+          "actor": { "type": "string" },
+          "status": { "type": "string" },
+          "durationMs": { "type": "number" }
+        }
+      }
+    },
+    "stage.unavailable": { "topic": "stage.unavailable", "payload": { "type": "object", "required": ["runId", "workflowId", "stage"], "properties": { "runId": { "type": "string" }, "workflowId": { "type": "string" }, "stage": { "type": "string" }, "reason": { "type": "string" } } } },
+    "external.step": { "topic": "external.step", "payload": { "type": "object", "required": ["runId", "workflowId", "stepId", "actor"], "properties": { "runId": { "type": "string" }, "workflowId": { "type": "string" }, "stepId": { "type": "string" }, "actor": { "type": "string" } } } },
+    "agent.started": {
+      "topic": "agent.started",
+      "payload": {
+        "type": "object",
+        "required": ["agentId", "runId", "workflowId", "stepId"],
+        "properties": { "agentId": { "type": "string" }, "runId": { "type": "string" }, "workflowId": { "type": "string" }, "stepId": { "type": ["string", "null"] } }
+      }
+    },
+    "agent.completed": {
+      "topic": "agent.completed",
+      "payload": {
+        "type": "object",
+        "required": ["agentId", "runId", "workflowId", "status", "durationMs", "strategy"],
+        "properties": {
+          "agentId": { "type": "string" },
+          "runId": { "type": "string" },
+          "workflowId": { "type": "string" },
+          "stepId": { "type": ["string", "null"] },
+          "status": { "type": "string" },
+          "strategy": { "type": "string" },
+          "durationMs": { "type": "number" },
+          "attempts": { "type": "integer" }
+        }
+      }
+    },
+    "agent.failed": {
+      "topic": "agent.failed",
+      "payload": {
+        "type": "object",
+        "required": ["agentId", "runId", "workflowId", "status"],
+        "properties": {
+          "agentId": { "type": "string" },
+          "runId": { "type": "string" },
+          "workflowId": { "type": "string" },
+          "stepId": { "type": ["string", "null"] },
+          "status": { "type": "string" },
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "validated": {
+      "topic": "validated",
+      "payload": {
+        "type": "object",
+        "required": ["agent", "kind", "valid"],
+        "properties": {
+          "agent": { "type": "string" },
+          "kind": { "type": "string" },
+          "valid": { "type": "boolean" },
+          "schemaPath": { "type": "string" },
+          "errors": { "type": "array", "items": { "type": "object" } }
+        }
+      }
+    },
+    "gate.passed": {
+      "topic": "gate.passed",
+      "payload": {
+        "type": "object",
+        "required": ["runId", "workflowId", "condition", "result"],
+        "properties": {
+          "runId": { "type": "string" },
+          "workflowId": { "type": "string" },
+          "stepId": { "type": ["string", "null"] },
+          "stage": { "type": ["string", "null"] },
+          "condition": { "type": "string" },
+          "result": { "type": "boolean" }
+        }
+      }
+    },
+    "gate.failed": {
+      "topic": "gate.failed",
+      "payload": {
+        "type": "object",
+        "required": ["runId", "workflowId", "condition", "result"],
+        "properties": {
+          "runId": { "type": "string" },
+          "workflowId": { "type": "string" },
+          "stepId": { "type": ["string", "null"] },
+          "stage": { "type": ["string", "null"] },
+          "condition": { "type": "string" },
+          "result": { "type": "boolean" }
+        }
+      }
+    },
+    "retry": {
+      "topic": "retry",
+      "payload": {
+        "type": "object",
+        "required": ["agent", "attempt"],
+        "properties": {
+          "agent": { "type": "string" },
+          "stepId": { "type": ["string", "null"] },
+          "attempt": { "type": "integer" },
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "rejected": {
+      "topic": "rejected",
+      "payload": {
+        "type": "object",
+        "required": ["stepId", "actor", "message"],
+        "properties": {
+          "stepId": { "type": "string" },
+          "actor": { "type": "string" },
+          "runId": { "type": "string" },
+          "workflowId": { "type": "string" },
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "document.emitted": {
+      "topic": "document.emitted",
+      "payload": {
+        "type": "object",
+        "required": ["runId", "workflowId", "name", "version", "checksum"],
+        "properties": {
+          "runId": { "type": "string" },
+          "workflowId": { "type": "string" },
+          "stepId": { "type": ["string", "null"] },
+          "name": { "type": "string" },
+          "version": { "type": "integer" },
+          "checksum": { "type": "string" }
+        }
+      }
+    },
+    "heartbeat.beat": {
+      "topic": "heartbeat.beat",
+      "description": "Periodic liveness signal from a producer (agent/instance).",
+      "payload": {
+        "type": "object",
+        "required": ["id", "instanceId", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "instanceId": { "type": "string" },
+          "status": { "type": "string", "enum": ["alive", "busy", "draining"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "heartbeat.request": {
+      "topic": "heartbeat.request",
+      "description": "Directed liveness probe; the target must answer with heartbeat.response.",
+      "payload": {
+        "type": "object",
+        "required": ["id", "instanceId", "requestId"],
+        "properties": { "id": { "type": "string" }, "instanceId": { "type": "string" }, "requestId": { "type": "string" } },
+        "additionalProperties": false
+      }
+    },
+    "heartbeat.response": {
+      "topic": "heartbeat.response",
+      "payload": {
+        "type": "object",
+        "required": ["id", "instanceId", "requestId", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "instanceId": { "type": "string" },
+          "requestId": { "type": "string" },
+          "status": { "type": "string", "enum": ["alive"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "heartbeat.missed": {
+      "topic": "heartbeat.missed",
+      "description": "A monitored producer missed its liveness window; recovered:true when it beats again.",
+      "payload": {
+        "type": "object",
+        "required": ["id", "instanceId"],
+        "properties": {
+          "id": { "type": "string" },
+          "instanceId": { "type": "string" },
+          "missedForMs": { "type": "integer" },
+          "recovered": { "type": "boolean" }
+        }
+      }
+    },
+    "queue.acked": {
+      "topic": "queue.acked",
+      "payload": {
+        "type": "object",
+        "required": ["queue", "messageId"],
+        "properties": { "queue": { "type": "string" }, "messageId": { "type": "string" }, "attempt": { "type": "integer" } }
+      }
+    },
+    "queue.nacked": {
+      "topic": "queue.nacked",
+      "payload": {
+        "type": "object",
+        "required": ["queue", "messageId", "reason"],
+        "properties": {
+          "queue": { "type": "string" },
+          "messageId": { "type": "string" },
+          "reason": { "type": "string" },
+          "attempt": { "type": "integer" },
+          "requeued": { "type": "boolean" }
+        }
+      }
+    },
+    "queue.expired": {
+      "topic": "queue.expired",
+      "payload": {
+        "type": "object",
+        "required": ["queue", "messageId", "reason"],
+        "properties": { "queue": { "type": "string" }, "messageId": { "type": "string" }, "reason": { "type": "string" } }
+      }
+    },
+    "queue.dead": {
+      "topic": "queue.dead",
+      "payload": {
+        "type": "object",
+        "required": ["queue", "messageId", "reason"],
+        "properties": { "queue": { "type": "string" }, "messageId": { "type": "string" }, "reason": { "type": "string" }, "attempt": { "type": "integer" } }
+      }
+    }
+  }
+}

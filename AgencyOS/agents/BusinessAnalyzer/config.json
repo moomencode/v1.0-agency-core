@@ -1,0 +1,44 @@
+{
+  "id": "business-analyzer",
+  "name": "BusinessAnalyzer",
+  "version": "1.0.0",
+  "role": "Business research and data structuring",
+  "model": {
+    "primary": "deep-research",
+    "fallback": "reasoning",
+    "temperature": 0.3,
+    "maxTokens": 8192
+  },
+  "tools": [
+    "web-search",
+    "source-reader",
+    "storage-client",
+    "crm-client",
+    "logging-client"
+  ],
+  "permissions": {
+    "readExternal": true,
+    "writeExternal": false,
+    "contactProspects": false,
+    "writeBusinessDocs": true
+  },
+  "limits": {
+    "maxSourcesPerFact": 3,
+    "maxMenuItems": 60,
+    "maxGalleryItems": 30,
+    "maxReviews": 12
+  },
+  "retry": {
+    "maxAttempts": 3,
+    "backoff": "exponential",
+    "initialDelayMs": 1500
+  },
+  "timeoutSeconds": 240,
+  "contracts": {
+    "input": "agents/BusinessAnalyzer/input.schema.json",
+    "output": "agents/BusinessAnalyzer/output.schema.json"
+  },
+  "dependencies": {
+    "shared": ["memory", "logging", "caching", "retry", "validation", "rate-limiting"]
+  }
+}

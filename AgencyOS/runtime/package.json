@@ -1,0 +1,7 @@
+{
+  "name": "@agencyos/runtime",
+  "version": "3.0.0",
+  "type": "module",
+  "private": true,
+  "description": "AgencyOS runtime execution engine (Phase 3.0)"
+}

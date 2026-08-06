@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/lead",
+  "title": "Lead",
+  "type": "object",
+  "description": "Canonical Lead document. Produced by LeadHunter, owned by CRM.",
+  "required": ["leadId", "status", "businessName", "city", "score", "evidence"],
+  "properties": {
+    "leadId": { "type": "string" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "status": {
+      "type": "string",
+      "enum": ["new", "qualified", "disqualified", "merged", "contacted", "proposed", "won", "lost"]
+    },
+    "businessName": { "type": "string", "minLength": 1 },
+    "businessType": {
+      "type": "string",
+      "enum": ["restaurant", "cafe", "bakery", "pizza", "burger", "dessert", "hotel", "clinic", "gym", "barber", "beauty-salon", "other"]
+    },
+    "city": { "type": "string", "minLength": 1 },
+    "country": { "type": "string" },
+    "contact": {
+      "$ref": "#/definitions/contact",
+      "description": "Verifiable contact points (canonical: contact.schema.json)"
+    },
+    "score": { "type": "number", "minimum": 0, "maximum": 100 },
+    "scoreBreakdown": {
+      "type": "object",
+      "properties": {
+        "fit": { "type": "number", "description": "weight 0.5" },
+        "size": { "type": "number", "description": "weight 0.2" },
+        "urgency": { "type": "number", "description": "weight 0.15" },
+        "accessibility": { "type": "number", "description": "weight 0.15" }
+      }
+    },
+    "discoveryMetadata": {
+      "type": "object",
+      "properties": {
+        "source": { "type": "string" },
+        "discoveredAt": { "type": "string", "format": "date-time" },
+        "urlsChecked": { "type": "array", "items": { "type": "string" } },
+        "hasWebPresence": { "type": "boolean" },
+        "hasSocialPresence": { "type": "boolean" },
+        "notes": { "type": "string" }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "fact": { "type": "string" },
+          "source": { "type": "string" },
+          "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+        }
+      }
+    },
+    "reason": { "type": "string", "description": "Qualify/disqualify rationale" },
+    "duplicateOf": { "type": "string", "description": "Existing leadId when merged" }
+  },
+  "definitions": {
+    "contact": {
+      "type": "object",
+      "properties": {
+        "phone": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "whatsapp": { "type": "string" },
+        "website": { "type": "string", "format": "uri" },
+        "instagram": { "type": "string" },
+        "facebook": { "type": "string" },
+        "address": { "type": "string" },
+        "mapsUrl": { "type": "string", "format": "uri" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

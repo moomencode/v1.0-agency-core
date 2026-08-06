@@ -1,0 +1,45 @@
+{
+  "id": "sales",
+  "name": "Sales",
+  "version": "1.0.0",
+  "role": "Proposal generation and deal management",
+  "model": {
+    "primary": "creative",
+    "fallback": "reasoning",
+    "temperature": 0.6,
+    "maxTokens": 6144
+  },
+  "tools": [
+    "storage-client",
+    "crm-client",
+    "logging-client"
+  ],
+  "permissions": {
+    "readExternal": false,
+    "writeExternal": false,
+    "writeProposals": true,
+    "draftOutreach": true
+  },
+  "pricing": {
+    "tiers": {
+      "essential": { "min": 150, "max": 350, "currency": "USD" },
+      "premium": { "min": 400, "max": 800, "currency": "USD" },
+      "enterprise": { "min": 900, "max": 2000, "currency": "USD" }
+    },
+    "defaultTier": "premium"
+  },
+  "timelineDays": { "min": 3, "max": 10 },
+  "retry": {
+    "maxAttempts": 2,
+    "backoff": "linear",
+    "initialDelayMs": 1000
+  },
+  "timeoutSeconds": 120,
+  "contracts": {
+    "input": "agents/Sales/input.schema.json",
+    "output": "agents/Sales/output.schema.json"
+  },
+  "dependencies": {
+    "shared": ["memory", "logging", "validation", "retry"]
+  }
+}

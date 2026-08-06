@@ -1,0 +1,44 @@
+{
+  "eyebrow": "Welcome to iconic",
+  "title": "GARCIA",
+  "subtitle": "RESTAURANT & CAFE",
+  "slogan": "Good Food \u2022 Good Mood",
+  "description": "A place where great food, warm atmosphere and good times come together. Experience the authentic taste in the heart of Heliopolis.",
+  "image": {
+    "dark": "/hero/dark-hero.jpg",
+    "light": "/hero/light-hero.jpg",
+    "alt": "Garcia Ambiance"
+  },
+  "ctaPrimary": {
+    "label": "View Menu",
+    "href": "#menu",
+    "icon": "utensils-crossed"
+  },
+  "ctaSecondary": {
+    "label": "Reserve a Table",
+    "href": "#reservation",
+    "icon": "calendar-check"
+  },
+  "info": [
+    {
+      "icon": "map-pin",
+      "title": "5 Baghdad St.",
+      "subtitle": "Heliopolis, Cairo"
+    },
+    {
+      "icon": "clock",
+      "title": "Open Everyday",
+      "subtitle": "6:00 AM - 1:00 AM"
+    },
+    {
+      "icon": "star",
+      "title": "4.0 Rating",
+      "subtitle": "(3800+ Reviews)"
+    },
+    {
+      "icon": "rocket",
+      "title": "Fast Delivery",
+      "subtitle": "via Our Website"
+    }
+  ]
+}

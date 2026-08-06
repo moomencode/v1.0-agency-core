@@ -1,0 +1,252 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/content-writer/output",
+  "title": "ContentBundle",
+  "type": "object",
+  "description": "Localized website copy shaped like Website Engine config files. Merged by WebsiteBuilder.",
+  "required": ["hero", "booking", "footer", "seo", "i18n", "meta"],
+  "properties": {
+    "hero": {
+      "type": "object",
+      "properties": {
+        "eyebrow": { "$ref": "#/definitions/localeString" },
+        "title": { "$ref": "#/definitions/localeString" },
+        "subtitle": { "$ref": "#/definitions/localeString" },
+        "slogan": { "$ref": "#/definitions/localeString" },
+        "description": { "$ref": "#/definitions/localeString" },
+        "ctaPrimary": { "$ref": "#/definitions/localeString" },
+        "ctaSecondary": { "$ref": "#/definitions/localeString" },
+        "info": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": { "$ref": "#/definitions/localeString" },
+              "subtitle": { "$ref": "#/definitions/localeString" }
+            }
+          }
+        }
+      }
+    },
+    "menu": {
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "object",
+          "properties": {
+            "eyebrow": { "$ref": "#/definitions/localeString" },
+            "title": { "$ref": "#/definitions/localeString" }
+          }
+        },
+        "categories": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/localeString" }
+        },
+        "dishes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "$ref": "#/definitions/localeString" },
+              "description": { "$ref": "#/definitions/localeString" }
+            },
+            "required": ["id", "name"]
+          }
+        },
+        "more": { "$ref": "#/definitions/localeString" }
+      }
+    },
+    "offers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "$ref": "#/definitions/localeString" },
+          "description": { "$ref": "#/definitions/localeString" },
+          "time": { "$ref": "#/definitions/localeString" },
+          "badge": { "$ref": "#/definitions/localeString" }
+        }
+      }
+    },
+    "booking": {
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "object",
+          "properties": {
+            "eyebrow": { "$ref": "#/definitions/localeString" },
+            "title": { "$ref": "#/definitions/localeString" }
+          }
+        },
+        "fields": {
+          "type": "object",
+          "properties": {
+            "guestsPlaceholder": { "$ref": "#/definitions/localeString" },
+            "phonePlaceholder": { "$ref": "#/definitions/localeString" }
+          }
+        },
+        "phoneError": { "$ref": "#/definitions/localeString" },
+        "success": { "$ref": "#/definitions/localeString" },
+        "submit": { "$ref": "#/definitions/localeString" },
+        "note": { "$ref": "#/definitions/localeString" }
+      }
+    },
+    "gallery": {
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "object",
+          "properties": {
+            "eyebrow": { "$ref": "#/definitions/localeString" },
+            "title": { "$ref": "#/definitions/localeString" }
+          }
+        },
+        "images": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/localeString" },
+          "description": "Per-image alt texts, in gallery order"
+        }
+      }
+    },
+    "location": {
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "object",
+          "properties": {
+            "eyebrow": { "$ref": "#/definitions/localeString" },
+            "title": { "$ref": "#/definitions/localeString" }
+          }
+        },
+        "directions": { "$ref": "#/definitions/localeString" }
+      }
+    },
+    "footer": {
+      "type": "object",
+      "properties": {
+        "brandDescription": { "$ref": "#/definitions/localeString" },
+        "quickLinksTitle": { "$ref": "#/definitions/localeString" },
+        "contactTitle": { "$ref": "#/definitions/localeString" },
+        "hoursTitle": { "$ref": "#/definitions/localeString" },
+        "rights": { "$ref": "#/definitions/localeString" }
+      }
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "$ref": "#/definitions/localeString" },
+          "text": { "$ref": "#/definitions/localeString" }
+        }
+      }
+    },
+    "services": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "$ref": "#/definitions/localeString" },
+          "text": { "$ref": "#/definitions/localeString" }
+        }
+      }
+    },
+    "stats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "$ref": "#/definitions/localeString" }
+        }
+      }
+    },
+    "reviews": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "$ref": "#/definitions/localeString" },
+          "role": { "$ref": "#/definitions/localeString" },
+          "text": { "$ref": "#/definitions/localeString" }
+        }
+      }
+    },
+    "faq": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "question": { "$ref": "#/definitions/localeString" },
+          "answer": { "$ref": "#/definitions/localeString" }
+        }
+      }
+    },
+    "seo": {
+      "type": "object",
+      "properties": {
+        "title": { "$ref": "#/definitions/localeString" },
+        "description": { "$ref": "#/definitions/localeString" },
+        "keywords": { "type": "array", "items": { "type": "string" } },
+        "openGraph": {
+          "type": "object",
+          "properties": {
+            "title": { "$ref": "#/definitions/localeString" },
+            "description": { "$ref": "#/definitions/localeString" }
+          }
+        }
+      }
+    },
+    "i18n": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/localeString" }
+    },
+    "meta": {
+      "type": "object",
+      "required": ["businessId", "localeCoverage"],
+      "properties": {
+        "businessId": { "type": "string" },
+        "localeCoverage": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "total": { "type": "integer" },
+              "translated": { "type": "integer" }
+            }
+          }
+        },
+        "missingTranslations": { "type": "array", "items": { "type": "string" } },
+        "needsReview": { "type": "array", "items": { "type": "string" } },
+        "version": { "type": "string" }
+      }
+    }
+  },
+  "definitions": {
+    "localeString": {
+      "oneOf": [
+        {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "type": "string" },
+          "description": "Locale map: { en: \"...\", ar: \"...\" }"
+        },
+        {
+          "type": "object",
+          "required": ["singleLocale"],
+          "properties": {
+            "singleLocale": { "type": "boolean", "const": true },
+            "value": { "type": "string" }
+          }
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

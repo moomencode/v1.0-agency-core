@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/deployment/output",
+  "title": "DeploymentRecord",
+  "type": "object",
+  "description": "Record of a build/release attempt.",
+  "required": [
+    "deploymentId", "websiteId", "businessId", "reviewId",
+    "pipeline", "status", "releaseNotes"
+  ],
+  "properties": {
+    "deploymentId": { "type": "string" },
+    "websiteId": { "type": "string" },
+    "businessId": { "type": "string" },
+    "reviewId": { "type": "string" },
+    "startedAt": { "type": "string", "format": "date-time" },
+    "finishedAt": { "type": "string", "format": "date-time" },
+    "pipeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["step", "status"],
+        "properties": {
+          "step": {
+            "type": "string",
+            "enum": ["materialize-config", "materialize-assets", "engine-qa", "build", "sitemap", "preview", "release-notes"]
+          },
+          "status": { "type": "string", "enum": ["pass", "fail", "skipped"] },
+          "detail": { "type": "string" },
+          "durationMs": { "type": "integer" }
+        }
+      }
+    },
+    "build": {
+      "type": "object",
+      "properties": {
+        "distPath": { "type": "string" },
+        "success": { "type": "boolean" },
+        "bundleSizeKb": { "type": "number" }
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "kind": { "type": "string" },
+          "status": { "type": "string", "enum": ["written", "missing", "failed"] }
+        }
+      }
+    },
+    "preview": {
+      "type": "object",
+      "properties": {
+        "url": { "type": "string" },
+        "screenshotPaths": { "type": "array", "items": { "type": "string" } },
+        "verified": { "type": "boolean" }
+      }
+    },
+    "releaseNotes": {
+      "type": "object",
+      "required": ["version", "date"],
+      "properties": {
+        "version": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "summary": { "type": "string" },
+        "rollbackPointer": { "type": "string" }
+      }
+    },
+    "status": { "type": "string", "enum": ["deployed", "unverified", "failed", "blocked"] },
+    "failures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "step": { "type": "string" },
+          "path": { "type": "string" },
+          "error": { "type": "string" },
+          "owner": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

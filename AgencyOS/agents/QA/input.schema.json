@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/qa/input",
+  "title": "QAInput",
+  "type": "object",
+  "description": "What QA receives to review.",
+  "required": ["website", "request"],
+  "properties": {
+    "website": { "type": "object", "description": "WebsiteBuilder output" },
+    "request": {
+      "type": "object",
+      "required": ["checkIds"],
+      "properties": {
+        "checkIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["schema", "i18n", "menu", "seo", "assets", "build", "render", "a11y"]
+          },
+          "minItems": 1
+        },
+        "screenshots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": { "type": "string" },
+              "section": { "type": "string" },
+              "viewport": { "type": "string" }
+            }
+          }
+        },
+        "buildLogPath": { "type": "string" },
+        "engineQaOutput": { "type": "object" },
+        "languages": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "additionalProperties": false
+}

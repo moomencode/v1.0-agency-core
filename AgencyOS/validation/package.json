@@ -1,0 +1,8 @@
+{
+  "name": "agencyos-validation",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "description": "AgencyOS Phase 3.4 - Global Validation Layer"
+}

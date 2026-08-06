@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/workflows/qa",
+  "title": "QAWorkflow",
+  "type": "object",
+  "description": "Quality gate workflow definition.",
+  "required": ["id", "name", "trigger", "actors", "steps", "exitConditions"],
+  "properties": {
+    "id": { "const": "qa" },
+    "name": { "const": "QA" },
+    "trigger": {
+      "type": "string",
+      "description": "Website doc emitted by Website Generation"
+    },
+    "actors": {
+      "type": "array",
+      "const": ["qa", "website-builder"]
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "actor", "action", "output", "gate"],
+        "properties": {
+          "id": { "type": "string" },
+          "actor": { "type": "string" },
+          "action": { "type": "string" },
+          "output": { "type": "string" },
+          "gate": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "condition": { "type": "string" }
+            }
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "exitConditions": {
+      "type": "object",
+      "properties": {
+        "success": { "type": "string" },
+        "fail": { "type": "string" }
+      }
+    },
+    "entryDocument": { "type": "string" },
+    "exitDocument": { "type": "string" },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["schema", "i18n", "menu", "seo", "assets", "build", "render", "a11y"]
+      }
+    }
+  },
+  "additionalProperties": false
+}

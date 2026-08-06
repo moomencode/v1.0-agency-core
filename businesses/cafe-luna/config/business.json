@@ -1,0 +1,25 @@
+{
+  "name": "Cafe Luna",
+  "type": "cafe",
+  "locale": "en",
+  "languages": ["en", "ar"],
+  "currency": {
+    "code": "EGP",
+    "symbol": "EGP",
+    "position": "after",
+    "decimals": 0
+  },
+  "phoneDigits": 11,
+  "sections": [
+    "navbar",
+    "hero",
+    "menu",
+    "stats",
+    "offers",
+    "reservation",
+    "testimonials",
+    "gallery",
+    "location",
+    "footer"
+  ]
+}

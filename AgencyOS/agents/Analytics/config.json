@@ -1,0 +1,43 @@
+{
+  "id": "analytics",
+  "name": "Analytics",
+  "version": "1.0.0",
+  "role": "Aggregate events into operational and site-health reports",
+  "model": {
+    "primary": "fast",
+    "fallback": "reasoning",
+    "temperature": 0.2,
+    "maxTokens": 5120
+  },
+  "tools": [
+    "storage-client",
+    "logging-client"
+  ],
+  "permissions": {
+    "readExternal": false,
+    "writeExternal": false,
+    "readEvents": true,
+    "writeReports": true
+  },
+  "reports": {
+    "periodic": ["weekly", "monthly"],
+    "sections": ["performance", "quality", "funnel", "site-health"]
+  },
+  "anomalyThresholds": {
+    "defectRegressionDeltaPct": 20,
+    "successRateFloorPct": 80
+  },
+  "retry": {
+    "maxAttempts": 2,
+    "backoff": "linear",
+    "initialDelayMs": 1000
+  },
+  "timeoutSeconds": 120,
+  "contracts": {
+    "input": "agents/Analytics/input.schema.json",
+    "output": "agents/Analytics/output.schema.json"
+  },
+  "dependencies": {
+    "shared": ["memory", "logging", "validation", "caching"]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "agencyos-memory",
+  "version": "3.2.0",
+  "description": "AgencyOS Phase 3.2 — long-term memory engine: 8 typed memories, version history, snapshots, rollback, compression, expiration, indexing, search, cross-workflow reuse, dedupe.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "smoke": "node smoke.mjs"
+  }
+}

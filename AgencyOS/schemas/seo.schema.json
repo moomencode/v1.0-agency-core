@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/seo",
+  "title": "SEO",
+  "type": "object",
+  "description": "Canonical SEO document. Maps to the engine seo.json config key. ContentWriter owns all text.",
+  "required": ["title", "description", "canonical", "keywords"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 65,
+      "description": "One per locale; length limits per the engine contract"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 50,
+      "maxLength": 165
+    },
+    "canonical": { "type": "string", "format": "uri" },
+    "keywords": { "type": "array", "items": { "type": "string" } },
+    "ogImage": { "type": "string" },
+    "localeStrings": {
+      "type": "object",
+      "description": "Per-locale SEO copy: {en: {...}, ar: {...}} or {singleLocale: true, value: {...}}"
+    },
+    "structuredData": {
+      "type": "object",
+      "description": "JSON-LD fragments (Business, Restaurant, LocalBusiness)"
+    },
+    "robots": { "type": "string", "enum": ["index", "noindex"], "default": "index" }
+  },
+  "additionalProperties": false
+}

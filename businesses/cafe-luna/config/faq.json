@@ -1,0 +1,23 @@
+{
+  "heading": {
+    "eyebrow": "FAQ",
+    "title": "Frequently asked questions"
+  },
+  "items": [
+    {
+      "id": 1,
+      "question": "Do you offer delivery?",
+      "answer": "Yes, we offer fast delivery through our website in most areas of Cairo."
+    },
+    {
+      "id": 2,
+      "question": "Can I reserve a table online?",
+      "answer": "Absolutely. Use the reservation form on this page and we will confirm via WhatsApp."
+    },
+    {
+      "id": 3,
+      "question": "Do you handle events and gatherings?",
+      "answer": "Yes, contact us and our team will plan the perfect event for you."
+    }
+  ]
+}

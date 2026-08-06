@@ -1,0 +1,52 @@
+{
+  "id": "deployment",
+  "name": "Deployment",
+  "version": "1.0.0",
+  "role": "Build, verify, and ship website releases",
+  "model": {
+    "primary": "fast",
+    "fallback": "fast",
+    "temperature": 0.0,
+    "maxTokens": 3072
+  },
+  "tools": [
+    "engine-cli",
+    "storage-client",
+    "logging-client"
+  ],
+  "permissions": {
+    "readExternal": false,
+    "writeExternal": false,
+    "writeBusinessDir": true,
+    "writeAssetsDir": true,
+    "runBuild": true,
+    "writeReleases": true
+  },
+  "pipeline": {
+    "order": ["materialize-config", "materialize-assets", "engine-qa", "build", "sitemap", "preview", "release-notes"],
+    "abortOn": ["engine-qa", "build"]
+  },
+  "engine": {
+    "root": "../Garcia2",
+    "businessesDir": "businesses",
+    "scripts": {
+      "qa": "scripts/qa.mjs",
+      "buildBusiness": "scripts/build-business.mjs",
+      "sitemap": "scripts/generate-sitemap.mjs"
+    }
+  },
+  "retry": {
+    "maxAttempts": 2,
+    "backoff": "exponential",
+    "initialDelayMs": 2000,
+    "retryOn": ["build-timeout", "network-flake"]
+  },
+  "timeoutSeconds": 600,
+  "contracts": {
+    "input": "agents/Deployment/input.schema.json",
+    "output": "agents/Deployment/output.schema.json"
+  },
+  "dependencies": {
+    "shared": ["memory", "logging", "validation", "error-handling", "retry", "caching"]
+  }
+}

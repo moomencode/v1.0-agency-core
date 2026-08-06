@@ -1,0 +1,23 @@
+{
+  "title": "Garcia Restaurant & Cafe | \u0645\u0637\u0639\u0645 \u0648\u0643\u0627\u0641\u064a\u0647 \u062c\u0627\u0631\u0633\u064a\u0627",
+  "description": "Garcia Restaurant & Cafe \u2014 Good Food, Good Mood. Authentic taste in the heart of Heliopolis.",
+  "keywords": ["restaurant", "cafe", "heliopolis", "cairo", "dining", "Garcia"],
+  "author": "Garcia Restaurant & Cafe",
+  "robots": "index, follow",
+  "canonical": "https://garcia.example.com",
+  "openGraph": {
+    "type": "website",
+    "locale": "en_US",
+    "siteName": "Garcia Restaurant & Cafe",
+    "title": "Garcia Restaurant & Cafe",
+    "description": "Good Food, Good Mood \u2014 Authentic taste in the heart of Heliopolis.",
+    "image": "/gallery/restaurant-1.jpg"
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "title": "Garcia Restaurant & Cafe",
+    "description": "Good Food, Good Mood \u2014 Authentic taste in the heart of Heliopolis.",
+    "image": "/gallery/restaurant-1.jpg"
+  },
+  "schemaType": "Restaurant"
+}

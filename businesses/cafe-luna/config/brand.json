@@ -1,0 +1,15 @@
+{
+  "name": "Cafe Luna",
+  "shortName": "LUNA",
+  "tagline": "Specialty Coffee House",
+  "slogan": "Brewed with Passion",
+  "description": "A cozy specialty coffee house serving single-origin brews and artisan pastries in the heart of Zamalek.",
+  "logo": {
+    "dark": "/logo/logo.png",
+    "light": "/logo/logo3.png",
+    "favicon": "/logo/logo.png",
+    "alt": "Cafe Luna Logo",
+    "rounded": true
+  },
+  "heroEyebrow": "Welcome to"
+}

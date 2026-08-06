@@ -1,0 +1,29 @@
+{
+  "heading": {
+    "eyebrow": "Testimonials",
+    "title": "What our guests say"
+  },
+  "items": [
+    {
+      "id": 1,
+      "name": "Mona Adel",
+      "role": "Coffee Lover",
+      "rating": 5,
+      "text": "Best pour over in Cairo. The atmosphere is perfect for reading."
+    },
+    {
+      "id": 2,
+      "name": "Youssef Nabil",
+      "role": "Remote Worker",
+      "rating": 5,
+      "text": "Fast Wi-Fi, great brew and the croissants are unreal."
+    },
+    {
+      "id": 3,
+      "name": "Laila Kamel",
+      "role": "Regular Guest",
+      "rating": 5,
+      "text": "My favorite corner in Zamalek. The cold brew tonic is a must."
+    }
+  ]
+}

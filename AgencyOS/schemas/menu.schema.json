@@ -1,0 +1,43 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/menu",
+  "title": "Menu",
+  "type": "object",
+  "description": "Canonical Menu document for food businesses. Maps to the engine menu.json config key.",
+  "required": ["categories", "currency"],
+  "properties": {
+    "categories": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "items"],
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["name", "price", "currency"],
+              "properties": {
+                "name": { "type": "string", "minLength": 1 },
+                "description": { "type": "string" },
+                "price": { "type": "number", "minimum": 0 },
+                "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+                "isPopular": { "type": "boolean" },
+                "isVegan": { "type": "boolean" },
+                "isGlutenFree": { "type": "boolean" },
+                "image": { "type": "string", "description": "asset path" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}

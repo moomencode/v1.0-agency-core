@@ -1,0 +1,160 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/business",
+  "title": "BusinessDossier",
+  "type": "object",
+  "description": "Canonical Business dossier. Produced by BusinessAnalyzer from a qualified Lead.",
+  "required": [
+    "businessId", "leadId", "name", "type", "location",
+    "sections", "confidence", "researchSummary"
+  ],
+  "properties": {
+    "businessId": { "type": "string" },
+    "leadId": { "type": "string" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "name": { "type": "string", "minLength": 1 },
+    "type": {
+      "type": "string",
+      "enum": ["restaurant", "cafe", "bakery", "pizza", "burger", "dessert", "hotel", "clinic", "gym", "barber", "beauty-salon", "other"]
+    },
+    "location": {
+      "type": "object",
+      "required": ["city"],
+      "properties": {
+        "city": { "type": "string" },
+        "country": { "type": "string" },
+        "area": { "type": "string" },
+        "address": { "type": "string" },
+        "mapsUrl": { "type": "string", "format": "uri" },
+        "coordinates": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" }
+          }
+        }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "description": "Brand identity facts (canonical: brand.schema.json)",
+      "properties": {
+        "tagline": { "type": "string" },
+        "description": { "type": "string" },
+        "foundedYear": { "type": "integer" },
+        "brandColors": { "type": "array", "items": { "type": "string" } },
+        "logoUrl": { "type": "string", "format": "uri" }
+      }
+    },
+    "contact": {
+      "$ref": "#/definitions/contact",
+      "description": "Canonical: contact.schema.json"
+    },
+    "social": {
+      "type": "array",
+      "description": "Canonical: social.schema.json",
+      "items": {
+        "type": "object",
+        "properties": {
+          "platform": { "type": "string" },
+          "handle": { "type": "string" },
+          "url": { "type": "string", "format": "uri" },
+          "followers": { "type": "integer" }
+        }
+      }
+    },
+    "offerings": {
+      "type": "object",
+      "description": "Products/services by category. Canonical: menu.schema.json for food businesses.",
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "price": { "type": "number" },
+                    "currency": { "type": "string" },
+                    "description": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "hours": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "day": { "type": "string", "enum": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"] },
+          "open": { "type": "string" },
+          "close": { "type": "string" }
+        }
+      }
+    },
+    "competitors": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "media": {
+      "type": "array",
+      "description": "Media inventory. Canonical: media.schema.json",
+      "items": {
+        "type": "object",
+        "properties": {
+          "kind": { "type": "string", "enum": ["photo", "video", "logo"] },
+          "sourceUrl": { "type": "string", "format": "uri" },
+          "subject": { "type": "string" },
+          "quality": { "type": "string", "enum": ["high", "medium", "low"] },
+          "license": { "type": "string" }
+        }
+      }
+    },
+    "sections": {
+      "type": "object",
+      "description": "Per-section confidence and findings"
+    },
+    "confidence": {
+      "type": "object",
+      "description": "confidence: high | medium | low, per section",
+      "additionalProperties": { "type": "string", "enum": ["high", "medium", "low"] }
+    },
+    "needsVerification": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "field": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "researchSummary": { "type": "string" },
+    "status": { "type": "string", "enum": ["complete", "incomplete"] }
+  },
+  "definitions": {
+    "contact": {
+      "type": "object",
+      "properties": {
+        "phone": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "whatsapp": { "type": "string" },
+        "website": { "type": "string", "format": "uri" },
+        "instagram": { "type": "string" },
+        "facebook": { "type": "string" },
+        "address": { "type": "string" },
+        "mapsUrl": { "type": "string", "format": "uri" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

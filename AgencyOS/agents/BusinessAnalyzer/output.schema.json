@@ -1,0 +1,142 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/business-analyzer/output",
+  "title": "BusinessDossier",
+  "type": "object",
+  "description": "The full Business dossier. Canonical shape: schemas/business.schema.json. This is the analyzer's guarantee of completeness.",
+  "required": [
+    "business", "brand", "contact", "social", "seo",
+    "researchSummary", "confidence"
+  ],
+  "properties": {
+    "business": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "descriptionSeeds": { "type": "array", "items": { "type": "string" } },
+        "audience": { "type": "string" },
+        "size": { "type": "string", "enum": ["solo", "small", "medium", "large", "unknown"] },
+        "founded": { "type": "string" },
+        "needsVerification": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "brand": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "shortName": { "type": "string" },
+        "tagline": { "type": "string" },
+        "slogan": { "type": "string" },
+        "description": { "type": "string" },
+        "tone": { "type": "string" },
+        "logoFacts": {
+          "type": "object",
+          "properties": {
+            "hasLogo": { "type": "boolean" },
+            "description": { "type": "string" },
+            "colors": { "type": "array", "items": { "type": "string" } },
+            "sourceUrl": { "type": "string" }
+          }
+        }
+      }
+    },
+    "contact": {
+      "type": "object",
+      "properties": {
+        "phone": { "type": "string" },
+        "phoneRaw": { "type": "string" },
+        "whatsapp": { "type": "string" },
+        "email": { "type": "string" },
+        "address": { "type": "string" },
+        "addressShort": { "type": "string" },
+        "area": { "type": "string" },
+        "mapsUrl": { "type": "string" },
+        "mapsEmbed": { "type": "string" },
+        "hours": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "days": { "type": "string" },
+              "time": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "social": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "description": "Platform name -> profile URL"
+    },
+    "menu": {
+      "type": "object",
+      "properties": {
+        "available": { "type": "boolean" },
+        "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
+        "categories": { "type": "array", "items": { "type": "object" } },
+        "items": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+    "offers": { "type": "array", "items": { "type": "object" } },
+    "gallery": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "src": { "type": "string", "format": "uri" },
+          "alt": { "type": "string" },
+          "sourceUrl": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+    "reviews": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "role": { "type": "string" },
+          "rating": { "type": "integer", "minimum": 1, "maximum": 5 },
+          "text": { "type": "string" },
+          "sourceUrl": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+    "seo": {
+      "type": "object",
+      "properties": {
+        "keywords": { "type": "array", "items": { "type": "string" } },
+        "competitors": { "type": "array", "items": { "type": "string" } },
+        "canonicalCandidate": { "type": "string", "format": "uri" },
+        "notes": { "type": "string" }
+      }
+    },
+    "media": {
+      "type": "object",
+      "properties": {
+        "logo": { "type": "array", "items": { "type": "string", "format": "uri" } },
+        "hero": { "type": "array", "items": { "type": "string", "format": "uri" } },
+        "food": { "type": "array", "items": { "type": "string", "format": "uri" } },
+        "background": { "type": "array", "items": { "type": "string", "format": "uri" } },
+        "videos": { "type": "array", "items": { "type": "string", "format": "uri" } }
+      }
+    },
+    "researchSummary": {
+      "type": "object",
+      "required": ["keyFacts", "risks", "needsVerification"],
+      "properties": {
+        "keyFacts": { "type": "array", "items": { "type": "string" } },
+        "risks": { "type": "array", "items": { "type": "string" } },
+        "needsVerification": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "confidence": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "enum": ["high", "medium", "low"] }
+    }
+  },
+  "additionalProperties": false
+}

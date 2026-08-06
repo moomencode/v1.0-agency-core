@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/proposal",
+  "title": "Proposal",
+  "type": "object",
+  "description": "Canonical Proposal document. Produced by Sales, tracked by CRM.",
+  "required": [
+    "proposalId", "leadId", "businessId", "websiteId", "reviewId",
+    "prospect", "scope", "tier", "timeline", "deliverables", "terms", "status"
+  ],
+  "properties": {
+    "proposalId": { "type": "string" },
+    "leadId": { "type": "string" },
+    "businessId": { "type": "string" },
+    "websiteId": { "type": "string" },
+    "reviewId": { "type": "string" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "prospect": {
+      "type": "object",
+      "required": ["name", "type", "city"],
+      "properties": {
+        "name": { "type": "string" },
+        "type": { "type": "string" },
+        "city": { "type": "string" },
+        "country": { "type": "string" }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "required": ["sections", "languages", "assetCount"],
+      "properties": {
+        "sections": { "type": "array", "items": { "type": "string" } },
+        "languages": { "type": "array", "items": { "type": "string" } },
+        "assetCount": { "type": "integer" },
+        "modules": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "tier": {
+      "type": "object",
+      "required": ["id", "priceBand", "currency"],
+      "properties": {
+        "id": { "type": "string", "enum": ["essential", "premium", "enterprise"] },
+        "priceBand": {
+          "type": "object",
+          "properties": {
+            "min": { "type": "number" },
+            "max": { "type": "number" }
+          }
+        },
+        "currency": { "type": "string" },
+        "rationale": { "type": "string" }
+      }
+    },
+    "timeline": {
+      "type": "object",
+      "required": ["minDays", "maxDays"],
+      "properties": {
+        "minDays": { "type": "integer" },
+        "maxDays": { "type": "integer" },
+        "milestones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "day": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "deliverables": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "count": { "type": "integer" }
+        }
+      }
+    },
+    "terms": {
+      "type": "object",
+      "properties": {
+        "payment": { "type": "string" },
+        "revisions": { "type": "integer" },
+        "hosting": { "type": "string" },
+        "maintenance": { "type": "string" }
+      }
+    },
+    "outreach": {
+      "type": "object",
+      "properties": {
+        "channel": { "type": "string", "enum": ["email", "whatsapp", "both"] },
+        "subject": { "type": "string" },
+        "body": { "type": "string" }
+      }
+    },
+    "deal": {
+      "type": "object",
+      "properties": {
+        "status": { "type": "string", "enum": ["new", "open", "negotiation", "won", "lost"] },
+        "stage": { "type": "string" },
+        "nextAction": { "type": "string" },
+        "nextActionDue": { "type": "string", "format": "date-time" }
+      }
+    },
+    "status": { "type": "string", "enum": ["ready", "blocked"] },
+    "blockReason": { "type": "string" }
+  },
+  "additionalProperties": false
+}

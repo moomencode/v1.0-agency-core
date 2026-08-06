@@ -1,0 +1,15 @@
+{
+  "items": [
+    { "label": "Home", "href": "#home" },
+    { "label": "Menu", "href": "#menu" },
+    { "label": "Reservations", "href": "#reservation" },
+    { "label": "Offers", "href": "#offers" },
+    { "label": "Gallery", "href": "#gallery" },
+    { "label": "Contact", "href": "#footer" }
+  ],
+  "cta": {
+    "label": "Order Now",
+    "href": "#menu",
+    "icon": "shopping-bag"
+  }
+}

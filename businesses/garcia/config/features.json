@@ -1,0 +1,26 @@
+{
+  "heading": {
+    "eyebrow": "Why Choose Us",
+    "title": "The Garcia experience"
+  },
+  "items": [
+    {
+      "id": "fresh",
+      "icon": "sparkles",
+      "title": "Fresh Ingredients",
+      "text": "Every dish starts with carefully selected, market-fresh ingredients."
+    },
+    {
+      "id": "chefs",
+      "icon": "chef-hat",
+      "title": "Expert Chefs",
+      "text": "A passionate kitchen team crafting authentic recipes with love."
+    },
+    {
+      "id": "delivery",
+      "icon": "rocket",
+      "title": "Fast Delivery",
+      "text": "Hot, fresh and on time — right to your door."
+    }
+  ]
+}

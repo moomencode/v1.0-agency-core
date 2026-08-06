@@ -1,0 +1,19 @@
+{
+  "heading": {
+    "eyebrow": "Book Your Table",
+    "title": "Book your table now"
+  },
+  "fields": {
+    "guestsPlaceholder": "Number of Guests",
+    "phonePlaceholder": "Phone Number (11 digits)"
+  },
+  "phoneError": "Please enter a valid 11-digit phone number",
+  "success": "Thanks! Your table request has been received. We will confirm via WhatsApp or phone call.",
+  "submit": {
+    "label": "Find a Table",
+    "icon": "search"
+  },
+  "note": "You will receive a confirmation with WhatsApp or phone call.",
+  "method": "whatsapp",
+  "maxGuests": 20
+}

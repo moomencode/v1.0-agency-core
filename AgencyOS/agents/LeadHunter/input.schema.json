@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/lead/discovery-request",
+  "title": "LeadDiscoveryRequest",
+  "type": "object",
+  "description": "A run request given to LeadHunter: what to look for and how.",
+  "required": ["runId", "industries", "regions"],
+  "properties": {
+    "runId": { "type": "string", "description": "Unique id of this discovery run" },
+    "trigger": {
+      "type": "string",
+      "enum": ["scheduled", "manual", "event"],
+      "default": "scheduled"
+    },
+    "industries": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "restaurant", "cafe", "bakery", "pizza", "burger", "dessert",
+          "hotel", "clinic", "gym", "barber", "beauty-salon", "any"
+        ]
+      },
+      "minItems": 1
+    },
+    "regions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["country"],
+        "properties": {
+          "country": { "type": "string" },
+          "city": { "type": "string" },
+          "region": { "type": "string" }
+        }
+      },
+      "minItems": 1
+    },
+    "maxCandidates": { "type": "integer", "minimum": 1, "default": 50 },
+    "minQualifyScore": { "type": "integer", "minimum": 0, "maximum": 100, "default": 60 },
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "city": { "type": "string" }
+        }
+      },
+      "description": "Known clients or disqualified prospects to skip"
+    }
+  },
+  "additionalProperties": false
+}

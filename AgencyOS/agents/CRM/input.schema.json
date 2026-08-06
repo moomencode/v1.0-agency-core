@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/crm/input",
+  "title": "CRMInput",
+  "type": "object",
+  "description": "A lifecycle event or query for the CRM agent.",
+  "required": ["actor", "action", "entity"],
+  "properties": {
+    "actor": { "type": "string", "description": "agent id or system" },
+    "action": { "type": "string", "enum": ["create", "transition", "merge", "query", "log"] },
+    "entity": { "type": "string", "enum": ["lead", "deal", "communication"] },
+    "entityId": { "type": "string" },
+    "fromStatus": { "type": "string" },
+    "toStatus": { "type": "string" },
+    "payload": {
+      "type": "object",
+      "description": "Record content for create; update fields for log/transition"
+    },
+    "query": {
+      "type": "object",
+      "properties": {
+        "byId": { "type": "string" },
+        "byName": { "type": "string" },
+        "byCity": { "type": "string" },
+        "byStatus": { "type": "string" },
+        "limit": { "type": "integer", "minimum": 1, "maximum": 500 }
+      }
+    }
+  },
+  "additionalProperties": false
+}

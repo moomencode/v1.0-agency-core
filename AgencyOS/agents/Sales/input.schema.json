@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/schemas/sales/input",
+  "title": "SalesInput",
+  "type": "object",
+  "description": "What Sales receives to build a proposal.",
+  "required": ["website", "review", "lead"],
+  "properties": {
+    "website": { "type": "object", "description": "WebsiteBuilder output (approved)" },
+    "review": { "type": "object", "description": "QA output; verdict must be pass/pass_with_warnings" },
+    "lead": { "type": "object", "description": "Lead document for prospect context" },
+    "request": {
+      "type": "object",
+      "properties": {
+        "tierOverride": { "type": "string" },
+        "priceOverride": {
+          "type": "object",
+          "properties": {
+            "amount": { "type": "number" },
+            "currency": { "type": "string" }
+          }
+        },
+        "channel": { "type": "string", "enum": ["email", "whatsapp", "both"], "default": "email" },
+        "agencyName": { "type": "string" },
+        "language": { "type": "string", "description": "Locale for client-facing text" }
+      }
+    }
+  },
+  "additionalProperties": false
+}
