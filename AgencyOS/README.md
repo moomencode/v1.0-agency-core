@@ -64,6 +64,7 @@ AgencyOS/
 7. `reports/PHASE4_DISCOVERY_IMPLEMENTATION.md` — discovery engine report
 8. `reports/PHASE4_5_BRAIN_IMPLEMENTATION.md` — agency brain report
 9. `reports/PHASE4_1_DOSSIER_IMPLEMENTATION.md` — business dossier engine report
+10. `reports/PHASE4_2_PIPELINE_IMPLEMENTATION.md` — website production pipeline report
 ## Runtime, Communication, Memory, Artifacts, Validation & Scheduler (Phases 3.0 – 3.5)
 
 Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
@@ -150,3 +151,22 @@ Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
   `dossier/unit.mjs` (41 PASS) + `dossier/smoke.mjs` (75 PASS) + `dossier/demo.mjs`.
   Docs: `README.md`, `Architecture.md`, `Data Flow.md`, `Schema Guide.md`,
   `Extension Guide.md`.
+- `pipeline/` — **website production pipeline** (Phase 4.2): transforms a validated
+  Business Dossier into a complete production-ready website config bundle. 13 stages
+  (validate → normalize → generate-theme → generate-sections →
+  generate-assets-manifest → generate-config → generate-navigation → generate-seo →
+  generate-structured-data → generate-localization → generate-build-package →
+  qa-validation → website-ready), each checkpointed and resumable. Config Generator
+  produces the engine's canonical 19 files (brand/theme/business/hero/navigation/
+  services/gallery/reviews/stats/faq/footer/contact/seo/social/booking/offers/
+  features/menu/i18n) — all derived from the dossier; Theme Generator emits 10 token
+  groups (colors with WCAG contrast pairs, typography pairings, spacing, radius,
+  shadows, buttons, cards, animations, icons, gradients); Assets Manifest is
+  declarative (no downloads); Structured Data emits schema.org `@graph`; QA runs 6
+  checks (config, theme, website, SEO, schema, missing assets) and halts on failure;
+  Build Package produces `website-config/` + `reports/` (pipeline/generation/
+  validation/QA) + `logs/` + `artifacts/` + `summary.json` (sha256 checksums).
+  100% deterministic (seeded RNG + stable JSON, verified by checksum in smoke),
+  versioned runIds, no deployment. `pipeline/unit.mjs` (24 PASS) +
+  `pipeline/smoke.mjs` (9 scenarios incl. resume + QA gate) + `pipeline/demo.mjs`
+  (3-business market). Docs: `README.md`, `Architecture.md`.

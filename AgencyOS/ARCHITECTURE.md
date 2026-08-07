@@ -1,9 +1,10 @@
 # AgencyOS — Architecture (`ARCHITECTURE.md`)
 
-## Module Inventory — Phase 4.1 (Business Dossier Engine)
+## Module Inventory — Phase 4.2 (Website Production Pipeline)
 
 | module | responsibility | API version | smoke |
 |---|---|---|---|
+| `pipeline/` | dossier → production website config bundle, 13 resumable stages | 1.0 | 9 PASS (+24 unit) |
 | `dossier/` | structured business knowledge: 20 documents + 5 reports, versioned | 1.0 | 75 PASS (+41 unit) |
 | `brain/` | facade + pipeline orchestration, Runtime wiring | 1.0 | 45 PASS |
 | `decision-engine/` | verdicts, estimates, risk, confidence, priorities | 1.0 | 38 PASS |
@@ -17,12 +18,27 @@
 | `rules/` | rule registry + evaluation | 1.0 | 18 PASS |
 | `metrics/` | counters, sums, snapshot, persistence | 1.0 | 18 PASS |
 
-**Dossier total: 116 PASS. Brain total: 328 PASS. Full regression across
-phases 3.0–4.1: 863+ PASS.**
+**Pipeline total: 33 PASS. Dossier total: 116 PASS. Brain total: 328 PASS.
+Full regression across phases 3.0–4.2: 896+ PASS.**
 
 ## Dependency Graph
 
 ```
+pipeline/
+  ├── dossier/          (input: validated business dossier)
+  ├── registry.js       (pipelines, generators, dependency graph, versions)
+  ├── normalize.js      (dossier → normalized context)
+  ├── sections.js       (section plan)
+  ├── theme.js          (10 token groups + contrast pairs)
+  ├── manifest.js       (declarative assets, no downloads)
+  ├── config/           (19 config generators)
+  ├── structured-data.js / localization.js
+  ├── schemas/          (19 config schemas)
+  ├── qa.js             (6 checks, gates readiness)
+  ├── reports.js        (4 markdown reports)
+  ├── profiles/         (11 category profiles)
+  └── runtime/          (EventBus, Validator, Logger — injected)
+
 dossier/
   ├── brain/            (prepareInput: context + estimates + decision)
   ├── extractors/       (profile · digital · commerce facts)
@@ -65,6 +81,9 @@ via `context.estimates`; `planner/` delegates plan loading to
 | `dossier.engine` | `DossierEngine` reuses `Brain.runBusiness` for prepareInput; `requireApproved` gates builds |
 | dossier events | `dossier.started/validated/created/updated/reports_ready` on the same EventBus |
 | dossier memory | `memory.put('business', 'business:<id>', <id>, …)` — hand-off contract for Phase 4.2 |
+| `pipeline.runner` | `PipelineRunner.run(dossier, { resume, runId })` — consumes any dossier, checkpoint/resume per stage |
+| pipeline events | `pipeline.started/stage.started/stage.completed/stage.failed/qa.completed/completed/failed` |
+| pipeline output | `storage/<root>/build/` — `website-config/` consumed by the Website Engine |
 | metrics persistence | `storage/<root>/metrics.json` via `atomicWrite` (gitignored) |
 
 ## Future Extension Points (AI reasoning)
@@ -82,6 +101,11 @@ via `context.estimates`; `planner/` delegates plan loading to
 - `dossier/` documents, categories, enrichers and report templates are all
   additive JSON/code — see `dossier/Extension Guide.md`; `templates/*.md`
   are editable without redeploys.
+- `pipeline/` stages are declared data in `registry.js` (dependencies +
+  labels) — new stages are additive; generators are injectable; profiles,
+  palettes and copy in `profiles/index.js` are operator-editable data.
+- `pipeline/` is deterministic by construction — an AI or human can review
+  the `summary.json` checksums to verify reproducible builds.
 
 ## Production Readiness
 
@@ -92,15 +116,16 @@ via `context.estimates`; `planner/` delegates plan loading to
 | observability | bus events, per-step results, metrics snapshot, reasoning traces |
 | resilience | retry policy per state, timeout actions, escalation records, gate failures are handled results |
 | configurability | policies, strategies, plan catalog, gates, executors all injectable |
-| test coverage | 19 suites, 863+ assertions, all green |
+| test coverage | 21 suites, 896+ assertions, all green |
 | persistence | metrics + state summaries to `storage/` (gitignored) |
 | runtime footprint | zero runtime deps, Node 24 ESM only |
 
 ## Run It
 
 ```bash
-node AgencyOS/dossier/demo.mjs       # dossier demo (20 documents, 5 reports)
-node AgencyOS/brain/smoke.mjs        # 45 PASS — facade end-to-end
-node AgencyOS/demo.mjs               # 6-business market through the pipeline
+node AgencyOS/pipeline/demo.mjs       # production pipeline demo (3 businesses)
+node AgencyOS/dossier/demo.mjs        # dossier demo (20 documents, 5 reports)
+node AgencyOS/brain/smoke.mjs         # 45 PASS — facade end-to-end
+node AgencyOS/demo.mjs                # 6-business market through the pipeline
 # per-module: node AgencyOS/<module>/smoke.mjs
 ```
