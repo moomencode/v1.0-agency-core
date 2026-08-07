@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/delivery/deployment-record",
+  "title": "DeploymentRecord",
+  "description": "Canonical, append-only lifecycle record for one deployment. id is deterministically derived from the build: dep_<buildId>.",
+  "type": "object",
+  "required": ["schema", "id", "businessId", "trace", "provider", "target", "mode", "status", "package", "timeline", "createdAt"],
+  "properties": {
+    "schema": { "const": "https://agency.os/delivery/deployment-record" },
+    "id": { "type": "string", "minLength": 20, "pattern": "^dep_[0-9a-f]{16}$" },
+    "businessId": { "type": "string", "minLength": 1 },
+    "trace": {
+      "type": "object",
+      "required": ["businessId", "buildId"],
+      "properties": {
+        "businessId": { "type": "string" },
+        "dossierVersion": { "type": ["integer", "null"] },
+        "pipelineRunId": { "type": ["string", "null"] },
+        "engineOutputChecksum": { "type": "string", "minLength": 16 },
+        "buildId": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+        "engineVersion": { "type": ["string", "null"] }
+      }
+    },
+    "provider": { "type": "string", "minLength": 1 },
+    "target": { "type": "object" },
+    "mode": { "type": "string", "enum": ["dry-run", "explicit", "auto"] },
+    "status": { "type": "string", "minLength": 1 },
+    "qaSummary": {
+      "type": "object",
+      "properties": {
+        "checks": { "type": "integer" },
+        "passed": { "type": "integer" },
+        "failed": { "type": "integer" }
+      }
+    },
+    "package": {
+      "type": "object",
+      "required": ["packageId", "bundleSha256", "fileCount"],
+      "properties": {
+        "packageId": { "type": "string" },
+        "bundleSha256": { "type": "string", "minLength": 32 },
+        "fileCount": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "deployment": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": { "type": ["string", "null"] },
+        "url": { "type": ["string", "null"] },
+        "state": { "type": "string" }
+      }
+    },
+    "dryRun": { "type": ["object", "null"] },
+    "approvals": { "type": "array", "items": { "type": "object" } },
+    "rollback": { "type": ["object", "null"] },
+    "rollbackOf": { "type": ["string", "null"] },
+    "rollbackApproval": { "type": ["object", "null"] },
+    "revertedTo": { "type": ["string", "null"] },
+    "error": { "type": ["object", "null"] },
+    "timeline": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["event", "from", "to", "at"],
+        "properties": {
+          "event": { "type": "string" },
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "at": { "type": "string", "format": "date-time" },
+          "actor": { "type": "string" },
+          "note": { "type": ["string", "null"] },
+          "mode": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": true
+}

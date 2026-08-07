@@ -26,3 +26,8 @@ dist-ssr
 # Runtime test data (debug / smoke / demo runs)
 storage/
 discovery-demo/
+
+# Local secrets (never commit provider credentials)
+.env
+.env.*
+!.env.example

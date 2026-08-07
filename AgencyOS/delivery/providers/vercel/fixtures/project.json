@@ -1,0 +1,9 @@
+{
+  "id": "prj_agencydemo000000000000000001",
+  "name": "agency-demo",
+  "framework": "other",
+  "createdAt": "2026-01-01T00:00:00.000Z",
+  "updatedAt": "2026-01-01T00:00:00.000Z",
+  "link": null,
+  "targets": { "production": { "alias": ["agency-demo.vercel.app"] } }
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/delivery/approval",
+  "title": "Approval",
+  "description": "Record of an explicit human approval or rejection of a deployment.",
+  "type": "object",
+  "required": ["approved", "by", "at"],
+  "properties": {
+    "approved": { "type": "boolean" },
+    "by": { "type": "string", "minLength": 1 },
+    "note": { "type": ["string", "null"] },
+    "at": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

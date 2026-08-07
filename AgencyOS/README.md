@@ -189,3 +189,21 @@ Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
   dossier → pipeline → engine E2E) + `visual.mjs` (2, structural snapshot) +
   `regression.mjs` (7 categories, 112 checks) + `demo.mjs` (7 real websites).
   Docs: `README.md`, `Architecture.md`.
+- `delivery/` — **autonomous website delivery & deployment** (Phase 4.4): takes
+  an immutable, QA-passed website build and delivers it through an approval
+  gate to a hosting provider, recording every step in a state-machine ledger
+  with full rollback support. Deterministic identities (`buildId` content hash,
+  `recordId = dep_<buildId>`, no timestamps), immutable zip packages with
+  SHA-256 re-verification, three delivery modes (dry-run simulated /
+  explicit approval-gated / auto — disabled unless `DELIVERY_AUTO_ALLOWED=true`),
+  gates enforced inside the manager (final QA must exist + pass, secret scan
+  on the production tree, provider preflight, bundle checksum), retry policy
+  (429/5xx/`E_TR_*` retried with backoff + `RETRY` timeline events; auth
+  failures never blind-retried), provider verification to READY, rollback +
+  revert that re-promote previous immutable deployments, redacted NDJSON audit
+  log, `deployment-report`/`qa-report` artifacts, business-scoped memory
+  facts, scheduler + brain integration. Offline providers: `local` (disk +
+  alias), `mock` (failure injection), `vercel` (recorded fixtures). 7 test
+  suites — 97 PASS, 0 FAIL, all offline. `demo.mjs` runs the full lifecycle
+  (dry-run, approval, rejection, QA block, retry, auth, rollback/revert).
+  Docs: `README.md`, `Architecture.md`.

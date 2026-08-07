@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/delivery/qa-report",
+  "title": "QaReport",
+  "description": "Final quality gate report produced by the delivery QA engine before any deployment is allowed.",
+  "type": "object",
+  "required": ["schema", "buildId", "businessId", "passed", "groups", "totals", "ranAt"],
+  "properties": {
+    "schema": { "const": "https://agency.os/delivery/qa-report" },
+    "buildId": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+    "businessId": { "type": "string", "minLength": 1 },
+    "passed": { "type": "boolean" },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "passed", "checks"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "passed": { "type": "boolean" },
+          "checks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "label", "passed"],
+              "properties": {
+                "id": { "type": "string" },
+                "label": { "type": "string" },
+                "passed": { "type": "boolean" },
+                "details": { "type": ["string", "null"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "totals": {
+      "type": "object",
+      "required": ["checks", "passed", "failed"],
+      "properties": {
+        "checks": { "type": "integer" },
+        "passed": { "type": "integer" },
+        "failed": { "type": "integer" }
+      }
+    },
+    "ranAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

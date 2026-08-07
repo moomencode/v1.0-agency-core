@@ -1,0 +1,7 @@
+{
+  "name": "delivery",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Autonomous Website Delivery & Deployment layer (Phase 4.4): production build, final QA gates, immutable packaging, provider abstraction (Vercel first), deployment records, rollback.",
+  "exports": "./index.js"
+}

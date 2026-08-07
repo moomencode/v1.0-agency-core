@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/delivery/package-manifest",
+  "title": "PackageManifest",
+  "description": "Deterministic manifest of an immutable deployment bundle. Content-addressed by bundle sha256.",
+  "type": "object",
+  "required": ["schema", "packageId", "businessId", "trace", "bundle", "files", "qaPassed"],
+  "properties": {
+    "schema": { "const": "https://agency.os/delivery/package-manifest" },
+    "packageId": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+    "businessId": { "type": "string", "minLength": 1 },
+    "trace": {
+      "type": "object",
+      "properties": {
+        "dossierVersion": { "type": ["integer", "null"] },
+        "pipelineRunId": { "type": ["string", "null"] },
+        "engineOutputChecksum": { "type": ["string", "null"] }
+      }
+    },
+    "bundle": {
+      "type": "object",
+      "required": ["format", "bytes", "sha256", "fileCount"],
+      "properties": {
+        "format": { "const": "zip" },
+        "bytes": { "type": "integer", "minimum": 1 },
+        "sha256": { "type": "string", "minLength": 32 },
+        "fileCount": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256", "bytes"],
+        "properties": {
+          "path": { "type": "string" },
+          "sha256": { "type": "string", "minLength": 32 },
+          "bytes": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "qaReportId": { "type": ["string", "null"] },
+    "qaPassed": { "type": "boolean" }
+  },
+  "additionalProperties": false
+}

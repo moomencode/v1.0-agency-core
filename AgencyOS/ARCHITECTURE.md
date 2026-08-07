@@ -1,9 +1,10 @@
 # AgencyOS — Architecture (`ARCHITECTURE.md`)
 
-## Module Inventory — Phase 4.3 (Universal Website Engine)
+## Module Inventory — Phase 4.4 (Autonomous Delivery & Deployment)
 
 | module | responsibility | API version | smoke |
 |---|---|---|---|
+| `delivery/` | QA-gated, approval-gated delivery + rollback to hosting providers | 1.0 | 97 PASS (unit 27, qa 17, packaging 9, security 10, providers 13, rollback 9, smoke 12) |
 | `website-engine/` | config bundle → production website (static/react/json/vercel) | 1.0 | 10 PASS (+22 unit, +2 visual, +2 regression) |
 | `pipeline/` | dossier → production website config bundle, 13 resumable stages | 1.0 | 9 PASS (+24 unit) |
 | `dossier/` | structured business knowledge: 20 documents + 5 reports, versioned | 1.0 | 75 PASS (+41 unit) |
@@ -19,13 +20,28 @@
 | `rules/` | rule registry + evaluation | 1.0 | 18 PASS |
 | `metrics/` | counters, sums, snapshot, persistence | 1.0 | 18 PASS |
 
-**Website Engine total: 36 PASS. Pipeline total: 33 PASS. Dossier total: 116
-PASS. Brain total: 328 PASS. Full regression across phases 3.0–4.3:
-932+ PASS.**
+**Delivery total: 97 PASS. Website Engine total: 36 PASS. Pipeline total: 33
+PASS. Dossier total: 116 PASS. Brain total: 328 PASS. Full regression across
+phases 3.0–4.4: 1029+ PASS.**
 
 ## Dependency Graph
 
 ```
+delivery/
+  ├── website-engine/    (input: production build tree + final QA report)
+  ├── build/             (deterministic production tree + delivery-meta.json)
+  ├── qa/                (final QA gate: links, assets, SEO, secrets)
+  ├── security/          (scan, redaction, env-only SecretVault)
+  ├── packaging/         (immutable manifest + zip bundle, sha256 linkage)
+  ├── deployment/        (manager, state machine, retry/poll, dry-run)
+  ├── rollback/          (approve → promote previous package → revert)
+  ├── providers/         (registry + local/mock/vercel)
+  ├── artifacts/         (deployment-report + qa-report via Phase 4 artifacts)
+  ├── memory/            (business-scoped deployment facts)
+  ├── scheduler/         (delivery.deploy job)
+  ├── brain/             (DELIVERY_EVENTS, DEPLOY/ROLLBACK executors)
+  └── schemas/           (8 JSON schemas)
+
 website-engine/
   ├── pipeline/          (input: 19-file website config bundle + manifest)
   ├── renderer/          (node tree, escaping, HTML + JSX serializers)
@@ -103,6 +119,13 @@ via `context.estimates`; `planner/` delegates plan loading to
 | engine validation | `validate(site)` — 7 checks per page (links/sections/ids/seo/a11y/wcag/responsive), gates export |
 | engine export | `export(site, { format, root, validation })` — static/react/json/vercel/all + `site-manifest.json` checksums |
 | engine preview | `preview(site, { root })` — single-file preview for sales review |
+| `delivery.system` | `createDeliverySystem({ root, engine })` — consumes production build tree + QA report |
+| delivery gates | QA report must exist + pass at record creation and again before provider call; secret scan on the tree; bundle sha256 vs manifest; provider preflight |
+| delivery modes | `dry-run` (simulated, zero provider contact) / `explicit` (approval-gated) / `auto` (disabled unless `DELIVERY_AUTO_ALLOWED=true`) |
+| delivery retry | 429/5xx/`E_TR_*` retried with backoff (`RETRY` timeline events); auth failures (`E_DEL_AUTH_FAILED`) never blind-retried; `verify()` polled to READY |
+| delivery rollback | `approveRollback` → `rollback` promotes previous immutable deployment via provider alias → `revert` re-promotes the original |
+| delivery persistence | `storage/<root>/delivery/records|packages|local` + redacted NDJSON audit in `logs/delivery/` |
+| delivery integrations | `deployment-report`/`qa-report` artifacts, business memory facts, `delivery.deploy` scheduler job, brain DEPLOY/ROLLBACK executors |
 | metrics persistence | `storage/<root>/metrics.json` via `atomicWrite` (gitignored) |
 
 ## Future Extension Points (AI reasoning)
@@ -137,17 +160,18 @@ via `context.estimates`; `planner/` delegates plan loading to
 | area | status |
 |---|---|
 | determinism | guaranteed except timestamps/durationMs; seeded generation |
-| validation | schemas for context, policy, plan, instance, decision, brain-run + 7-check site gate |
+| validation | schemas for context, policy, plan, instance, decision, brain-run, 7-check site gate + 8 delivery schemas |
 | observability | bus events, per-step results, metrics snapshot, reasoning traces |
 | resilience | retry policy per state, timeout actions, escalation records, gate failures are handled results |
 | configurability | policies, strategies, plan catalog, gates, executors all injectable; sections/layouts additive |
-| test coverage | 25 suites, 932+ assertions, all green |
+| test coverage | 32 suites, 1029+ assertions, all green |
 | persistence | metrics + state summaries to `storage/` (gitignored) |
 | runtime footprint | zero runtime deps, Node 24 ESM only |
 
 ## Run It
 
 ```bash
+node AgencyOS/delivery/demo/demo.mjs        # delivery lifecycle demo (local + mock, offline)
 node AgencyOS/website-engine/demo/demo.mjs  # universal engine demo (7 real websites)
 node AgencyOS/pipeline/demo.mjs             # production pipeline demo (3 businesses)
 node AgencyOS/dossier/demo.mjs              # dossier demo (20 documents, 5 reports)

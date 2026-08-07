@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/delivery/build-record",
+  "title": "BuildRecord",
+  "description": "Deterministic record of a production build produced by the delivery build manager.",
+  "type": "object",
+  "required": ["schema", "buildId", "businessId", "engineVersion", "trace", "engineOutputChecksum", "files", "fileCount", "budget", "createdAt"],
+  "properties": {
+    "schema": { "const": "https://agency.os/delivery/build-record" },
+    "buildId": { "type": "string", "pattern": "^[0-9a-f]{16}$" },
+    "businessId": { "type": "string", "minLength": 1 },
+    "engineVersion": { "type": "string" },
+    "trace": {
+      "type": "object",
+      "properties": {
+        "businessId": { "type": "string" },
+        "dossierVersion": { "type": ["integer", "null"] },
+        "pipelineRunId": { "type": ["string", "null"] }
+      }
+    },
+    "engineOutputChecksum": { "type": "string", "minLength": 16 },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256", "bytes"],
+        "properties": {
+          "path": { "type": "string" },
+          "sha256": { "type": "string", "minLength": 32 },
+          "bytes": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "fileCount": { "type": "integer", "minimum": 1 },
+    "budget": {
+      "type": "object",
+      "properties": {
+        "totalBytes": { "type": "integer" },
+        "gzipBytes": { "type": "integer" },
+        "passed": { "type": "boolean" }
+      }
+    },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

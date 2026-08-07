@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/delivery/provider-config",
+  "title": "ProviderConfig",
+  "description": "Contract for the per-provider target configuration passed to a deployment provider.",
+  "type": "object",
+  "required": ["project"],
+  "properties": {
+    "project": { "type": "string", "minLength": 1 },
+    "team": { "type": ["string", "null"] },
+    "url": { "type": ["string", "null"] }
+  },
+  "additionalProperties": true
+}

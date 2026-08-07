@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": "TOKEN_INVALID",
+    "message": "The provided token is not valid"
+  }
+}
