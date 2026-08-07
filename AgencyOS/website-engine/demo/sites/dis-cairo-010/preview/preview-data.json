@@ -1,0 +1,33 @@
+{
+  "businessId": "dis-cairo-010",
+  "layout": {
+    "density": "spacious",
+    "extraBeforeFooter": [
+      "cta"
+    ],
+    "gridCols": 3,
+    "heroVariant": "fullbleed",
+    "id": "restaurant",
+    "includesPages": [
+      "menu",
+      "contact"
+    ],
+    "label": "Restaurant",
+    "sectionAltEvery": 2
+  },
+  "name": "Nile Terrace",
+  "pages": [
+    {
+      "id": "home",
+      "title": "Nile Terrace | Restaurant in Cairo"
+    },
+    {
+      "id": "menu",
+      "title": "Nile Terrace Menu | Nile Terrace"
+    },
+    {
+      "id": "contact",
+      "title": "Contact Nile Terrace | Nile Terrace"
+    }
+  ]
+}

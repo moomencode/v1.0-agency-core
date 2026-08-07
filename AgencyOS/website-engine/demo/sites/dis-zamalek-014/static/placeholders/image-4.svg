@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+<rect width="800" height="600" fill="rgb(30,32,44)"/>
+<rect x="24" y="24" width="752" height="552" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="2" stroke-dasharray="6 8"/>
+<text x="50%" y="48%" fill="rgba(255,255,255,0.82)" font-family="system-ui, sans-serif" font-size="34" font-weight="600" text-anchor="middle" dominant-baseline="middle">image 4</text>
+<text x="50%" y="56%" fill="rgba(255,255,255,0.4)" font-family="system-ui, sans-serif" font-size="18" text-anchor="middle" dominant-baseline="middle">image placeholder</text>
+</svg>

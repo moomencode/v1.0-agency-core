@@ -1,0 +1,16 @@
+{
+  "name": "agencyos-website-engine",
+  "version": "1.0.0",
+  "description": "Phase 4.3 — Universal Website Engine: website config bundle → production-ready React/static websites",
+  "type": "module",
+  "main": "index.js",
+  "engines": { "node": ">=18" },
+  "apiVersion": "1.0",
+  "formats": ["static", "react", "json", "vercel"],
+  "scripts": {
+    "test": "node tests/unit.mjs && node tests/smoke.mjs",
+    "visual": "node tests/visual.mjs",
+    "regression": "node tests/regression.mjs",
+    "demo": "node demo/demo.mjs"
+  }
+}

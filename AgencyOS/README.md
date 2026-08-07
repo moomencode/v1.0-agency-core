@@ -65,6 +65,7 @@ AgencyOS/
 8. `reports/PHASE4_5_BRAIN_IMPLEMENTATION.md` — agency brain report
 9. `reports/PHASE4_1_DOSSIER_IMPLEMENTATION.md` — business dossier engine report
 10. `reports/PHASE4_2_PIPELINE_IMPLEMENTATION.md` — website production pipeline report
+11. `reports/PHASE4_3_WEBSITE_ENGINE_IMPLEMENTATION.md` — universal website engine report
 ## Runtime, Communication, Memory, Artifacts, Validation & Scheduler (Phases 3.0 – 3.5)
 
 Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
@@ -170,3 +171,21 @@ Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
   versioned runIds, no deployment. `pipeline/unit.mjs` (24 PASS) +
   `pipeline/smoke.mjs` (9 scenarios incl. resume + QA gate) + `pipeline/demo.mjs`
   (3-business market). Docs: `README.md`, `Architecture.md`.
+- `website-engine/` — **universal website engine** (Phase 4.3): consumes the
+  pipeline's 19-file config bundle and renders a complete, production-ready
+  website — deterministically. 18 generic config-driven sections (hero, about,
+  services, products, menu, gallery, testimonials, faq, pricing, offers,
+  booking, stats, team, contact, location, cta, + navbar/footer), 7 layouts
+  (restaurant/cafe/medical/realestate/corporate/portfolio/default) auto-selected
+  by business category, theme engine (CSS variables + Tailwind tokens +
+  component stylesheet with dark/light modes and FOUC-free bootstrap), full SEO
+  (title/OG/Twitter/canonical/robots/sitemap/webmanifest/favicon), structured
+  data passthrough, asset resolver with deterministic seeded SVG placeholders,
+  and a 7-check validation gate (links, sections, ids, seo, a11y, wcag,
+  responsive). Exports: `static/` (hostable HTML), `react/` (Vite project),
+  `json/` (site-bundle.json), `vercel/` (deployable), `preview/` (single-file) —
+  all byte-deterministic with per-file SHA-256 manifests. Zero runtime
+  dependencies. `website-engine/unit.mjs` (22 PASS) + `smoke.mjs` (10, full
+  dossier → pipeline → engine E2E) + `visual.mjs` (2, structural snapshot) +
+  `regression.mjs` (7 categories, 112 checks) + `demo.mjs` (7 real websites).
+  Docs: `README.md`, `Architecture.md`.

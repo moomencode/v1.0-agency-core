@@ -1,0 +1,19 @@
+{
+  "display": "standalone",
+  "icons": [
+    {
+      "sizes": "any",
+      "src": "/favicon.svg",
+      "type": "image/svg+xml"
+    },
+    {
+      "sizes": "180x180",
+      "src": "/apple-touch-icon.png",
+      "type": "image/png"
+    }
+  ],
+  "name": "Cairo Roastery",
+  "short_name": "CAIRO",
+  "start_url": "/",
+  "theme_color": "#a37a49"
+}

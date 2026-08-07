@@ -1,0 +1,4267 @@
+{
+  "assets": {
+    "count": 11,
+    "manifestRefs": [
+      "/logo/logo.png",
+      "/logo/logo-light.png",
+      "/logo/favicon.png",
+      "/hero/dark-hero.jpg",
+      "/hero/light-hero.jpg",
+      "/gallery/62dfa9c5.jpg",
+      "/gallery/61dfa832.jpg",
+      "/gallery/60dfa69f.jpg",
+      "/gallery/5fdfa50c.jpg",
+      "/food/7100137a.jpg",
+      "/food/7200150d.jpg",
+      "/icons/favicon.svg",
+      "/icons/apple-touch-icon.png",
+      "/backgrounds/pattern.svg",
+      "/backgrounds/map-dark.png",
+      "/placeholders/logo.svg",
+      "/placeholders/profile.jpg",
+      "/placeholders/gallery-1.jpg",
+      "/placeholders/gallery-2.jpg",
+      "/placeholders/gallery-3.jpg",
+      "/placeholders/gallery-4.jpg",
+      "/placeholders/food-1.jpg",
+      "/placeholders/food-2.jpg",
+      "/placeholders/food-3.jpg"
+    ],
+    "missing": [],
+    "placeholderable": [],
+    "refs": [
+      {
+        "group": "logos",
+        "ref": "/logo/logo.png",
+        "source": "client",
+        "status": "in-manifest"
+      },
+      {
+        "group": "logos",
+        "ref": "/logo/logo-light.png",
+        "source": "client",
+        "status": "in-manifest"
+      },
+      {
+        "group": "logos",
+        "ref": "/logo/favicon.png",
+        "source": "client",
+        "status": "in-manifest"
+      },
+      {
+        "group": "hero",
+        "ref": "/hero/dark-hero.jpg",
+        "source": "unsplash",
+        "status": "in-manifest"
+      },
+      {
+        "group": "hero",
+        "ref": "/hero/light-hero.jpg",
+        "source": "unsplash",
+        "status": "in-manifest"
+      },
+      {
+        "group": "placeholders",
+        "ref": "/placeholders/gallery-1.jpg",
+        "source": "generated",
+        "status": "in-manifest"
+      },
+      {
+        "group": "placeholders",
+        "ref": "/placeholders/gallery-2.jpg",
+        "source": "generated",
+        "status": "in-manifest"
+      },
+      {
+        "group": "placeholders",
+        "ref": "/placeholders/gallery-3.jpg",
+        "source": "generated",
+        "status": "in-manifest"
+      },
+      {
+        "group": "placeholders",
+        "ref": "/placeholders/gallery-4.jpg",
+        "source": "generated",
+        "status": "in-manifest"
+      },
+      {
+        "group": "placeholders",
+        "ref": "/placeholders/food-1.jpg",
+        "source": "generated",
+        "status": "in-manifest"
+      },
+      {
+        "group": "gallery",
+        "ref": "/gallery/62dfa9c5.jpg",
+        "source": "business-photos",
+        "status": "in-manifest"
+      }
+    ]
+  },
+  "businessId": "dis-zamalek-014",
+  "category": "tailor",
+  "engineVersion": "1.0",
+  "layout": {
+    "density": "gallery",
+    "extraBeforeFooter": [
+      "cta"
+    ],
+    "gridCols": 4,
+    "heroVariant": "split",
+    "id": "portfolio",
+    "includesPages": [
+      "contact"
+    ],
+    "label": "Portfolio",
+    "sectionAltEvery": 2
+  },
+  "name": "Atelier Cairo",
+  "pages": [
+    {
+      "id": "home",
+      "path": "index.html",
+      "route": "/",
+      "sections": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "props": {
+                            "alt": "Atelier Cairo Logo",
+                            "height": "36",
+                            "src": "/logo/logo-light.png"
+                          },
+                          "tag": "img",
+                          "type": "element"
+                        },
+                        {
+                          "text": "ATELIER",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "nav__brand",
+                        "href": "#home"
+                      },
+                      "tag": "a",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "name": "menu",
+                          "props": {},
+                          "type": "icon"
+                        }
+                      ],
+                      "props": {
+                        "ariaExpanded": "false",
+                        "ariaLabel": "Open menu",
+                        "className": "nav__toggle",
+                        "data-nav-toggle": "",
+                        "type": "button"
+                      },
+                      "tag": "button",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Home",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "ariaLabel": "Home",
+                                    "className": "nav__link",
+                                    "href": "#home"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Stats",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "ariaLabel": "Stats",
+                                    "className": "nav__link",
+                                    "href": "#stats"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Why Us",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "ariaLabel": "Why Us",
+                                    "className": "nav__link",
+                                    "href": "#features"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Reviews",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "ariaLabel": "Reviews",
+                                    "className": "nav__link",
+                                    "href": "#testimonials"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Gallery",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "ariaLabel": "Gallery",
+                                    "className": "nav__link",
+                                    "href": "#gallery"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Contact",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "ariaLabel": "Contact",
+                                    "className": "nav__link",
+                                    "href": "#contact"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Location",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "ariaLabel": "Location",
+                                    "className": "nav__link",
+                                    "href": "#location"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "nav__links",
+                            "id": "site-menu"
+                          },
+                          "tag": "ul",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "name": "moon",
+                                  "props": {},
+                                  "type": "icon"
+                                }
+                              ],
+                              "props": {
+                                "ariaLabel": "Toggle dark/light mode",
+                                "className": "theme-toggle",
+                                "data-theme-toggle": "",
+                                "type": "button"
+                              },
+                              "tag": "button",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Get a Quote",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "ariaLabel": "Get a Quote",
+                                    "className": "btn btn--primary",
+                                    "href": "#contact"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {
+                                "className": "nav__cta"
+                              },
+                              "tag": "span",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "nav__icon-row"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "nav__right",
+                        "style": "display:flex;align-items:center;gap:var(--space-md)"
+                      },
+                      "tag": "div",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "ariaLabel": "Main navigation",
+                    "className": "nav__inner"
+                  },
+                  "tag": "nav",
+                  "type": "element"
+                }
+              ],
+              "props": {
+                "className": "container"
+              },
+              "tag": "div",
+              "type": "element"
+            }
+          ],
+          "props": {
+            "className": "nav",
+            "data-section": "navbar",
+            "role": "banner"
+          },
+          "tag": "header",
+          "type": "element"
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "props": {
+                    "alt": "",
+                    "ariaHidden": "true",
+                    "className": "img--cover",
+                    "src": "/hero/light-hero.jpg"
+                  },
+                  "tag": "img",
+                  "type": "element"
+                }
+              ],
+              "props": {
+                "ariaHidden": "true",
+                "className": "hero__bg"
+              },
+              "tag": "div",
+              "type": "element"
+            },
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "name": "sparkles",
+                                      "props": {},
+                                      "type": "icon"
+                                    },
+                                    {
+                                      "text": "Welcome to",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "className": "hero__eyebrow"
+                                  },
+                                  "tag": "span",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "text": "ATELIER",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "className": "hero__title"
+                                  },
+                                  "tag": "h1",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "text": "TAILOR & ALTERATIONS",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "className": "hero__subtitle"
+                                  },
+                                  "tag": "p",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Tailor & Alterations Reach us today.",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "className": "hero__desc"
+                                  },
+                                  "tag": "p",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "children": [
+                                        {
+                                          "name": "sparkles",
+                                          "props": {},
+                                          "type": "icon"
+                                        },
+                                        {
+                                          "text": "Explore",
+                                          "type": "text"
+                                        }
+                                      ],
+                                      "props": {
+                                        "className": "btn btn--primary",
+                                        "href": "#features"
+                                      },
+                                      "tag": "a",
+                                      "type": "element"
+                                    },
+                                    {
+                                      "children": [
+                                        {
+                                          "name": "phone",
+                                          "props": {},
+                                          "type": "icon"
+                                        },
+                                        {
+                                          "text": "Contact Us",
+                                          "type": "text"
+                                        }
+                                      ],
+                                      "props": {
+                                        "className": "btn btn--secondary",
+                                        "href": "#contact"
+                                      },
+                                      "tag": "a",
+                                      "type": "element"
+                                    }
+                                  ],
+                                  "props": {
+                                    "className": "hero__cta"
+                                  },
+                                  "tag": "div",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "children": [
+                                        {
+                                          "name": "map-pin",
+                                          "props": {},
+                                          "type": "icon"
+                                        },
+                                        {
+                                          "children": [
+                                            {
+                                              "children": [
+                                                {
+                                                  "text": "3 Zamalek St",
+                                                  "type": "text"
+                                                }
+                                              ],
+                                              "props": {},
+                                              "tag": "strong",
+                                              "type": "element"
+                                            },
+                                            {
+                                              "children": [
+                                                {
+                                                  "text": "Cairo",
+                                                  "type": "text"
+                                                }
+                                              ],
+                                              "props": {},
+                                              "tag": "span",
+                                              "type": "element"
+                                            }
+                                          ],
+                                          "props": {},
+                                          "tag": "div",
+                                          "type": "element"
+                                        }
+                                      ],
+                                      "props": {
+                                        "className": "hero__info-item"
+                                      },
+                                      "tag": "div",
+                                      "type": "element"
+                                    },
+                                    {
+                                      "children": [
+                                        {
+                                          "name": "clock",
+                                          "props": {},
+                                          "type": "icon"
+                                        },
+                                        {
+                                          "children": [
+                                            {
+                                              "children": [
+                                                {
+                                                  "text": "Open Daily",
+                                                  "type": "text"
+                                                }
+                                              ],
+                                              "props": {},
+                                              "tag": "strong",
+                                              "type": "element"
+                                            },
+                                            {
+                                              "children": [
+                                                {
+                                                  "text": "10:00 AM - 10:00 PM",
+                                                  "type": "text"
+                                                }
+                                              ],
+                                              "props": {},
+                                              "tag": "span",
+                                              "type": "element"
+                                            }
+                                          ],
+                                          "props": {},
+                                          "tag": "div",
+                                          "type": "element"
+                                        }
+                                      ],
+                                      "props": {
+                                        "className": "hero__info-item"
+                                      },
+                                      "tag": "div",
+                                      "type": "element"
+                                    },
+                                    {
+                                      "children": [
+                                        {
+                                          "name": "star",
+                                          "props": {},
+                                          "type": "icon"
+                                        },
+                                        {
+                                          "children": [
+                                            {
+                                              "children": [
+                                                {
+                                                  "text": "{rating} Rating",
+                                                  "type": "text"
+                                                }
+                                              ],
+                                              "props": {},
+                                              "tag": "strong",
+                                              "type": "element"
+                                            },
+                                            {
+                                              "children": [
+                                                {
+                                                  "text": "(91+ Reviews)",
+                                                  "type": "text"
+                                                }
+                                              ],
+                                              "props": {},
+                                              "tag": "span",
+                                              "type": "element"
+                                            }
+                                          ],
+                                          "props": {},
+                                          "tag": "div",
+                                          "type": "element"
+                                        }
+                                      ],
+                                      "props": {
+                                        "className": "hero__info-item"
+                                      },
+                                      "tag": "div",
+                                      "type": "element"
+                                    },
+                                    {
+                                      "children": [
+                                        {
+                                          "name": "scissors",
+                                          "props": {},
+                                          "type": "icon"
+                                        },
+                                        {
+                                          "children": [
+                                            {
+                                              "children": [
+                                                {
+                                                  "text": "Hand Crafted",
+                                                  "type": "text"
+                                                }
+                                              ],
+                                              "props": {},
+                                              "tag": "strong",
+                                              "type": "element"
+                                            },
+                                            {
+                                              "children": [
+                                                {
+                                                  "text": "Made to measure",
+                                                  "type": "text"
+                                                }
+                                              ],
+                                              "props": {},
+                                              "tag": "span",
+                                              "type": "element"
+                                            }
+                                          ],
+                                          "props": {},
+                                          "tag": "div",
+                                          "type": "element"
+                                        }
+                                      ],
+                                      "props": {
+                                        "className": "hero__info-item"
+                                      },
+                                      "tag": "div",
+                                      "type": "element"
+                                    }
+                                  ],
+                                  "props": {
+                                    "className": "hero__info"
+                                  },
+                                  "tag": "div",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "div",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "props": {
+                                    "alt": "Atelier Cairo Ambiance",
+                                    "className": "img--cover",
+                                    "src": "/hero/light-hero.jpg"
+                                  },
+                                  "tag": "img",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {
+                                "className": "hero__visual"
+                              },
+                              "tag": "div",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "hero__grid"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "container"
+                      },
+                      "tag": "div",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "hero__inner"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                }
+              ],
+              "props": {
+                "className": "hero__inner"
+              },
+              "tag": "div",
+              "type": "element"
+            }
+          ],
+          "props": {
+            "ariaLabel": "Introduction",
+            "className": "sec sec--alt",
+            "data-section": "hero",
+            "id": "home"
+          },
+          "tag": "section",
+          "type": "element"
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "name": "sparkles",
+                          "props": {},
+                          "type": "icon"
+                        },
+                        {
+                          "text": "By The Numbers",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "sec__eyebrow"
+                      },
+                      "tag": "span",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "text": "Our stats",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "sec__title"
+                      },
+                      "tag": "h2",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "sec__head"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "text": "4.7/5",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "stat__value"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "Average Rating",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "stat__label"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "stat",
+                        "id": "stat-rating"
+                      },
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "text": "91+",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "stat__value"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "Reviews",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "stat__label"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "stat",
+                        "id": "stat-reviews"
+                      },
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "text": "5000+",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "stat__value"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "Garments Tailored",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "stat__label"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "stat",
+                        "id": "stat-garments"
+                      },
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "text": "25",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "stat__value"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "Years of Craft",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "stat__label"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "stat",
+                        "id": "stat-years"
+                      },
+                      "tag": "div",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "stats__grid"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                }
+              ],
+              "props": {
+                "className": "container"
+              },
+              "tag": "div",
+              "type": "element"
+            }
+          ],
+          "props": {
+            "ariaLabel": "Statistics",
+            "className": "sec sec--deep",
+            "data-section": "stats",
+            "id": "stats"
+          },
+          "tag": "section",
+          "type": "element"
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "name": "sparkles",
+                          "props": {},
+                          "type": "icon"
+                        },
+                        {
+                          "text": "Why Choose Us",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "sec__eyebrow"
+                      },
+                      "tag": "span",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "text": "The Atelier Cairo experience",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "sec__title"
+                      },
+                      "tag": "h2",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "sec__head"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                },
+                {
+                  "children": [
+                    {
+                      "text": "Tailor & Alterations in Cairo",
+                      "type": "text"
+                    }
+                  ],
+                  "props": {
+                    "className": "sec__sub"
+                  },
+                  "tag": "p",
+                  "type": "element"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "name": "sparkles",
+                              "props": {},
+                              "type": "icon"
+                            }
+                          ],
+                          "props": {
+                            "ariaHidden": "true",
+                            "className": "icon-chip"
+                          },
+                          "tag": "span",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "Strong business fundamentals (66/100)",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {},
+                          "tag": "h3",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "business score",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {},
+                          "tag": "p",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "card--icon"
+                      },
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "name": "sparkles",
+                              "props": {},
+                              "type": "icon"
+                            }
+                          ],
+                          "props": {
+                            "ariaHidden": "true",
+                            "className": "icon-chip"
+                          },
+                          "tag": "span",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "High local demand (70/100)",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {},
+                          "tag": "h3",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "opportunity score",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {},
+                          "tag": "p",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "card--icon"
+                      },
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "name": "sparkles",
+                              "props": {},
+                              "type": "icon"
+                            }
+                          ],
+                          "props": {
+                            "ariaHidden": "true",
+                            "className": "icon-chip"
+                          },
+                          "tag": "span",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "91 customer reviews build trust",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {},
+                          "tag": "h3",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "review count",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {},
+                          "tag": "p",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "card--icon"
+                      },
+                      "tag": "div",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "grid grid--3"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                }
+              ],
+              "props": {
+                "className": "container"
+              },
+              "tag": "div",
+              "type": "element"
+            }
+          ],
+          "props": {
+            "ariaLabel": "About",
+            "className": "sec sec--alt sec--alt",
+            "data-section": "about",
+            "id": "features"
+          },
+          "tag": "section",
+          "type": "element"
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "name": "sparkles",
+                          "props": {},
+                          "type": "icon"
+                        },
+                        {
+                          "text": "Testimonials",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "sec__eyebrow"
+                      },
+                      "tag": "span",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "text": "What our clients say",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "sec__title"
+                      },
+                      "tag": "h2",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "sec__head"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "count": 5,
+                              "props": {},
+                              "type": "stars"
+                            }
+                          ],
+                          "props": {
+                            "ariaLabel": "5 out of 5 stars",
+                            "className": "review__stars",
+                            "role": "img"
+                          },
+                          "tag": "span",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "Friendly staff, fair prices and a wonderful atmosphere.",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "review__text"
+                          },
+                          "tag": "p",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "text": "Mona Adel",
+                                  "type": "text"
+                                }
+                              ],
+                              "props": {
+                                "className": "review__name"
+                              },
+                              "tag": "div",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "text": "Regular Guest",
+                                  "type": "text"
+                                }
+                              ],
+                              "props": {
+                                "className": "review__role"
+                              },
+                              "tag": "div",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {},
+                          "tag": "div",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "review"
+                      },
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "count": 5,
+                              "props": {},
+                              "type": "stars"
+                            }
+                          ],
+                          "props": {
+                            "ariaLabel": "5 out of 5 stars",
+                            "className": "review__stars",
+                            "role": "img"
+                          },
+                          "tag": "span",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "Best experience in the area — highly recommended.",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "review__text"
+                          },
+                          "tag": "p",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "text": "Laila Kamel",
+                                  "type": "text"
+                                }
+                              ],
+                              "props": {
+                                "className": "review__name"
+                              },
+                              "tag": "div",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "text": "Neighborhood Regular",
+                                  "type": "text"
+                                }
+                              ],
+                              "props": {
+                                "className": "review__role"
+                              },
+                              "tag": "div",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {},
+                          "tag": "div",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "review"
+                      },
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "count": 5,
+                              "props": {},
+                              "type": "stars"
+                            }
+                          ],
+                          "props": {
+                            "ariaLabel": "5 out of 5 stars",
+                            "className": "review__stars",
+                            "role": "img"
+                          },
+                          "tag": "span",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "A hidden gem. The team really cares about their craft.",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "review__text"
+                          },
+                          "tag": "p",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "text": "Youssef Nabil",
+                                  "type": "text"
+                                }
+                              ],
+                              "props": {
+                                "className": "review__name"
+                              },
+                              "tag": "div",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "text": "First Time Visitor",
+                                  "type": "text"
+                                }
+                              ],
+                              "props": {
+                                "className": "review__role"
+                              },
+                              "tag": "div",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {},
+                          "tag": "div",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "review"
+                      },
+                      "tag": "div",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "reviews__grid"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                }
+              ],
+              "props": {
+                "className": "container"
+              },
+              "tag": "div",
+              "type": "element"
+            }
+          ],
+          "props": {
+            "ariaLabel": "Testimonials",
+            "className": "sec sec--alt",
+            "data-section": "testimonials",
+            "id": "testimonials"
+          },
+          "tag": "section",
+          "type": "element"
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "name": "sparkles",
+                          "props": {},
+                          "type": "icon"
+                        },
+                        {
+                          "text": "Our Gallery",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "sec__eyebrow"
+                      },
+                      "tag": "span",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "text": "A glimpse of our place",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "sec__title"
+                      },
+                      "tag": "h2",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "sec__head"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "props": {
+                            "alt": "Gallery photo 1",
+                            "className": "img--cover",
+                            "src": "/placeholders/gallery-1.jpg"
+                          },
+                          "tag": "img",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "Gallery photo 1",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {},
+                          "tag": "figcaption",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "gallery__item",
+                        "id": "gallery-item-1"
+                      },
+                      "tag": "figure",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "props": {
+                            "alt": "Gallery photo 2",
+                            "className": "img--cover",
+                            "src": "/placeholders/gallery-2.jpg"
+                          },
+                          "tag": "img",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "Gallery photo 2",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {},
+                          "tag": "figcaption",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "gallery__item",
+                        "id": "gallery-item-2"
+                      },
+                      "tag": "figure",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "props": {
+                            "alt": "Gallery photo 3",
+                            "className": "img--cover",
+                            "src": "/placeholders/gallery-3.jpg"
+                          },
+                          "tag": "img",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "Gallery photo 3",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {},
+                          "tag": "figcaption",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "gallery__item",
+                        "id": "gallery-item-3"
+                      },
+                      "tag": "figure",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "props": {
+                            "alt": "Gallery photo 4",
+                            "className": "img--cover",
+                            "src": "/placeholders/gallery-4.jpg"
+                          },
+                          "tag": "img",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "Gallery photo 4",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {},
+                          "tag": "figcaption",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "gallery__item",
+                        "id": "gallery-item-4"
+                      },
+                      "tag": "figure",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "ariaLabel": "More photos",
+                    "className": "gallery__grid",
+                    "role": "list"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                }
+              ],
+              "props": {
+                "className": "container"
+              },
+              "tag": "div",
+              "type": "element"
+            }
+          ],
+          "props": {
+            "ariaLabel": "Gallery",
+            "className": "sec sec--alt",
+            "data-section": "gallery",
+            "id": "gallery"
+          },
+          "tag": "section",
+          "type": "element"
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "name": "sparkles",
+                          "props": {},
+                          "type": "icon"
+                        },
+                        {
+                          "text": "Get in touch",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "sec__eyebrow"
+                      },
+                      "tag": "span",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "text": "Contact us",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "sec__title"
+                      },
+                      "tag": "h2",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "sec__head"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "name": "mail",
+                              "props": {},
+                              "type": "icon"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Email",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "strong",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "text": "studio@ateliercairo.example",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "span",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "div",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "contact__row"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "name": "map-pin",
+                              "props": {},
+                              "type": "icon"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Address",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "strong",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "text": "3 Zamalek St, Cairo",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "span",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "div",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "contact__row"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "name": "clock",
+                              "props": {},
+                              "type": "icon"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Hours",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "strong",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Monday - Sunday: 10:00 AM - 10:00 PM",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "span",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "div",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "contact__row"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "text": "whatsapp",
+                                  "type": "text"
+                                }
+                              ],
+                              "props": {
+                                "ariaLabel": "whatsapp",
+                                "className": "nav__link",
+                                "href": "https://wa.me/201000000015",
+                                "rel": "noopener noreferrer",
+                                "target": "_blank"
+                              },
+                              "tag": "a",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "style": "display:flex;gap:var(--space-md);margin-top:var(--space-md)"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "text": "Find us on the map",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {},
+                          "tag": "strong",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "props": {
+                                "alt": "Map",
+                                "className": "img--cover map-frame",
+                                "height": "320",
+                                "src": "/backgrounds/map-dark.png",
+                                "width": "600"
+                              },
+                              "tag": "img",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "ariaLabel": "Open map in new tab",
+                            "href": "https://maps.google.com/?q=Cairo",
+                            "rel": "noopener noreferrer",
+                            "target": "_blank"
+                          },
+                          "tag": "a",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "div",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "contact__grid"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                }
+              ],
+              "props": {
+                "className": "container"
+              },
+              "tag": "div",
+              "type": "element"
+            }
+          ],
+          "props": {
+            "ariaLabel": "Contact",
+            "className": "sec",
+            "data-section": "contact",
+            "id": "contact"
+          },
+          "tag": "section",
+          "type": "element"
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "name": "sparkles",
+                          "props": {},
+                          "type": "icon"
+                        },
+                        {
+                          "text": "Visit us",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "sec__eyebrow"
+                      },
+                      "tag": "span",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "text": "Our location",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "sec__title"
+                      },
+                      "tag": "h2",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "sec__head"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "name": "map-pin",
+                              "props": {},
+                              "type": "icon"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Address",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "strong",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "text": "3 Zamalek St, Cairo",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "span",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "div",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "contact__row"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "name": "map-pin",
+                              "props": {},
+                              "type": "icon"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Area",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "strong",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Cairo",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "span",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "div",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "contact__row"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "name": "clock",
+                              "props": {},
+                              "type": "icon"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Opening Hours",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "strong",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "children": [
+                                        {
+                                          "children": [
+                                            {
+                                              "text": "Monday - Sunday",
+                                              "type": "text"
+                                            }
+                                          ],
+                                          "props": {},
+                                          "tag": "span",
+                                          "type": "element"
+                                        },
+                                        {
+                                          "children": [
+                                            {
+                                              "text": "10:00 AM - 10:00 PM",
+                                              "type": "text"
+                                            }
+                                          ],
+                                          "props": {},
+                                          "tag": "span",
+                                          "type": "element"
+                                        }
+                                      ],
+                                      "props": {},
+                                      "tag": "li",
+                                      "type": "element"
+                                    }
+                                  ],
+                                  "props": {
+                                    "className": "contact__hours"
+                                  },
+                                  "tag": "ul",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "div",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "contact__row"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "name": "map-pin",
+                              "props": {},
+                              "type": "icon"
+                            },
+                            {
+                              "text": "Get Directions",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "btn btn--secondary",
+                            "href": "https://maps.google.com/?q=Cairo",
+                            "rel": "noopener noreferrer",
+                            "target": "_blank"
+                          },
+                          "tag": "a",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "props": {
+                            "alt": "Map to 3 Zamalek St, Cairo",
+                            "className": "map-frame",
+                            "height": "320",
+                            "src": "/backgrounds/map-dark.png",
+                            "width": "600"
+                          },
+                          "tag": "img",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "ariaLabel": "Open map in new tab",
+                        "href": "https://maps.google.com/?q=Cairo",
+                        "rel": "noopener noreferrer",
+                        "target": "_blank"
+                      },
+                      "tag": "a",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "contact__grid"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                }
+              ],
+              "props": {
+                "className": "container"
+              },
+              "tag": "div",
+              "type": "element"
+            }
+          ],
+          "props": {
+            "ariaLabel": "Location",
+            "className": "sec sec--alt sec--alt",
+            "data-section": "location",
+            "id": "location"
+          },
+          "tag": "section",
+          "type": "element"
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "text": "Tailor & Alterations in Cairo",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "cta__title"
+                          },
+                          "tag": "h2",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "name": "scissors",
+                                  "props": {},
+                                  "type": "icon"
+                                },
+                                {
+                                  "text": "Get a Quote",
+                                  "type": "text"
+                                }
+                              ],
+                              "props": {
+                                "className": "btn btn--primary",
+                                "href": "#contact"
+                              },
+                              "tag": "a",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "cta__actions"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "cta__inner"
+                      },
+                      "tag": "div",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "container"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                }
+              ],
+              "props": {
+                "className": "cta"
+              },
+              "tag": "div",
+              "type": "element"
+            }
+          ],
+          "props": {
+            "ariaLabel": "Call to action",
+            "className": "sec sec--alt",
+            "data-section": "cta",
+            "id": "cta"
+          },
+          "tag": "section",
+          "type": "element"
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "text": "ATELIER",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "footer__brand",
+                            "style": "font-family:var(--font-display);font-weight:700;font-size:1.15rem"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "Atelier Cairo — Tailor & Alterations, serving Cairo.",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "style": "margin-top:var(--space-sm);font-size:0.9rem"
+                          },
+                          "tag": "p",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "text": "Quick Links",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "footer__title"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Home",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "href": "#home"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Stats",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "href": "#stats"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Why Us",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "href": "#features"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Reviews",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "href": "#testimonials"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Gallery",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "href": "#gallery"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Contact",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "href": "#contact"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Location",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "href": "#location"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "footer__links"
+                          },
+                          "tag": "ul",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "text": "Contact Us",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "footer__title"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            null,
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "studio@ateliercairo.example",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "href": "mailto:studio@ateliercairo.example"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "text": "3 Zamalek St, Cairo",
+                                  "type": "text"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "footer__links"
+                          },
+                          "tag": "ul",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "text": "whatsapp",
+                                  "type": "text"
+                                }
+                              ],
+                              "props": {
+                                "ariaLabel": "whatsapp profile",
+                                "href": "https://wa.me/201000000015",
+                                "rel": "noopener noreferrer",
+                                "target": "_blank"
+                              },
+                              "tag": "a",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "footer__links",
+                            "style": "flex-direction:row"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "text": "Opening Hours",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "footer__title"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "text": "Monday - Sunday: 10:00 AM - 10:00 PM",
+                                  "type": "text"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "footer__links"
+                          },
+                          "tag": "ul",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "div",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "footer__grid"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "text": "© Atelier Cairo All rights reserved.",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "span",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "text": "Built with AgencyOS Website Engine",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "span",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "footer__bottom"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                }
+              ],
+              "props": {
+                "className": "container"
+              },
+              "tag": "div",
+              "type": "element"
+            }
+          ],
+          "props": {
+            "className": "footer",
+            "data-section": "footer",
+            "id": "footer",
+            "role": "contentinfo"
+          },
+          "tag": "footer",
+          "type": "element"
+        }
+      ],
+      "title": "Atelier Cairo | Tailor & Alterations in Cairo"
+    },
+    {
+      "id": "contact",
+      "path": "contact.html",
+      "route": "/contact",
+      "sections": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "props": {
+                            "alt": "Atelier Cairo Logo",
+                            "height": "36",
+                            "src": "/logo/logo-light.png"
+                          },
+                          "tag": "img",
+                          "type": "element"
+                        },
+                        {
+                          "text": "ATELIER",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "nav__brand",
+                        "href": "#home"
+                      },
+                      "tag": "a",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "name": "menu",
+                          "props": {},
+                          "type": "icon"
+                        }
+                      ],
+                      "props": {
+                        "ariaExpanded": "false",
+                        "ariaLabel": "Open menu",
+                        "className": "nav__toggle",
+                        "data-nav-toggle": "",
+                        "type": "button"
+                      },
+                      "tag": "button",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Home",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "ariaLabel": "Home",
+                                    "className": "nav__link",
+                                    "href": "#home"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Stats",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "ariaLabel": "Stats",
+                                    "className": "nav__link",
+                                    "href": "#stats"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Why Us",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "ariaLabel": "Why Us",
+                                    "className": "nav__link",
+                                    "href": "#features"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Reviews",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "ariaLabel": "Reviews",
+                                    "className": "nav__link",
+                                    "href": "#testimonials"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Gallery",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "ariaLabel": "Gallery",
+                                    "className": "nav__link",
+                                    "href": "#gallery"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Contact",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "ariaLabel": "Contact",
+                                    "className": "nav__link",
+                                    "href": "#contact"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Location",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "ariaLabel": "Location",
+                                    "className": "nav__link",
+                                    "href": "#location"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "nav__links",
+                            "id": "site-menu"
+                          },
+                          "tag": "ul",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "name": "moon",
+                                  "props": {},
+                                  "type": "icon"
+                                }
+                              ],
+                              "props": {
+                                "ariaLabel": "Toggle dark/light mode",
+                                "className": "theme-toggle",
+                                "data-theme-toggle": "",
+                                "type": "button"
+                              },
+                              "tag": "button",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Get a Quote",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "ariaLabel": "Get a Quote",
+                                    "className": "btn btn--primary",
+                                    "href": "#contact"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {
+                                "className": "nav__cta"
+                              },
+                              "tag": "span",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "nav__icon-row"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "className": "nav__right",
+                        "style": "display:flex;align-items:center;gap:var(--space-md)"
+                      },
+                      "tag": "div",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "ariaLabel": "Main navigation",
+                    "className": "nav__inner"
+                  },
+                  "tag": "nav",
+                  "type": "element"
+                }
+              ],
+              "props": {
+                "className": "container"
+              },
+              "tag": "div",
+              "type": "element"
+            }
+          ],
+          "props": {
+            "className": "nav",
+            "data-section": "navbar",
+            "role": "banner"
+          },
+          "tag": "header",
+          "type": "element"
+        },
+        {
+          "children": [
+            {
+              "text": "Contact Us",
+              "type": "text"
+            }
+          ],
+          "props": {
+            "className": "page-title"
+          },
+          "tag": "h1",
+          "type": "element"
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "name": "sparkles",
+                          "props": {},
+                          "type": "icon"
+                        },
+                        {
+                          "text": "Get in touch",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "sec__eyebrow"
+                      },
+                      "tag": "span",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "text": "Contact us",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "sec__title"
+                      },
+                      "tag": "h2",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "sec__head"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "name": "mail",
+                              "props": {},
+                              "type": "icon"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Email",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "strong",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "text": "studio@ateliercairo.example",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "span",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "div",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "contact__row"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "name": "map-pin",
+                              "props": {},
+                              "type": "icon"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Address",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "strong",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "text": "3 Zamalek St, Cairo",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "span",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "div",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "contact__row"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "name": "clock",
+                              "props": {},
+                              "type": "icon"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Hours",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "strong",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Monday - Sunday: 10:00 AM - 10:00 PM",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "span",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "div",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "contact__row"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "text": "whatsapp",
+                                  "type": "text"
+                                }
+                              ],
+                              "props": {
+                                "ariaLabel": "whatsapp",
+                                "className": "nav__link",
+                                "href": "https://wa.me/201000000015",
+                                "rel": "noopener noreferrer",
+                                "target": "_blank"
+                              },
+                              "tag": "a",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "style": "display:flex;gap:var(--space-md);margin-top:var(--space-md)"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "text": "Find us on the map",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {},
+                          "tag": "strong",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "props": {
+                                "alt": "Map",
+                                "className": "img--cover map-frame",
+                                "height": "320",
+                                "src": "/backgrounds/map-dark.png",
+                                "width": "600"
+                              },
+                              "tag": "img",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "ariaLabel": "Open map in new tab",
+                            "href": "https://maps.google.com/?q=Cairo",
+                            "rel": "noopener noreferrer",
+                            "target": "_blank"
+                          },
+                          "tag": "a",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "div",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "contact__grid"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                }
+              ],
+              "props": {
+                "className": "container"
+              },
+              "tag": "div",
+              "type": "element"
+            }
+          ],
+          "props": {
+            "ariaLabel": "Contact",
+            "className": "sec",
+            "data-section": "contact",
+            "id": "contact"
+          },
+          "tag": "section",
+          "type": "element"
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "name": "sparkles",
+                          "props": {},
+                          "type": "icon"
+                        },
+                        {
+                          "text": "Visit us",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "sec__eyebrow"
+                      },
+                      "tag": "span",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "text": "Our location",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {
+                        "className": "sec__title"
+                      },
+                      "tag": "h2",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "sec__head"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "name": "map-pin",
+                              "props": {},
+                              "type": "icon"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Address",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "strong",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "text": "3 Zamalek St, Cairo",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "span",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "div",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "contact__row"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "name": "map-pin",
+                              "props": {},
+                              "type": "icon"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Area",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "strong",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Cairo",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "span",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "div",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "contact__row"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "name": "clock",
+                              "props": {},
+                              "type": "icon"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Opening Hours",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {},
+                                  "tag": "strong",
+                                  "type": "element"
+                                },
+                                {
+                                  "children": [
+                                    {
+                                      "children": [
+                                        {
+                                          "children": [
+                                            {
+                                              "text": "Monday - Sunday",
+                                              "type": "text"
+                                            }
+                                          ],
+                                          "props": {},
+                                          "tag": "span",
+                                          "type": "element"
+                                        },
+                                        {
+                                          "children": [
+                                            {
+                                              "text": "10:00 AM - 10:00 PM",
+                                              "type": "text"
+                                            }
+                                          ],
+                                          "props": {},
+                                          "tag": "span",
+                                          "type": "element"
+                                        }
+                                      ],
+                                      "props": {},
+                                      "tag": "li",
+                                      "type": "element"
+                                    }
+                                  ],
+                                  "props": {
+                                    "className": "contact__hours"
+                                  },
+                                  "tag": "ul",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "div",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "contact__row"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "name": "map-pin",
+                              "props": {},
+                              "type": "icon"
+                            },
+                            {
+                              "text": "Get Directions",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "btn btn--secondary",
+                            "href": "https://maps.google.com/?q=Cairo",
+                            "rel": "noopener noreferrer",
+                            "target": "_blank"
+                          },
+                          "tag": "a",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "props": {
+                            "alt": "Map to 3 Zamalek St, Cairo",
+                            "className": "map-frame",
+                            "height": "320",
+                            "src": "/backgrounds/map-dark.png",
+                            "width": "600"
+                          },
+                          "tag": "img",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {
+                        "ariaLabel": "Open map in new tab",
+                        "href": "https://maps.google.com/?q=Cairo",
+                        "rel": "noopener noreferrer",
+                        "target": "_blank"
+                      },
+                      "tag": "a",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "contact__grid"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                }
+              ],
+              "props": {
+                "className": "container"
+              },
+              "tag": "div",
+              "type": "element"
+            }
+          ],
+          "props": {
+            "ariaLabel": "Location",
+            "className": "sec sec--alt sec--alt",
+            "data-section": "location",
+            "id": "location"
+          },
+          "tag": "section",
+          "type": "element"
+        },
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "text": "ATELIER",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "footer__brand",
+                            "style": "font-family:var(--font-display);font-weight:700;font-size:1.15rem"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "text": "Atelier Cairo — Tailor & Alterations, serving Cairo.",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "style": "margin-top:var(--space-sm);font-size:0.9rem"
+                          },
+                          "tag": "p",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "text": "Quick Links",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "footer__title"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Home",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "href": "#home"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Stats",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "href": "#stats"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Why Us",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "href": "#features"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Reviews",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "href": "#testimonials"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Gallery",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "href": "#gallery"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Contact",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "href": "#contact"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "Location",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "href": "#location"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "footer__links"
+                          },
+                          "tag": "ul",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "text": "Contact Us",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "footer__title"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            null,
+                            {
+                              "children": [
+                                {
+                                  "children": [
+                                    {
+                                      "text": "studio@ateliercairo.example",
+                                      "type": "text"
+                                    }
+                                  ],
+                                  "props": {
+                                    "href": "mailto:studio@ateliercairo.example"
+                                  },
+                                  "tag": "a",
+                                  "type": "element"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            },
+                            {
+                              "children": [
+                                {
+                                  "text": "3 Zamalek St, Cairo",
+                                  "type": "text"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "footer__links"
+                          },
+                          "tag": "ul",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "text": "whatsapp",
+                                  "type": "text"
+                                }
+                              ],
+                              "props": {
+                                "ariaLabel": "whatsapp profile",
+                                "href": "https://wa.me/201000000015",
+                                "rel": "noopener noreferrer",
+                                "target": "_blank"
+                              },
+                              "tag": "a",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "footer__links",
+                            "style": "flex-direction:row"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "div",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "children": [
+                            {
+                              "text": "Opening Hours",
+                              "type": "text"
+                            }
+                          ],
+                          "props": {
+                            "className": "footer__title"
+                          },
+                          "tag": "div",
+                          "type": "element"
+                        },
+                        {
+                          "children": [
+                            {
+                              "children": [
+                                {
+                                  "text": "Monday - Sunday: 10:00 AM - 10:00 PM",
+                                  "type": "text"
+                                }
+                              ],
+                              "props": {},
+                              "tag": "li",
+                              "type": "element"
+                            }
+                          ],
+                          "props": {
+                            "className": "footer__links"
+                          },
+                          "tag": "ul",
+                          "type": "element"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "div",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "footer__grid"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [
+                        {
+                          "text": "© Atelier Cairo All rights reserved.",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "span",
+                      "type": "element"
+                    },
+                    {
+                      "children": [
+                        {
+                          "text": "Built with AgencyOS Website Engine",
+                          "type": "text"
+                        }
+                      ],
+                      "props": {},
+                      "tag": "span",
+                      "type": "element"
+                    }
+                  ],
+                  "props": {
+                    "className": "footer__bottom"
+                  },
+                  "tag": "div",
+                  "type": "element"
+                }
+              ],
+              "props": {
+                "className": "container"
+              },
+              "tag": "div",
+              "type": "element"
+            }
+          ],
+          "props": {
+            "className": "footer",
+            "data-section": "footer",
+            "id": "footer",
+            "role": "contentinfo"
+          },
+          "tag": "footer",
+          "type": "element"
+        }
+      ],
+      "title": "Contact Atelier Cairo | Atelier Cairo"
+    }
+  ],
+  "structuredData": {
+    "@graph": [
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Cairo",
+          "streetAddress": "3 Zamalek St"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "bestRating": 5,
+          "ratingCount": 91,
+          "ratingValue": 4.7
+        },
+        "description": "Tailor & Alterations",
+        "geo": null,
+        "image": "/hero/dark-hero.jpg",
+        "name": "Atelier Cairo",
+        "openingHours": null,
+        "sameAs": [
+          "https://wa.me/201000000015"
+        ],
+        "url": "https://ateliercairo.example"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Menu",
+        "hasMenuSection": [
+          {
+            "@type": "MenuSection",
+            "hasMenuItem": [
+              {
+                "@type": "MenuItem",
+                "description": null,
+                "name": "Bespoke suits"
+              },
+              {
+                "@type": "MenuItem",
+                "description": null,
+                "name": "Made-to-measure shirts"
+              }
+            ],
+            "name": "Signature"
+          }
+        ],
+        "name": "Atelier Cairo Menu"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Review",
+        "author": {
+          "@type": "Organization",
+          "name": "Atelier Cairo"
+        },
+        "itemReviewed": {
+          "@type": "LocalBusiness",
+          "name": "Atelier Cairo"
+        },
+        "reviewRating": {
+          "@type": "Rating",
+          "bestRating": 5,
+          "ratingValue": 4.7
+        }
+      }
+    ],
+    "businessId": "dis-zamalek-014",
+    "schemaType": "LocalBusiness"
+  },
+  "theme": {
+    "animations": {
+      "durationBase": "300ms",
+      "durationFast": "150ms",
+      "durationSlow": "600ms",
+      "ease": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+      "spring": "cubic-bezier(0.34, 1.56, 0.64, 1)"
+    },
+    "buttons": {
+      "primary": {
+        "fontWeight": "600",
+        "paddingX": "1.5rem",
+        "paddingY": "0.7rem",
+        "radius": "0.75rem"
+      },
+      "secondary": {
+        "fontWeight": "600",
+        "paddingX": "1.5rem",
+        "paddingY": "0.7rem",
+        "radius": "0.75rem"
+      }
+    },
+    "cards": {
+      "borderOpacity": "0.08",
+      "padding": "1.5rem",
+      "radius": "1rem"
+    },
+    "colors": {
+      "dark": {
+        "base": "18 21 26",
+        "base-deep": "12 14 17",
+        "ink": "245 248 252",
+        "ink-muted": "150 153 157",
+        "primary": "120 160 200",
+        "primary-dark": "94 125 156",
+        "primary-light": "144 177 210",
+        "surface": "51 54 58",
+        "surface-2": "80 82 86",
+        "surface-3": "108 110 113"
+      },
+      "light": {
+        "base": "231 232 232",
+        "base-deep": "203 204 205",
+        "ink": "14 17 21",
+        "ink-muted": "251 252 254",
+        "primary": "94 125 156",
+        "primary-dark": "72 96 120",
+        "primary-light": "120 160 200",
+        "surface": "255 255 255",
+        "surface-2": "203 204 205",
+        "surface-3": "160 161 163"
+      }
+    },
+    "contrast": {
+      "dark": {
+        "inkOnBase": 17.17,
+        "primaryOnBase": 6.67,
+        "primaryOnPrimary": 1.57
+      },
+      "light": {
+        "inkOnBase": 15.41,
+        "primaryOnBase": 3.5,
+        "primaryOnPrimary": 1.52
+      }
+    },
+    "defaultMode": "light",
+    "gradients": {
+      "hero": "linear-gradient(180deg, rgb(var(--c-base) / 0.92) 0%, rgb(var(--c-base) / 0.55) 45%, rgb(var(--c-base) / 0.92) 100%)",
+      "primaryFade": "linear-gradient(135deg, rgb(var(--c-primary) / 0.25), rgb(var(--c-primary) / 0.05))"
+    },
+    "icons": {
+      "sizeLg": "36px",
+      "sizeMd": "24px",
+      "sizeSm": "16px",
+      "strokeWidth": "1.8"
+    },
+    "name": "dis-zamalek-014",
+    "radius": {
+      "full": "9999px",
+      "lg": "1rem",
+      "md": "0.75rem",
+      "sm": "0.5rem",
+      "xl": "1.25rem"
+    },
+    "shadows": {
+      "elevated": "0 12px 48px -12px rgba(0, 0, 0, 0.5)",
+      "primary": "0 4px 24px -4px rgb(var(--c-primary) / 0.35)",
+      "primary-lg": "0 8px 40px -8px rgb(var(--c-primary) / 0.3)"
+    },
+    "spacing": {
+      "2xl": "4rem",
+      "lg": "1.5rem",
+      "md": "1rem",
+      "sm": "0.5rem",
+      "xl": "2.5rem",
+      "xs": "0.25rem"
+    },
+    "storageKey": "site-theme",
+    "typography": {
+      "body": "'Source Sans 3', sans-serif",
+      "display": "'Merriweather', serif",
+      "fontsUrl": "https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap"
+    }
+  },
+  "validation": {
+    "failedChecks": [],
+    "pages": [
+      {
+        "checks": [
+          {
+            "errors": [],
+            "id": "links",
+            "ok": true
+          },
+          {
+            "errors": [],
+            "id": "sections",
+            "ok": true
+          },
+          {
+            "errors": [],
+            "id": "ids",
+            "ok": true
+          },
+          {
+            "errors": [],
+            "id": "seo",
+            "ok": true
+          },
+          {
+            "errors": [],
+            "id": "a11y",
+            "ok": true
+          },
+          {
+            "errors": [],
+            "id": "wcag",
+            "ok": true,
+            "warnings": [
+              "dark: primary button accent contrast 1.566837463110029 < 3.0 (decorative accent)",
+              "light: primary button accent contrast 1.5185052880798924 < 3.0 (decorative accent)"
+            ]
+          },
+          {
+            "errors": [],
+            "id": "responsive",
+            "ok": true
+          }
+        ],
+        "id": "home",
+        "ok": true,
+        "path": "index.html"
+      },
+      {
+        "checks": [
+          {
+            "errors": [],
+            "id": "links",
+            "ok": true
+          },
+          {
+            "errors": [],
+            "id": "sections",
+            "ok": true
+          },
+          {
+            "errors": [],
+            "id": "ids",
+            "ok": true
+          },
+          {
+            "errors": [],
+            "id": "seo",
+            "ok": true
+          },
+          {
+            "errors": [],
+            "id": "a11y",
+            "ok": true
+          },
+          {
+            "errors": [],
+            "id": "wcag",
+            "ok": true,
+            "warnings": [
+              "dark: primary button accent contrast 1.566837463110029 < 3.0 (decorative accent)",
+              "light: primary button accent contrast 1.5185052880798924 < 3.0 (decorative accent)"
+            ]
+          },
+          {
+            "errors": [],
+            "id": "responsive",
+            "ok": true
+          }
+        ],
+        "id": "contact",
+        "ok": true,
+        "path": "contact.html"
+      }
+    ],
+    "passed": true,
+    "totals": {
+      "checks": 14,
+      "failed": 0,
+      "pages": 2
+    }
+  }
+}

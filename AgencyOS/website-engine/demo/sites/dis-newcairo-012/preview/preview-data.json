@@ -1,0 +1,28 @@
+{
+  "businessId": "dis-newcairo-012",
+  "layout": {
+    "density": "wide",
+    "extraBeforeFooter": [
+      "cta"
+    ],
+    "gridCols": 3,
+    "heroVariant": "fullbleed",
+    "id": "realestate",
+    "includesPages": [
+      "contact"
+    ],
+    "label": "Real Estate",
+    "sectionAltEvery": 2
+  },
+  "name": "Prime Properties",
+  "pages": [
+    {
+      "id": "home",
+      "title": "Prime Properties | Local Business in New Cairo"
+    },
+    {
+      "id": "contact",
+      "title": "Contact Prime Properties | Prime Properties"
+    }
+  ]
+}

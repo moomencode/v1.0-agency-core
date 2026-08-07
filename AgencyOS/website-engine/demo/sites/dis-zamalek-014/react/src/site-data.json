@@ -1,0 +1,583 @@
+{
+  "businessId": "dis-zamalek-014",
+  "category": "tailor",
+  "configs": {
+    "booking.json": {
+      "enabled": false,
+      "fields": {
+        "guestsPlaceholder": "Number of Guests",
+        "phonePlaceholder": "Phone Number (11 digits)"
+      },
+      "heading": {
+        "eyebrow": "Book Your Spot",
+        "title": "Book your slot now"
+      },
+      "maxGuests": 20,
+      "method": "whatsapp",
+      "note": "You will receive a confirmation via WhatsApp.",
+      "phoneError": "Please enter a valid 11-digit phone number",
+      "submit": {
+        "icon": "search",
+        "label": "Send Request"
+      },
+      "success": "Thanks! Your request has been received. We will confirm via WhatsApp."
+    },
+    "brand.json": {
+      "description": "Atelier Cairo — Tailor & Alterations in Cairo.",
+      "heroEyebrow": "Welcome to",
+      "logo": {
+        "alt": "Atelier Cairo Logo",
+        "dark": "/logo/logo.png",
+        "favicon": "/logo/favicon.png",
+        "light": "/logo/logo-light.png",
+        "rounded": true
+      },
+      "name": "Atelier Cairo",
+      "shortName": "ATELIER",
+      "slogan": "Tailor & Alterations in Cairo",
+      "tagline": "Tailor & Alterations"
+    },
+    "business.json": {
+      "currency": {
+        "code": "EGP",
+        "decimals": 0,
+        "position": "after",
+        "symbol": "EGP"
+      },
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "locale": "en",
+      "name": "Atelier Cairo",
+      "phoneDigits": 11,
+      "sections": [
+        "navbar",
+        "hero",
+        "stats",
+        "features",
+        "testimonials",
+        "gallery",
+        "contact",
+        "location",
+        "footer"
+      ],
+      "type": "tailor"
+    },
+    "contact.json": {
+      "address": "3 Zamalek St, Cairo",
+      "addressShort": "3 Zamalek St, Cairo",
+      "area": "Cairo",
+      "email": "studio@ateliercairo.example",
+      "hours": [
+        {
+          "days": "Monday - Sunday",
+          "time": "10:00 AM - 10:00 PM"
+        }
+      ],
+      "hoursShort": "Monday - Sunday: 10:00 AM - 10:00 PM",
+      "mapsEmbed": null,
+      "mapsUrl": "https://maps.google.com/?q=Cairo",
+      "phone": null,
+      "phoneRaw": null,
+      "whatsapp": null
+    },
+    "faq.json": {
+      "heading": {
+        "eyebrow": "FAQ",
+        "title": "Frequently asked questions"
+      },
+      "items": [
+        {
+          "answer": "Typically 2–3 weeks including two fitting sessions.",
+          "id": 1,
+          "question": "How long does a custom suit take?"
+        },
+        {
+          "answer": "Yes — we tailor for all genders and styles.",
+          "id": 2,
+          "question": "Do you do ladies tailoring?"
+        },
+        {
+          "answer": "Yes, bring a photo or a sample and we will quote it.",
+          "id": 3,
+          "question": "Can you replicate a garment from a photo?"
+        }
+      ]
+    },
+    "features.json": {
+      "heading": {
+        "eyebrow": "Why Choose Us",
+        "title": "The Atelier Cairo experience"
+      },
+      "items": [
+        {
+          "icon": "sparkles",
+          "id": "strong-business-score",
+          "text": "business score",
+          "title": "Strong business fundamentals (66/100)"
+        },
+        {
+          "icon": "sparkles",
+          "id": "high-demand",
+          "text": "opportunity score",
+          "title": "High local demand (70/100)"
+        },
+        {
+          "icon": "sparkles",
+          "id": "social-proof",
+          "text": "review count",
+          "title": "91 customer reviews build trust"
+        }
+      ]
+    },
+    "footer.json": {
+      "brandDescription": "Atelier Cairo — Tailor & Alterations, serving Cairo.",
+      "contactTitle": "Contact Us",
+      "hoursTitle": "Opening Hours",
+      "quickLinksTitle": "Quick Links",
+      "rights": "All rights reserved."
+    },
+    "gallery.json": {
+      "count": 4,
+      "heading": {
+        "eyebrow": "Our Gallery",
+        "title": "A glimpse of our place"
+      },
+      "images": [
+        {
+          "alt": "Gallery photo 1",
+          "src": "/placeholders/gallery-1.jpg"
+        },
+        {
+          "alt": "Gallery photo 2",
+          "src": "/placeholders/gallery-2.jpg"
+        },
+        {
+          "alt": "Gallery photo 3",
+          "src": "/placeholders/gallery-3.jpg"
+        },
+        {
+          "alt": "Gallery photo 4",
+          "src": "/placeholders/gallery-4.jpg"
+        }
+      ],
+      "moreAria": "More photos"
+    },
+    "hero.json": {
+      "ctaPrimary": {
+        "href": "#features",
+        "icon": "sparkles",
+        "label": "Explore"
+      },
+      "ctaSecondary": {
+        "href": "#contact",
+        "icon": "phone",
+        "label": "Contact Us"
+      },
+      "description": "Tailor & Alterations Reach us today.",
+      "eyebrow": "Welcome to",
+      "image": {
+        "alt": "Atelier Cairo Ambiance",
+        "dark": "/hero/dark-hero.jpg",
+        "light": "/hero/light-hero.jpg"
+      },
+      "info": [
+        {
+          "icon": "map-pin",
+          "subtitle": "Cairo",
+          "title": "3 Zamalek St"
+        },
+        {
+          "icon": "clock",
+          "subtitle": "10:00 AM - 10:00 PM",
+          "title": "Open Daily"
+        },
+        {
+          "icon": "star",
+          "subtitle": "(91+ Reviews)",
+          "title": "{rating} Rating"
+        },
+        {
+          "icon": "scissors",
+          "subtitle": "Made to measure",
+          "title": "Hand Crafted"
+        }
+      ],
+      "slogan": "Tailor & Alterations in Cairo",
+      "subtitle": "TAILOR & ALTERATIONS",
+      "title": "ATELIER"
+    },
+    "i18n.json": {
+      "businessId": "dis-zamalek-014",
+      "labels": {
+        "common": {
+          "bookNow": "Book Now",
+          "contactUs": "Contact Us",
+          "more": "More",
+          "no": "No",
+          "rating": "Rating",
+          "reviews": "Reviews",
+          "viewMenu": "View Menu",
+          "yes": "Yes"
+        },
+        "nav": {
+          "ariaClose": "Close menu",
+          "ariaOpen": "Open menu",
+          "home": "Home"
+        },
+        "sections": {
+          "contact": {
+            "anchor": "#contact",
+            "label": "Contact"
+          },
+          "features": {
+            "anchor": "#features",
+            "label": "Features"
+          },
+          "footer": {
+            "anchor": "#footer",
+            "label": "Footer"
+          },
+          "gallery": {
+            "anchor": "#gallery",
+            "label": "Gallery"
+          },
+          "hero": {
+            "anchor": "#home",
+            "label": "Hero"
+          },
+          "location": {
+            "anchor": "#location",
+            "label": "Location"
+          },
+          "navbar": {
+            "anchor": "#home",
+            "label": "Navbar"
+          },
+          "stats": {
+            "anchor": "#stats",
+            "label": "Stats"
+          },
+          "testimonials": {
+            "anchor": "#testimonials",
+            "label": "Testimonials"
+          }
+        },
+        "theme": {
+          "aria": "Toggle dark/light mode"
+        }
+      },
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "locale": "en"
+    },
+    "menu.json": {
+      "addAria": "View item details",
+      "categories": [],
+      "dishes": {},
+      "heading": {
+        "eyebrow": "Our Menu",
+        "title": "What are you craving?"
+      },
+      "itemsSuffix": "Items",
+      "more": {
+        "href": "#menu",
+        "label": "View Full Menu"
+      }
+    },
+    "navigation.json": {
+      "cta": {
+        "href": "#contact",
+        "icon": "scissors",
+        "label": "Get a Quote"
+      },
+      "items": [
+        {
+          "href": "#home",
+          "label": "Home"
+        },
+        {
+          "href": "#stats",
+          "label": "Stats"
+        },
+        {
+          "href": "#features",
+          "label": "Why Us"
+        },
+        {
+          "href": "#testimonials",
+          "label": "Reviews"
+        },
+        {
+          "href": "#gallery",
+          "label": "Gallery"
+        },
+        {
+          "href": "#contact",
+          "label": "Contact"
+        },
+        {
+          "href": "#location",
+          "label": "Location"
+        }
+      ]
+    },
+    "offers.json": {
+      "heading": {
+        "eyebrow": "Special Offers",
+        "title": "Don't miss our offers"
+      },
+      "items": [
+        {
+          "badge": "FEATURED",
+          "description": "Add online booking / reservation flow",
+          "id": 1,
+          "image": "/placeholders/food-1.jpg",
+          "time": "Ongoing",
+          "title": "Add online booking / reservation flow"
+        }
+      ],
+      "more": {
+        "href": "#offers",
+        "label": "View All Offers"
+      }
+    },
+    "reviews.json": {
+      "heading": {
+        "eyebrow": "Testimonials",
+        "title": "What our clients say"
+      },
+      "items": [
+        {
+          "id": 1,
+          "name": "Mona Adel",
+          "rating": 5,
+          "role": "Regular Guest",
+          "text": "Friendly staff, fair prices and a wonderful atmosphere."
+        },
+        {
+          "id": 2,
+          "name": "Laila Kamel",
+          "rating": 5,
+          "role": "Neighborhood Regular",
+          "text": "Best experience in the area — highly recommended."
+        },
+        {
+          "id": 3,
+          "name": "Youssef Nabil",
+          "rating": 5,
+          "role": "First Time Visitor",
+          "text": "A hidden gem. The team really cares about their craft."
+        }
+      ]
+    },
+    "seo.json": {
+      "author": "Atelier Cairo",
+      "canonical": "https://ateliercairo.example",
+      "description": "Atelier Cairo — Tailor & Alterations in Cairo. ",
+      "keywords": [
+        "tailor",
+        "Atelier Cairo",
+        "Cairo"
+      ],
+      "openGraph": {
+        "description": "Atelier Cairo — Tailor & Alterations in Cairo. ",
+        "image": "/gallery/62dfa9c5.jpg",
+        "locale": "en_US",
+        "siteName": "Atelier Cairo",
+        "title": "Atelier Cairo | Tailor & Alterations",
+        "type": "website"
+      },
+      "robots": "index, follow",
+      "schemaType": "LocalBusiness",
+      "title": "Atelier Cairo | Tailor & Alterations in Cairo",
+      "twitter": {
+        "card": "summary_large_image",
+        "description": "Atelier Cairo — Tailor & Alterations in Cairo. ",
+        "image": "/hero/dark-hero.jpg",
+        "title": "Atelier Cairo | Tailor & Alterations"
+      }
+    },
+    "services.json": {
+      "heading": {
+        "eyebrow": "Our Services",
+        "title": "What we offer"
+      },
+      "items": [
+        {
+          "icon": "sparkles",
+          "id": "svc-1",
+          "link": "#contact",
+          "text": "",
+          "title": "Custom tailoring"
+        },
+        {
+          "icon": "sparkles",
+          "id": "svc-2",
+          "link": "#contact",
+          "text": "",
+          "title": "Alterations"
+        },
+        {
+          "icon": "sparkles",
+          "id": "svc-3",
+          "link": "#contact",
+          "text": "",
+          "title": "Repairs"
+        }
+      ]
+    },
+    "social.json": {
+      "facebook": "",
+      "instagram": "",
+      "linkedin": "",
+      "tiktok": "",
+      "twitter": "",
+      "whatsapp": "https://wa.me/201000000015",
+      "youtube": ""
+    },
+    "stats.json": {
+      "heading": {
+        "eyebrow": "By The Numbers",
+        "title": "Our stats"
+      },
+      "items": [
+        {
+          "decimals": 1,
+          "id": "rating",
+          "label": "Average Rating",
+          "suffix": "/5",
+          "value": 4.7
+        },
+        {
+          "id": "reviews",
+          "label": "Reviews",
+          "suffix": "+",
+          "value": 91
+        },
+        {
+          "id": "garments",
+          "label": "Garments Tailored",
+          "suffix": "+",
+          "value": 5000
+        },
+        {
+          "id": "years",
+          "label": "Years of Craft",
+          "suffix": "",
+          "value": 25
+        }
+      ]
+    },
+    "theme.json": {
+      "animations": {
+        "durationBase": "300ms",
+        "durationFast": "150ms",
+        "durationSlow": "600ms",
+        "ease": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+        "spring": "cubic-bezier(0.34, 1.56, 0.64, 1)"
+      },
+      "buttons": {
+        "primary": {
+          "fontWeight": "600",
+          "paddingX": "1.5rem",
+          "paddingY": "0.7rem",
+          "radius": "0.75rem"
+        },
+        "secondary": {
+          "fontWeight": "600",
+          "paddingX": "1.5rem",
+          "paddingY": "0.7rem",
+          "radius": "0.75rem"
+        }
+      },
+      "cards": {
+        "borderOpacity": "0.08",
+        "padding": "1.5rem",
+        "radius": "1rem"
+      },
+      "colors": {
+        "dark": {
+          "base": "18 21 26",
+          "base-deep": "12 14 17",
+          "ink": "245 248 252",
+          "ink-muted": "150 153 157",
+          "primary": "120 160 200",
+          "primary-dark": "94 125 156",
+          "primary-light": "144 177 210",
+          "surface": "51 54 58",
+          "surface-2": "80 82 86",
+          "surface-3": "108 110 113"
+        },
+        "light": {
+          "base": "231 232 232",
+          "base-deep": "203 204 205",
+          "ink": "14 17 21",
+          "ink-muted": "251 252 254",
+          "primary": "94 125 156",
+          "primary-dark": "72 96 120",
+          "primary-light": "120 160 200",
+          "surface": "255 255 255",
+          "surface-2": "203 204 205",
+          "surface-3": "160 161 163"
+        }
+      },
+      "defaultMode": "light",
+      "gradients": {
+        "hero": "linear-gradient(180deg, rgb(var(--c-base) / 0.92) 0%, rgb(var(--c-base) / 0.55) 45%, rgb(var(--c-base) / 0.92) 100%)",
+        "primaryFade": "linear-gradient(135deg, rgb(var(--c-primary) / 0.25), rgb(var(--c-primary) / 0.05))"
+      },
+      "icons": {
+        "sizeLg": "36px",
+        "sizeMd": "24px",
+        "sizeSm": "16px",
+        "strokeWidth": "1.8"
+      },
+      "name": "dis-zamalek-014",
+      "radius": {
+        "full": "9999px",
+        "lg": "1rem",
+        "md": "0.75rem",
+        "sm": "0.5rem",
+        "xl": "1.25rem"
+      },
+      "shadows": {
+        "elevated": "0 12px 48px -12px rgba(0, 0, 0, 0.5)",
+        "primary": "0 4px 24px -4px rgb(var(--c-primary) / 0.35)",
+        "primary-lg": "0 8px 40px -8px rgb(var(--c-primary) / 0.3)"
+      },
+      "spacing": {
+        "2xl": "4rem",
+        "lg": "1.5rem",
+        "md": "1rem",
+        "sm": "0.5rem",
+        "xl": "2.5rem",
+        "xs": "0.25rem"
+      },
+      "storageKey": "site-theme",
+      "typography": {
+        "body": "'Source Sans 3', sans-serif",
+        "display": "'Merriweather', serif",
+        "fontsUrl": "https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap"
+      }
+    }
+  },
+  "layout": {
+    "density": "gallery",
+    "extraBeforeFooter": [
+      "cta"
+    ],
+    "gridCols": 4,
+    "heroVariant": "split",
+    "id": "portfolio",
+    "includesPages": [
+      "contact"
+    ],
+    "label": "Portfolio",
+    "sectionAltEvery": 2
+  },
+  "name": "Atelier Cairo"
+}

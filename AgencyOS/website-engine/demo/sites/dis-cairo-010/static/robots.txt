@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://nileterrace.example/sitemap.xml

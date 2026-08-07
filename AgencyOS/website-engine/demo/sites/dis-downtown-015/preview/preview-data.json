@@ -1,0 +1,28 @@
+{
+  "businessId": "dis-downtown-015",
+  "layout": {
+    "density": "standard",
+    "extraBeforeFooter": [
+      "cta"
+    ],
+    "gridCols": 3,
+    "heroVariant": "fullbleed",
+    "id": "default",
+    "includesPages": [
+      "contact"
+    ],
+    "label": "Default",
+    "sectionAltEvery": 2
+  },
+  "name": "Nile Books",
+  "pages": [
+    {
+      "id": "home",
+      "title": "Nile Books | Local Business in Cairo"
+    },
+    {
+      "id": "contact",
+      "title": "Contact Nile Books | Nile Books"
+    }
+  ]
+}

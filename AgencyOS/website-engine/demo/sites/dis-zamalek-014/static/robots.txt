@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ateliercairo.example/sitemap.xml

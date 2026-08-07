@@ -1,0 +1,28 @@
+{
+  "businessId": "dis-giza-013",
+  "layout": {
+    "density": "dense",
+    "extraBeforeFooter": [
+      "cta"
+    ],
+    "gridCols": 4,
+    "heroVariant": "centered",
+    "id": "corporate",
+    "includesPages": [
+      "contact"
+    ],
+    "label": "Corporate",
+    "sectionAltEvery": 1
+  },
+  "name": "Delta Logistics",
+  "pages": [
+    {
+      "id": "home",
+      "title": "Delta Logistics | Shop in Giza"
+    },
+    {
+      "id": "contact",
+      "title": "Contact Delta Logistics | Delta Logistics"
+    }
+  ]
+}

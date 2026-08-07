@@ -1,0 +1,33 @@
+{
+  "businessId": "dis-cairo-001",
+  "layout": {
+    "density": "cozy",
+    "extraBeforeFooter": [
+      "cta"
+    ],
+    "gridCols": 3,
+    "heroVariant": "split",
+    "id": "cafe",
+    "includesPages": [
+      "menu",
+      "contact"
+    ],
+    "label": "Café",
+    "sectionAltEvery": 2
+  },
+  "name": "Cairo Roastery",
+  "pages": [
+    {
+      "id": "home",
+      "title": "Cairo Roastery | Café in Cairo"
+    },
+    {
+      "id": "menu",
+      "title": "Cairo Roastery Menu | Cairo Roastery"
+    },
+    {
+      "id": "contact",
+      "title": "Contact Cairo Roastery | Cairo Roastery"
+    }
+  ]
+}

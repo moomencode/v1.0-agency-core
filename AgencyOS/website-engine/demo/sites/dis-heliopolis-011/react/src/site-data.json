@@ -1,0 +1,576 @@
+{
+  "businessId": "dis-heliopolis-011",
+  "category": "clinic",
+  "configs": {
+    "booking.json": {
+      "enabled": false,
+      "fields": {
+        "guestsPlaceholder": "Number of Guests",
+        "phonePlaceholder": "Phone Number (11 digits)"
+      },
+      "heading": {
+        "eyebrow": "Book Your Spot",
+        "title": "Book your slot now"
+      },
+      "maxGuests": 20,
+      "method": "whatsapp",
+      "note": "You will receive a confirmation via WhatsApp.",
+      "phoneError": "Please enter a valid 11-digit phone number",
+      "submit": {
+        "icon": "search",
+        "label": "Send Request"
+      },
+      "success": "Thanks! Your request has been received. We will confirm via WhatsApp."
+    },
+    "brand.json": {
+      "description": "Heliopolis Clinic — Medical Clinic in Cairo.",
+      "heroEyebrow": "Welcome to",
+      "logo": {
+        "alt": "Heliopolis Clinic Logo",
+        "dark": "/logo/logo.png",
+        "favicon": "/logo/favicon.png",
+        "light": "/logo/logo-light.png",
+        "rounded": true
+      },
+      "name": "Heliopolis Clinic",
+      "shortName": "HELIOPOLIS",
+      "slogan": "Medical Clinic in Cairo",
+      "tagline": "Medical Clinic"
+    },
+    "business.json": {
+      "currency": {
+        "code": "EGP",
+        "decimals": 0,
+        "position": "after",
+        "symbol": "EGP"
+      },
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "locale": "en",
+      "name": "Heliopolis Clinic",
+      "phoneDigits": 11,
+      "sections": [
+        "navbar",
+        "hero",
+        "services",
+        "stats",
+        "testimonials",
+        "gallery",
+        "location",
+        "footer"
+      ],
+      "type": "clinic"
+    },
+    "contact.json": {
+      "address": "45 El Thawra St, Cairo",
+      "addressShort": "45 El Thawra St, Cairo",
+      "area": "Cairo",
+      "email": "care@helioclinic.example",
+      "hours": [
+        {
+          "days": "Monday - Sunday",
+          "time": "10:00 AM - 10:00 PM"
+        }
+      ],
+      "hoursShort": "Monday - Sunday: 10:00 AM - 10:00 PM",
+      "mapsEmbed": null,
+      "mapsUrl": "https://maps.google.com/?q=Cairo",
+      "phone": "+20 22 401 234",
+      "phoneRaw": "+2022401234",
+      "whatsapp": "+20 22 401 234"
+    },
+    "faq.json": {
+      "heading": {
+        "eyebrow": "FAQ",
+        "title": "Frequently asked questions"
+      },
+      "items": [
+        {
+          "answer": "Appointments are recommended and can be booked online.",
+          "id": 1,
+          "question": "Do I need an appointment?"
+        },
+        {
+          "answer": "Contact us to confirm coverage with your provider.",
+          "id": 2,
+          "question": "What insurance do you accept?"
+        },
+        {
+          "answer": "Yes, most results are shared electronically.",
+          "id": 3,
+          "question": "Can I get my results online?"
+        }
+      ]
+    },
+    "features.json": {
+      "heading": {
+        "eyebrow": "Why Choose Us",
+        "title": "The Heliopolis Clinic experience"
+      },
+      "items": [
+        {
+          "icon": "sparkles",
+          "id": "strong-business-score",
+          "text": "business score",
+          "title": "Strong business fundamentals (63/100)"
+        },
+        {
+          "icon": "sparkles",
+          "id": "high-demand",
+          "text": "opportunity score",
+          "title": "High local demand (71/100)"
+        },
+        {
+          "icon": "sparkles",
+          "id": "social-proof",
+          "text": "review count",
+          "title": "176 customer reviews build trust"
+        }
+      ]
+    },
+    "footer.json": {
+      "brandDescription": "Heliopolis Clinic — Medical Clinic, serving Cairo.",
+      "contactTitle": "Contact Us",
+      "hoursTitle": "Opening Hours",
+      "quickLinksTitle": "Quick Links",
+      "rights": "All rights reserved."
+    },
+    "gallery.json": {
+      "count": 4,
+      "heading": {
+        "eyebrow": "Our Gallery",
+        "title": "A glimpse of our place"
+      },
+      "images": [
+        {
+          "alt": "Gallery photo 1",
+          "src": "/placeholders/gallery-1.jpg"
+        },
+        {
+          "alt": "Gallery photo 2",
+          "src": "/placeholders/gallery-2.jpg"
+        },
+        {
+          "alt": "Gallery photo 3",
+          "src": "/placeholders/gallery-3.jpg"
+        },
+        {
+          "alt": "Gallery photo 4",
+          "src": "/placeholders/gallery-4.jpg"
+        }
+      ],
+      "moreAria": "More photos"
+    },
+    "hero.json": {
+      "ctaPrimary": {
+        "href": "#services",
+        "icon": "sparkles",
+        "label": "Explore"
+      },
+      "ctaSecondary": {
+        "href": "#contact",
+        "icon": "phone",
+        "label": "Contact Us"
+      },
+      "description": "Medical Clinic Reach us today.",
+      "eyebrow": "Welcome to",
+      "image": {
+        "alt": "Heliopolis Clinic Ambiance",
+        "dark": "/hero/dark-hero.jpg",
+        "light": "/hero/light-hero.jpg"
+      },
+      "info": [
+        {
+          "icon": "map-pin",
+          "subtitle": "Cairo",
+          "title": "45 El Thawra St"
+        },
+        {
+          "icon": "clock",
+          "subtitle": "9:00 AM - 9:00 PM",
+          "title": "Open Daily"
+        },
+        {
+          "icon": "star",
+          "subtitle": "(176+ Reviews)",
+          "title": "{rating} Rating"
+        },
+        {
+          "icon": "shield-check",
+          "subtitle": "Specialist team",
+          "title": "Clean & Safe"
+        }
+      ],
+      "slogan": "Medical Clinic in Cairo",
+      "subtitle": "MEDICAL CLINIC",
+      "title": "HELIOPOLIS"
+    },
+    "i18n.json": {
+      "businessId": "dis-heliopolis-011",
+      "labels": {
+        "common": {
+          "bookNow": "Book Now",
+          "contactUs": "Contact Us",
+          "more": "More",
+          "no": "No",
+          "rating": "Rating",
+          "reviews": "Reviews",
+          "viewMenu": "View Menu",
+          "yes": "Yes"
+        },
+        "nav": {
+          "ariaClose": "Close menu",
+          "ariaOpen": "Open menu",
+          "home": "Home"
+        },
+        "sections": {
+          "footer": {
+            "anchor": "#footer",
+            "label": "Footer"
+          },
+          "gallery": {
+            "anchor": "#gallery",
+            "label": "Gallery"
+          },
+          "hero": {
+            "anchor": "#home",
+            "label": "Hero"
+          },
+          "location": {
+            "anchor": "#location",
+            "label": "Location"
+          },
+          "navbar": {
+            "anchor": "#home",
+            "label": "Navbar"
+          },
+          "services": {
+            "anchor": "#services",
+            "label": "Services"
+          },
+          "stats": {
+            "anchor": "#stats",
+            "label": "Stats"
+          },
+          "testimonials": {
+            "anchor": "#testimonials",
+            "label": "Testimonials"
+          }
+        },
+        "theme": {
+          "aria": "Toggle dark/light mode"
+        }
+      },
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "locale": "en"
+    },
+    "menu.json": {
+      "addAria": "View item details",
+      "categories": [],
+      "dishes": {},
+      "heading": {
+        "eyebrow": "Our Menu",
+        "title": "What are you craving?"
+      },
+      "itemsSuffix": "Items",
+      "more": {
+        "href": "#menu",
+        "label": "View Full Menu"
+      }
+    },
+    "navigation.json": {
+      "cta": {
+        "href": "#contact",
+        "icon": "calendar-check",
+        "label": "Book a Visit"
+      },
+      "items": [
+        {
+          "href": "#home",
+          "label": "Home"
+        },
+        {
+          "href": "#services",
+          "label": "Services"
+        },
+        {
+          "href": "#stats",
+          "label": "Stats"
+        },
+        {
+          "href": "#testimonials",
+          "label": "Reviews"
+        },
+        {
+          "href": "#gallery",
+          "label": "Gallery"
+        },
+        {
+          "href": "#location",
+          "label": "Location"
+        },
+        {
+          "href": "#contact",
+          "label": "Contact"
+        }
+      ]
+    },
+    "offers.json": {
+      "heading": {
+        "eyebrow": "Special Offers",
+        "title": "Don't miss our offers"
+      },
+      "items": [
+        {
+          "badge": "FEATURED",
+          "description": "Professional photo set (10+ images)",
+          "id": 1,
+          "image": "/placeholders/food-1.jpg",
+          "time": "Ongoing",
+          "title": "Professional photo set (10+ images)"
+        }
+      ],
+      "more": {
+        "href": "#offers",
+        "label": "View All Offers"
+      }
+    },
+    "reviews.json": {
+      "heading": {
+        "eyebrow": "Testimonials",
+        "title": "What our clients say"
+      },
+      "items": [
+        {
+          "id": 1,
+          "name": "Hana Youssef",
+          "rating": 4,
+          "role": "First Time Visitor",
+          "text": "Great quality and even better service. Will come back."
+        },
+        {
+          "id": 2,
+          "name": "Sara Mostafa",
+          "rating": 4,
+          "role": "Frequent Visitor",
+          "text": "Top notch from start to finish. Booking was effortless."
+        },
+        {
+          "id": 3,
+          "name": "Omar Farouk",
+          "rating": 4,
+          "role": "Frequent Visitor",
+          "text": "Best experience in the area — highly recommended."
+        }
+      ]
+    },
+    "seo.json": {
+      "author": "Heliopolis Clinic",
+      "canonical": "https://helioclinic.example",
+      "description": "Heliopolis Clinic — Medical Clinic in Cairo. ",
+      "keywords": [
+        "clinic",
+        "Heliopolis Clinic",
+        "Cairo"
+      ],
+      "openGraph": {
+        "description": "Heliopolis Clinic — Medical Clinic in Cairo. ",
+        "image": "/gallery/dca300c7.jpg",
+        "locale": "en_US",
+        "siteName": "Heliopolis Clinic",
+        "title": "Heliopolis Clinic | Medical Clinic",
+        "type": "website"
+      },
+      "robots": "index, follow",
+      "schemaType": "MedicalClinic",
+      "title": "Heliopolis Clinic | Medical Clinic in Cairo",
+      "twitter": {
+        "card": "summary_large_image",
+        "description": "Heliopolis Clinic — Medical Clinic in Cairo. ",
+        "image": "/hero/dark-hero.jpg",
+        "title": "Heliopolis Clinic | Medical Clinic"
+      }
+    },
+    "services.json": {
+      "heading": {
+        "eyebrow": "Our Services",
+        "title": "What we offer"
+      },
+      "items": [
+        {
+          "icon": "sparkles",
+          "id": "svc-1",
+          "link": "#contact",
+          "text": "",
+          "title": "Consultations"
+        },
+        {
+          "icon": "sparkles",
+          "id": "svc-2",
+          "link": "#contact",
+          "text": "",
+          "title": "Check-ups"
+        },
+        {
+          "icon": "sparkles",
+          "id": "svc-3",
+          "link": "#contact",
+          "text": "",
+          "title": "Specialist referrals"
+        }
+      ]
+    },
+    "social.json": {
+      "facebook": "",
+      "instagram": "",
+      "linkedin": "",
+      "tiktok": "",
+      "twitter": "",
+      "whatsapp": "https://wa.me/201000000012",
+      "youtube": ""
+    },
+    "stats.json": {
+      "heading": {
+        "eyebrow": "By The Numbers",
+        "title": "Our stats"
+      },
+      "items": [
+        {
+          "decimals": 1,
+          "id": "rating",
+          "label": "Average Rating",
+          "suffix": "/5",
+          "value": 4.4
+        },
+        {
+          "id": "reviews",
+          "label": "Reviews",
+          "suffix": "+",
+          "value": 176
+        },
+        {
+          "id": "patients",
+          "label": "Patients Treated",
+          "suffix": "+",
+          "value": 20000
+        },
+        {
+          "id": "years",
+          "label": "Years of Care",
+          "suffix": "",
+          "value": 14
+        }
+      ]
+    },
+    "theme.json": {
+      "animations": {
+        "durationBase": "300ms",
+        "durationFast": "150ms",
+        "durationSlow": "600ms",
+        "ease": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+        "spring": "cubic-bezier(0.34, 1.56, 0.64, 1)"
+      },
+      "buttons": {
+        "primary": {
+          "fontWeight": "600",
+          "paddingX": "1.5rem",
+          "paddingY": "0.7rem",
+          "radius": "0.75rem"
+        },
+        "secondary": {
+          "fontWeight": "600",
+          "paddingX": "1.5rem",
+          "paddingY": "0.7rem",
+          "radius": "0.75rem"
+        }
+      },
+      "cards": {
+        "borderOpacity": "0.08",
+        "padding": "1.5rem",
+        "radius": "1rem"
+      },
+      "colors": {
+        "dark": {
+          "base": "16 20 26",
+          "base-deep": "10 13 17",
+          "ink": "246 250 254",
+          "ink-muted": "149 153 158",
+          "primary": "96 165 250",
+          "primary-dark": "75 129 195",
+          "primary-light": "125 181 251",
+          "surface": "49 53 58",
+          "surface-2": "78 81 86",
+          "surface-3": "107 109 113"
+        },
+        "light": {
+          "base": "231 232 232",
+          "base-deep": "202 203 205",
+          "ink": "13 16 21",
+          "ink-muted": "251 253 255",
+          "primary": "75 129 195",
+          "primary-dark": "58 99 150",
+          "primary-light": "96 165 250",
+          "surface": "255 255 255",
+          "surface-2": "202 203 205",
+          "surface-3": "159 161 163"
+        }
+      },
+      "defaultMode": "light",
+      "gradients": {
+        "hero": "linear-gradient(180deg, rgb(var(--c-base) / 0.92) 0%, rgb(var(--c-base) / 0.55) 45%, rgb(var(--c-base) / 0.92) 100%)",
+        "primaryFade": "linear-gradient(135deg, rgb(var(--c-primary) / 0.25), rgb(var(--c-primary) / 0.05))"
+      },
+      "icons": {
+        "sizeLg": "36px",
+        "sizeMd": "24px",
+        "sizeSm": "16px",
+        "strokeWidth": "1.8"
+      },
+      "name": "dis-heliopolis-011",
+      "radius": {
+        "full": "9999px",
+        "lg": "1rem",
+        "md": "0.75rem",
+        "sm": "0.5rem",
+        "xl": "1.25rem"
+      },
+      "shadows": {
+        "elevated": "0 12px 48px -12px rgba(0, 0, 0, 0.5)",
+        "primary": "0 4px 24px -4px rgb(var(--c-primary) / 0.35)",
+        "primary-lg": "0 8px 40px -8px rgb(var(--c-primary) / 0.3)"
+      },
+      "spacing": {
+        "2xl": "4rem",
+        "lg": "1.5rem",
+        "md": "1rem",
+        "sm": "0.5rem",
+        "xl": "2.5rem",
+        "xs": "0.25rem"
+      },
+      "storageKey": "site-theme",
+      "typography": {
+        "body": "'Inter', sans-serif",
+        "display": "'Lora', serif",
+        "fontsUrl": "https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap"
+      }
+    }
+  },
+  "layout": {
+    "density": "clean",
+    "extraBeforeFooter": [],
+    "gridCols": 3,
+    "heroVariant": "centered",
+    "id": "medical",
+    "includesPages": [
+      "contact"
+    ],
+    "label": "Medical",
+    "sectionAltEvery": 1
+  },
+  "name": "Heliopolis Clinic"
+}

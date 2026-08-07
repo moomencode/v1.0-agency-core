@@ -1,0 +1,733 @@
+{
+  "businessId": "dis-cairo-001",
+  "category": "cafe",
+  "configs": {
+    "booking.json": {
+      "enabled": false,
+      "fields": {
+        "guestsPlaceholder": "Number of Guests",
+        "phonePlaceholder": "Phone Number (11 digits)"
+      },
+      "heading": {
+        "eyebrow": "Book Your Spot",
+        "title": "Book your slot now"
+      },
+      "maxGuests": 20,
+      "method": "whatsapp",
+      "note": "You will receive a confirmation via WhatsApp.",
+      "phoneError": "Please enter a valid 11-digit phone number",
+      "submit": {
+        "icon": "search",
+        "label": "Send Request"
+      },
+      "success": "Thanks! Your request has been received. We will confirm via WhatsApp."
+    },
+    "brand.json": {
+      "description": "Cairo Roastery — Café in Cairo.",
+      "heroEyebrow": "Welcome to",
+      "logo": {
+        "alt": "Cairo Roastery Logo",
+        "dark": "/logo/logo.png",
+        "favicon": "/logo/favicon.png",
+        "light": "/logo/logo-light.png",
+        "rounded": true
+      },
+      "name": "Cairo Roastery",
+      "shortName": "CAIRO",
+      "slogan": "Café in Cairo",
+      "tagline": "Café"
+    },
+    "business.json": {
+      "currency": {
+        "code": "EGP",
+        "decimals": 0,
+        "position": "after",
+        "symbol": "EGP"
+      },
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "locale": "en",
+      "name": "Cairo Roastery",
+      "phoneDigits": 11,
+      "sections": [
+        "navbar",
+        "hero",
+        "menu",
+        "stats",
+        "offers",
+        "testimonials",
+        "gallery",
+        "location",
+        "footer"
+      ],
+      "type": "cafe"
+    },
+    "contact.json": {
+      "address": "12 Tahrir St, Cairo",
+      "addressShort": "12 Tahrir St, Cairo",
+      "area": "Cairo",
+      "email": "hi@roastery.com",
+      "hours": [
+        {
+          "days": "Monday - Sunday",
+          "time": "10:00 AM - 10:00 PM"
+        }
+      ],
+      "hoursShort": "Monday - Sunday: 10:00 AM - 10:00 PM",
+      "mapsEmbed": null,
+      "mapsUrl": "https://maps.google.com/?q=Cairo",
+      "phone": "+20 27 357 788",
+      "phoneRaw": "+2027357788",
+      "whatsapp": "+20 27 357 788"
+    },
+    "faq.json": {
+      "heading": {
+        "eyebrow": "FAQ",
+        "title": "Frequently asked questions"
+      },
+      "items": [
+        {
+          "answer": "Yes — fast delivery across the area through our website.",
+          "id": 1,
+          "question": "Do you offer delivery?"
+        },
+        {
+          "answer": "Absolutely. Use the reservation form and we will confirm via WhatsApp.",
+          "id": 2,
+          "question": "Can I reserve a table online?"
+        },
+        {
+          "answer": "Yes, contact us and our team will plan the perfect event for you.",
+          "id": 3,
+          "question": "Do you handle events and gatherings?"
+        }
+      ]
+    },
+    "features.json": {
+      "heading": {
+        "eyebrow": "Why Choose Us",
+        "title": "The Cairo Roastery experience"
+      },
+      "items": [
+        {
+          "icon": "sparkles",
+          "id": "strong-business-score",
+          "text": "business score",
+          "title": "Strong business fundamentals (69/100)"
+        },
+        {
+          "icon": "sparkles",
+          "id": "high-demand",
+          "text": "opportunity score",
+          "title": "High local demand (77/100)"
+        },
+        {
+          "icon": "sparkles",
+          "id": "social-proof",
+          "text": "review count",
+          "title": "230 customer reviews build trust"
+        }
+      ]
+    },
+    "footer.json": {
+      "brandDescription": "Cairo Roastery — Café, serving Cairo.",
+      "contactTitle": "Contact Us",
+      "hoursTitle": "Opening Hours",
+      "quickLinksTitle": "Quick Links",
+      "rights": "All rights reserved."
+    },
+    "gallery.json": {
+      "count": 4,
+      "heading": {
+        "eyebrow": "Our Gallery",
+        "title": "A glimpse of our place"
+      },
+      "images": [
+        {
+          "alt": "Gallery photo 1",
+          "src": "/placeholders/gallery-1.jpg"
+        },
+        {
+          "alt": "Gallery photo 2",
+          "src": "/placeholders/gallery-2.jpg"
+        },
+        {
+          "alt": "Gallery photo 3",
+          "src": "/placeholders/gallery-3.jpg"
+        },
+        {
+          "alt": "Gallery photo 4",
+          "src": "/placeholders/gallery-4.jpg"
+        }
+      ],
+      "moreAria": "More photos"
+    },
+    "hero.json": {
+      "ctaPrimary": {
+        "href": "#menu",
+        "icon": "utensils-crossed",
+        "label": "View Menu"
+      },
+      "ctaSecondary": {
+        "href": "#contact",
+        "icon": "phone",
+        "label": "Contact Us"
+      },
+      "description": "Café Reach us today.",
+      "eyebrow": "Welcome to",
+      "image": {
+        "alt": "Cairo Roastery Ambiance",
+        "dark": "/hero/dark-hero.jpg",
+        "light": "/hero/light-hero.jpg"
+      },
+      "info": [
+        {
+          "icon": "map-pin",
+          "subtitle": "Cairo",
+          "title": "12 Tahrir St"
+        },
+        {
+          "icon": "clock",
+          "subtitle": "7:00 AM - 12:00 AM",
+          "title": "Open Daily"
+        },
+        {
+          "icon": "star",
+          "subtitle": "(230+ Reviews)",
+          "title": "{rating} Rating"
+        },
+        {
+          "icon": "wifi",
+          "subtitle": "Remote-work friendly",
+          "title": "Free Wi-Fi"
+        }
+      ],
+      "slogan": "Café in Cairo",
+      "subtitle": "CAFÉ",
+      "title": "CAIRO"
+    },
+    "i18n.json": {
+      "businessId": "dis-cairo-001",
+      "labels": {
+        "common": {
+          "bookNow": "Book Now",
+          "contactUs": "Contact Us",
+          "more": "More",
+          "no": "No",
+          "rating": "Rating",
+          "reviews": "Reviews",
+          "viewMenu": "View Menu",
+          "yes": "Yes"
+        },
+        "nav": {
+          "ariaClose": "Close menu",
+          "ariaOpen": "Open menu",
+          "home": "Home"
+        },
+        "sections": {
+          "footer": {
+            "anchor": "#footer",
+            "label": "Footer"
+          },
+          "gallery": {
+            "anchor": "#gallery",
+            "label": "Gallery"
+          },
+          "hero": {
+            "anchor": "#home",
+            "label": "Hero"
+          },
+          "location": {
+            "anchor": "#location",
+            "label": "Location"
+          },
+          "menu": {
+            "anchor": "#menu",
+            "label": "Menu"
+          },
+          "navbar": {
+            "anchor": "#home",
+            "label": "Navbar"
+          },
+          "offers": {
+            "anchor": "#offers",
+            "label": "Offers"
+          },
+          "stats": {
+            "anchor": "#stats",
+            "label": "Stats"
+          },
+          "testimonials": {
+            "anchor": "#testimonials",
+            "label": "Testimonials"
+          }
+        },
+        "theme": {
+          "aria": "Toggle dark/light mode"
+        }
+      },
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "locale": "en"
+    },
+    "menu.json": {
+      "addAria": "View item details",
+      "categories": [
+        {
+          "count": 3,
+          "id": "espresso",
+          "image": "/placeholders/food-1.jpg",
+          "label": "Espresso"
+        },
+        {
+          "count": 3,
+          "id": "brew",
+          "image": "/placeholders/food-2.jpg",
+          "label": "Brewed Coffee"
+        },
+        {
+          "count": 3,
+          "id": "pastries",
+          "image": "/placeholders/food-3.jpg",
+          "label": "Pastries"
+        },
+        {
+          "count": 3,
+          "id": "cold",
+          "image": "/placeholders/food-1.jpg",
+          "label": "Cold Drinks"
+        }
+      ],
+      "dishes": {
+        "brew": [
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 1,
+            "image": "/placeholders/food-1.jpg",
+            "name": "Whole bean coffee",
+            "price": 60
+          },
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 2,
+            "image": "/placeholders/food-2.jpg",
+            "name": "Merchandise & mugs",
+            "price": 75
+          },
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 3,
+            "image": "/placeholders/food-3.jpg",
+            "name": "Bottled cold brew",
+            "price": 90
+          }
+        ],
+        "cold": [
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 1,
+            "image": "/placeholders/food-1.jpg",
+            "name": "Whole bean coffee",
+            "price": 60
+          },
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 2,
+            "image": "/placeholders/food-2.jpg",
+            "name": "Merchandise & mugs",
+            "price": 75
+          },
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 3,
+            "image": "/placeholders/food-3.jpg",
+            "name": "Bottled cold brew",
+            "price": 90
+          }
+        ],
+        "espresso": [
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 1,
+            "image": "/placeholders/food-1.jpg",
+            "name": "Whole bean coffee",
+            "price": 60
+          },
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 2,
+            "image": "/placeholders/food-2.jpg",
+            "name": "Merchandise & mugs",
+            "price": 75
+          },
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 3,
+            "image": "/placeholders/food-3.jpg",
+            "name": "Bottled cold brew",
+            "price": 90
+          }
+        ],
+        "pastries": [
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 1,
+            "image": "/placeholders/food-1.jpg",
+            "name": "Whole bean coffee",
+            "price": 60
+          },
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 2,
+            "image": "/placeholders/food-2.jpg",
+            "name": "Merchandise & mugs",
+            "price": 75
+          },
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 3,
+            "image": "/placeholders/food-3.jpg",
+            "name": "Bottled cold brew",
+            "price": 90
+          }
+        ]
+      },
+      "heading": {
+        "eyebrow": "Our Menu",
+        "title": "What are you craving?"
+      },
+      "itemsSuffix": "Items",
+      "more": {
+        "href": "#menu",
+        "label": "View Full Menu"
+      }
+    },
+    "navigation.json": {
+      "cta": {
+        "href": "#contact",
+        "icon": "shopping-bag",
+        "label": "Order Now"
+      },
+      "items": [
+        {
+          "href": "#home",
+          "label": "Home"
+        },
+        {
+          "href": "#menu",
+          "label": "Menu"
+        },
+        {
+          "href": "#stats",
+          "label": "Stats"
+        },
+        {
+          "href": "#offers",
+          "label": "Offers"
+        },
+        {
+          "href": "#testimonials",
+          "label": "Reviews"
+        },
+        {
+          "href": "#gallery",
+          "label": "Gallery"
+        },
+        {
+          "href": "#location",
+          "label": "Location"
+        }
+      ]
+    },
+    "offers.json": {
+      "heading": {
+        "eyebrow": "Special Offers",
+        "title": "Don't miss our offers"
+      },
+      "items": [
+        {
+          "badge": "FEATURED",
+          "description": "Maintain the lead: monthly SEO checks and a review cadence",
+          "id": 1,
+          "image": "/placeholders/food-1.jpg",
+          "time": "Ongoing",
+          "title": "Maintain the lead: monthly SEO checks and a review cadence"
+        }
+      ],
+      "more": {
+        "href": "#offers",
+        "label": "View All Offers"
+      }
+    },
+    "reviews.json": {
+      "heading": {
+        "eyebrow": "Testimonials",
+        "title": "What our clients say"
+      },
+      "items": [
+        {
+          "id": 1,
+          "name": "Tarek Mahmoud",
+          "rating": 4,
+          "role": "Neighborhood Regular",
+          "text": "Great quality and even better service. Will come back."
+        },
+        {
+          "id": 2,
+          "name": "Nourhan Ali",
+          "rating": 4,
+          "role": "Frequent Visitor",
+          "text": "Great quality and even better service. Will come back."
+        },
+        {
+          "id": 3,
+          "name": "Dina Samir",
+          "rating": 4,
+          "role": "Long-time Client",
+          "text": "Friendly staff, fair prices and a wonderful atmosphere."
+        }
+      ]
+    },
+    "seo.json": {
+      "author": "Cairo Roastery",
+      "canonical": "https://roastery.example",
+      "description": "Cairo Roastery — Café in Cairo. ",
+      "keywords": [
+        "cafe",
+        "Cairo Roastery",
+        "Cairo"
+      ],
+      "openGraph": {
+        "description": "Cairo Roastery — Café in Cairo. ",
+        "image": "/gallery/1da0d664.jpg",
+        "locale": "en_US",
+        "siteName": "Cairo Roastery",
+        "title": "Cairo Roastery | Café",
+        "type": "website"
+      },
+      "robots": "index, follow",
+      "schemaType": "CafeOrCoffeeShop",
+      "title": "Cairo Roastery | Café in Cairo",
+      "twitter": {
+        "card": "summary_large_image",
+        "description": "Cairo Roastery — Café in Cairo. ",
+        "image": "/hero/dark-hero.jpg",
+        "title": "Cairo Roastery | Café"
+      }
+    },
+    "services.json": {
+      "heading": {
+        "eyebrow": "Our Services",
+        "title": "What we offer"
+      },
+      "items": [
+        {
+          "icon": "sparkles",
+          "id": "svc-1",
+          "link": "#contact",
+          "text": "",
+          "title": "Coffee & espresso drinks"
+        },
+        {
+          "icon": "sparkles",
+          "id": "svc-2",
+          "link": "#contact",
+          "text": "",
+          "title": "Specialty brews"
+        },
+        {
+          "icon": "sparkles",
+          "id": "svc-3",
+          "link": "#contact",
+          "text": "",
+          "title": "Pastries & snacks"
+        },
+        {
+          "icon": "sparkles",
+          "id": "svc-4",
+          "link": "#contact",
+          "text": "",
+          "title": "Dine-in seating"
+        }
+      ]
+    },
+    "social.json": {
+      "facebook": "",
+      "instagram": "",
+      "linkedin": "",
+      "tiktok": "",
+      "twitter": "",
+      "whatsapp": "https://wa.me/201000000001",
+      "youtube": ""
+    },
+    "stats.json": {
+      "heading": {
+        "eyebrow": "By The Numbers",
+        "title": "Our stats"
+      },
+      "items": [
+        {
+          "decimals": 1,
+          "id": "rating",
+          "label": "Average Rating",
+          "suffix": "/5",
+          "value": 4.2
+        },
+        {
+          "id": "reviews",
+          "label": "Reviews",
+          "suffix": "+",
+          "value": 230
+        },
+        {
+          "id": "origins",
+          "label": "Coffee Origins",
+          "suffix": "+",
+          "value": 14
+        },
+        {
+          "id": "cups",
+          "label": "Cups Served",
+          "suffix": "+",
+          "value": 40000
+        }
+      ]
+    },
+    "theme.json": {
+      "animations": {
+        "durationBase": "300ms",
+        "durationFast": "150ms",
+        "durationSlow": "600ms",
+        "ease": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+        "spring": "cubic-bezier(0.34, 1.56, 0.64, 1)"
+      },
+      "buttons": {
+        "primary": {
+          "fontWeight": "600",
+          "paddingX": "1.5rem",
+          "paddingY": "0.7rem",
+          "radius": "0.75rem"
+        },
+        "secondary": {
+          "fontWeight": "600",
+          "paddingX": "1.5rem",
+          "paddingY": "0.7rem",
+          "radius": "0.75rem"
+        }
+      },
+      "cards": {
+        "borderOpacity": "0.08",
+        "padding": "1.5rem",
+        "radius": "1rem"
+      },
+      "colors": {
+        "dark": {
+          "base": "24 19 33",
+          "base-deep": "16 12 21",
+          "ink": "245 241 233",
+          "ink-muted": "152 148 149",
+          "primary": "209 156 93",
+          "primary-dark": "163 122 73",
+          "primary-light": "217 174 122",
+          "surface": "56 52 64",
+          "surface-2": "84 80 91",
+          "surface-3": "112 109 117"
+        },
+        "light": {
+          "base": "232 231 233",
+          "base-deep": "204 203 206",
+          "ink": "19 15 26",
+          "ink-muted": "251 249 245",
+          "primary": "163 122 73",
+          "primary-dark": "125 94 56",
+          "primary-light": "209 156 93",
+          "surface": "255 255 255",
+          "surface-2": "204 203 206",
+          "surface-3": "163 161 166"
+        }
+      },
+      "defaultMode": "light",
+      "gradients": {
+        "hero": "linear-gradient(180deg, rgb(var(--c-base) / 0.92) 0%, rgb(var(--c-base) / 0.55) 45%, rgb(var(--c-base) / 0.92) 100%)",
+        "primaryFade": "linear-gradient(135deg, rgb(var(--c-primary) / 0.25), rgb(var(--c-primary) / 0.05))"
+      },
+      "icons": {
+        "sizeLg": "36px",
+        "sizeMd": "24px",
+        "sizeSm": "16px",
+        "strokeWidth": "1.8"
+      },
+      "name": "dis-cairo-001",
+      "radius": {
+        "full": "9999px",
+        "lg": "1rem",
+        "md": "0.75rem",
+        "sm": "0.5rem",
+        "xl": "1.25rem"
+      },
+      "shadows": {
+        "elevated": "0 12px 48px -12px rgba(0, 0, 0, 0.5)",
+        "primary": "0 4px 24px -4px rgb(var(--c-primary) / 0.35)",
+        "primary-lg": "0 8px 40px -8px rgb(var(--c-primary) / 0.3)"
+      },
+      "spacing": {
+        "2xl": "4rem",
+        "lg": "1.5rem",
+        "md": "1rem",
+        "sm": "0.5rem",
+        "xl": "2.5rem",
+        "xs": "0.25rem"
+      },
+      "storageKey": "site-theme",
+      "typography": {
+        "body": "'Nunito Sans', sans-serif",
+        "display": "'Cormorant Garamond', serif",
+        "fontsUrl": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito+Sans:wght@300;400;600;700&display=swap"
+      }
+    }
+  },
+  "layout": {
+    "density": "cozy",
+    "extraBeforeFooter": [
+      "cta"
+    ],
+    "gridCols": 3,
+    "heroVariant": "split",
+    "id": "cafe",
+    "includesPages": [
+      "menu",
+      "contact"
+    ],
+    "label": "Café",
+    "sectionAltEvery": 2
+  },
+  "name": "Cairo Roastery"
+}

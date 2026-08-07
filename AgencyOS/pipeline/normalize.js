@@ -83,7 +83,8 @@ export function normalizeDossier(dossier, { businessId = null } = {}) {
   const recIds = ensureArray(recommendations.websiteRecommendations).map((r) => r.id || '');
   const missingBooking = oppIds.includes('booking-flow') || recIds.includes('w-booking');
   const presenceBooking = dossier.context?.presence?.hasBooking === true || dossier.presence?.hasBooking === true;
-  const hasBooking = presenceBooking || !missingBooking;
+  const explicitBooking = business.booking != null && business.booking !== '' && business.booking !== false;
+  const hasBooking = explicitBooking || (presenceBooking && !missingBooking);
 
   const weaknessIds = ensureArray(weaknesses.weaknesses).map((w) => w.id || w);
   const hasMenus = Boolean(Array.isArray(products?.products) && products.products.length > 0) || weaknessIds.includes('no-online-menu') === false;

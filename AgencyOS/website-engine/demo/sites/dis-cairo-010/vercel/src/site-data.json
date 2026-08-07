@@ -1,0 +1,721 @@
+{
+  "businessId": "dis-cairo-010",
+  "category": "restaurant",
+  "configs": {
+    "booking.json": {
+      "enabled": false,
+      "fields": {
+        "guestsPlaceholder": "Number of Guests",
+        "phonePlaceholder": "Phone Number (11 digits)"
+      },
+      "heading": {
+        "eyebrow": "Book Your Spot",
+        "title": "Book your slot now"
+      },
+      "maxGuests": 20,
+      "method": "whatsapp",
+      "note": "You will receive a confirmation via WhatsApp.",
+      "phoneError": "Please enter a valid 11-digit phone number",
+      "submit": {
+        "icon": "search",
+        "label": "Send Request"
+      },
+      "success": "Thanks! Your request has been received. We will confirm via WhatsApp."
+    },
+    "brand.json": {
+      "description": "Nile Terrace — Restaurant in Cairo.",
+      "heroEyebrow": "Welcome to",
+      "logo": {
+        "alt": "Nile Terrace Logo",
+        "dark": "/logo/logo.png",
+        "favicon": "/logo/favicon.png",
+        "light": "/logo/logo-light.png",
+        "rounded": true
+      },
+      "name": "Nile Terrace",
+      "shortName": "NILE",
+      "slogan": "Restaurant in Cairo",
+      "tagline": "Restaurant"
+    },
+    "business.json": {
+      "currency": {
+        "code": "EGP",
+        "decimals": 0,
+        "position": "after",
+        "symbol": "EGP"
+      },
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "locale": "en",
+      "name": "Nile Terrace",
+      "phoneDigits": 11,
+      "sections": [
+        "navbar",
+        "hero",
+        "menu",
+        "stats",
+        "offers",
+        "testimonials",
+        "location",
+        "footer"
+      ],
+      "type": "restaurant"
+    },
+    "contact.json": {
+      "address": "1 Nile Corniche, Cairo",
+      "addressShort": "1 Nile Corniche, Cairo",
+      "area": "Cairo",
+      "email": "hello@nileterrace.example",
+      "hours": [
+        {
+          "days": "Monday - Sunday",
+          "time": "10:00 AM - 10:00 PM"
+        }
+      ],
+      "hoursShort": "Monday - Sunday: 10:00 AM - 10:00 PM",
+      "mapsEmbed": null,
+      "mapsUrl": "https://maps.google.com/?q=Cairo",
+      "phone": "+20 27 381 111",
+      "phoneRaw": "+2027381111",
+      "whatsapp": "+20 27 381 111"
+    },
+    "faq.json": {
+      "heading": {
+        "eyebrow": "FAQ",
+        "title": "Frequently asked questions"
+      },
+      "items": [
+        {
+          "answer": "Yes — fast delivery in most areas through our website.",
+          "id": 1,
+          "question": "Do you offer delivery?"
+        },
+        {
+          "answer": "Absolutely. Use the reservation form and we will confirm via WhatsApp.",
+          "id": 2,
+          "question": "Can I reserve a table online?"
+        },
+        {
+          "answer": "Yes, contact us and our team will plan the perfect event for you.",
+          "id": 3,
+          "question": "Do you handle events and gatherings?"
+        }
+      ]
+    },
+    "features.json": {
+      "heading": {
+        "eyebrow": "Why Choose Us",
+        "title": "The Nile Terrace experience"
+      },
+      "items": [
+        {
+          "icon": "sparkles",
+          "id": "strong-business-score",
+          "text": "business score",
+          "title": "Strong business fundamentals (81/100)"
+        },
+        {
+          "icon": "sparkles",
+          "id": "high-demand",
+          "text": "opportunity score",
+          "title": "High local demand (88/100)"
+        },
+        {
+          "icon": "sparkles",
+          "id": "social-proof",
+          "text": "review count",
+          "title": "512 customer reviews build trust"
+        }
+      ]
+    },
+    "footer.json": {
+      "brandDescription": "Nile Terrace — Restaurant, serving Cairo.",
+      "contactTitle": "Contact Us",
+      "hoursTitle": "Opening Hours",
+      "quickLinksTitle": "Quick Links",
+      "rights": "All rights reserved."
+    },
+    "gallery.json": {
+      "count": 4,
+      "heading": {
+        "eyebrow": "Our Gallery",
+        "title": "A glimpse of our place"
+      },
+      "images": [
+        {
+          "alt": "Gallery photo 1",
+          "src": "/placeholders/gallery-1.jpg"
+        },
+        {
+          "alt": "Gallery photo 2",
+          "src": "/placeholders/gallery-2.jpg"
+        },
+        {
+          "alt": "Gallery photo 3",
+          "src": "/placeholders/gallery-3.jpg"
+        },
+        {
+          "alt": "Gallery photo 4",
+          "src": "/placeholders/gallery-4.jpg"
+        }
+      ],
+      "moreAria": "More photos"
+    },
+    "hero.json": {
+      "ctaPrimary": {
+        "href": "#menu",
+        "icon": "utensils-crossed",
+        "label": "View Menu"
+      },
+      "ctaSecondary": {
+        "href": "#contact",
+        "icon": "phone",
+        "label": "Contact Us"
+      },
+      "description": "Restaurant Reach us today.",
+      "eyebrow": "Welcome to",
+      "image": {
+        "alt": "Nile Terrace Ambiance",
+        "dark": "/hero/dark-hero.jpg",
+        "light": "/hero/light-hero.jpg"
+      },
+      "info": [
+        {
+          "icon": "map-pin",
+          "subtitle": "Cairo",
+          "title": "1 Nile Corniche"
+        },
+        {
+          "icon": "clock",
+          "subtitle": "12:00 PM - 12:00 AM",
+          "title": "Open Daily"
+        },
+        {
+          "icon": "star",
+          "subtitle": "(512+ Reviews)",
+          "title": "{rating} Rating"
+        },
+        {
+          "icon": "chef-hat",
+          "subtitle": "Authentic recipes",
+          "title": "Chef Crafted"
+        }
+      ],
+      "slogan": "Restaurant in Cairo",
+      "subtitle": "RESTAURANT",
+      "title": "NILE"
+    },
+    "i18n.json": {
+      "businessId": "dis-cairo-010",
+      "labels": {
+        "common": {
+          "bookNow": "Book Now",
+          "contactUs": "Contact Us",
+          "more": "More",
+          "no": "No",
+          "rating": "Rating",
+          "reviews": "Reviews",
+          "viewMenu": "View Menu",
+          "yes": "Yes"
+        },
+        "nav": {
+          "ariaClose": "Close menu",
+          "ariaOpen": "Open menu",
+          "home": "Home"
+        },
+        "sections": {
+          "footer": {
+            "anchor": "#footer",
+            "label": "Footer"
+          },
+          "hero": {
+            "anchor": "#home",
+            "label": "Hero"
+          },
+          "location": {
+            "anchor": "#location",
+            "label": "Location"
+          },
+          "menu": {
+            "anchor": "#menu",
+            "label": "Menu"
+          },
+          "navbar": {
+            "anchor": "#home",
+            "label": "Navbar"
+          },
+          "offers": {
+            "anchor": "#offers",
+            "label": "Offers"
+          },
+          "stats": {
+            "anchor": "#stats",
+            "label": "Stats"
+          },
+          "testimonials": {
+            "anchor": "#testimonials",
+            "label": "Testimonials"
+          }
+        },
+        "theme": {
+          "aria": "Toggle dark/light mode"
+        }
+      },
+      "languages": [
+        "en",
+        "ar"
+      ],
+      "locale": "en"
+    },
+    "menu.json": {
+      "addAria": "View item details",
+      "categories": [
+        {
+          "count": 3,
+          "id": "starters",
+          "image": "/placeholders/food-1.jpg",
+          "label": "Starters"
+        },
+        {
+          "count": 3,
+          "id": "mains",
+          "image": "/placeholders/food-2.jpg",
+          "label": "Main Courses"
+        },
+        {
+          "count": 3,
+          "id": "grills",
+          "image": "/placeholders/food-3.jpg",
+          "label": "Grills"
+        },
+        {
+          "count": 3,
+          "id": "desserts",
+          "image": "/placeholders/food-1.jpg",
+          "label": "Desserts"
+        }
+      ],
+      "dishes": {
+        "desserts": [
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 1,
+            "image": "/placeholders/food-1.jpg",
+            "name": "Signature dishes",
+            "price": 60
+          },
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 2,
+            "image": "/placeholders/food-2.jpg",
+            "name": "Set menus",
+            "price": 75
+          },
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 3,
+            "image": "/placeholders/food-3.jpg",
+            "name": "Seasonal specials",
+            "price": 90
+          }
+        ],
+        "grills": [
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 1,
+            "image": "/placeholders/food-1.jpg",
+            "name": "Signature dishes",
+            "price": 60
+          },
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 2,
+            "image": "/placeholders/food-2.jpg",
+            "name": "Set menus",
+            "price": 75
+          },
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 3,
+            "image": "/placeholders/food-3.jpg",
+            "name": "Seasonal specials",
+            "price": 90
+          }
+        ],
+        "mains": [
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 1,
+            "image": "/placeholders/food-1.jpg",
+            "name": "Signature dishes",
+            "price": 60
+          },
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 2,
+            "image": "/placeholders/food-2.jpg",
+            "name": "Set menus",
+            "price": 75
+          },
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 3,
+            "image": "/placeholders/food-3.jpg",
+            "name": "Seasonal specials",
+            "price": 90
+          }
+        ],
+        "starters": [
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 1,
+            "image": "/placeholders/food-1.jpg",
+            "name": "Signature dishes",
+            "price": 60
+          },
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 2,
+            "image": "/placeholders/food-2.jpg",
+            "name": "Set menus",
+            "price": 75
+          },
+          {
+            "available": true,
+            "badges": [],
+            "description": "",
+            "id": 3,
+            "image": "/placeholders/food-3.jpg",
+            "name": "Seasonal specials",
+            "price": 90
+          }
+        ]
+      },
+      "heading": {
+        "eyebrow": "Our Menu",
+        "title": "What are you craving?"
+      },
+      "itemsSuffix": "Items",
+      "more": {
+        "href": "#menu",
+        "label": "View Full Menu"
+      }
+    },
+    "navigation.json": {
+      "cta": {
+        "href": "#contact",
+        "icon": "shopping-bag",
+        "label": "Order Now"
+      },
+      "items": [
+        {
+          "href": "#home",
+          "label": "Home"
+        },
+        {
+          "href": "#menu",
+          "label": "Menu"
+        },
+        {
+          "href": "#stats",
+          "label": "Stats"
+        },
+        {
+          "href": "#offers",
+          "label": "Offers"
+        },
+        {
+          "href": "#testimonials",
+          "label": "Reviews"
+        },
+        {
+          "href": "#location",
+          "label": "Location"
+        },
+        {
+          "href": "#contact",
+          "label": "Contact"
+        }
+      ]
+    },
+    "offers.json": {
+      "heading": {
+        "eyebrow": "Special Offers",
+        "title": "Don't miss our offers"
+      },
+      "items": [
+        {
+          "badge": "FEATURED",
+          "description": "Professional photo set (10+ images)",
+          "id": 1,
+          "image": "/placeholders/food-1.jpg",
+          "time": "Ongoing",
+          "title": "Professional photo set (10+ images)"
+        }
+      ],
+      "more": {
+        "href": "#offers",
+        "label": "View All Offers"
+      }
+    },
+    "reviews.json": {
+      "heading": {
+        "eyebrow": "Testimonials",
+        "title": "What our clients say"
+      },
+      "items": [
+        {
+          "id": 1,
+          "name": "Nourhan Ali",
+          "rating": 5,
+          "role": "Frequent Visitor",
+          "text": "Top notch from start to finish. Booking was effortless."
+        },
+        {
+          "id": 2,
+          "name": "Hana Youssef",
+          "rating": 5,
+          "role": "Neighborhood Regular",
+          "text": "Great quality and even better service. Will come back."
+        },
+        {
+          "id": 3,
+          "name": "Dina Samir",
+          "rating": 5,
+          "role": "Long-time Client",
+          "text": "Great quality and even better service. Will come back."
+        }
+      ]
+    },
+    "seo.json": {
+      "author": "Nile Terrace",
+      "canonical": "https://nileterrace.example",
+      "description": "Nile Terrace — Restaurant in Cairo. ",
+      "keywords": [
+        "restaurant",
+        "Nile Terrace",
+        "Cairo"
+      ],
+      "openGraph": {
+        "description": "Nile Terrace — Restaurant in Cairo. ",
+        "image": "/gallery/b322ce26.jpg",
+        "locale": "en_US",
+        "siteName": "Nile Terrace",
+        "title": "Nile Terrace | Restaurant",
+        "type": "website"
+      },
+      "robots": "index, follow",
+      "schemaType": "Restaurant",
+      "title": "Nile Terrace | Restaurant in Cairo",
+      "twitter": {
+        "card": "summary_large_image",
+        "description": "Nile Terrace — Restaurant in Cairo. ",
+        "image": "/hero/dark-hero.jpg",
+        "title": "Nile Terrace | Restaurant"
+      }
+    },
+    "services.json": {
+      "heading": {
+        "eyebrow": "Our Services",
+        "title": "What we offer"
+      },
+      "items": [
+        {
+          "icon": "sparkles",
+          "id": "svc-1",
+          "link": "#contact",
+          "text": "",
+          "title": "Dine-in meals"
+        },
+        {
+          "icon": "sparkles",
+          "id": "svc-2",
+          "link": "#contact",
+          "text": "",
+          "title": "Takeaway"
+        },
+        {
+          "icon": "sparkles",
+          "id": "svc-3",
+          "link": "#contact",
+          "text": "",
+          "title": "Event catering"
+        }
+      ]
+    },
+    "social.json": {
+      "facebook": "",
+      "instagram": "",
+      "linkedin": "",
+      "tiktok": "",
+      "twitter": "",
+      "whatsapp": "https://wa.me/201000000011",
+      "youtube": ""
+    },
+    "stats.json": {
+      "heading": {
+        "eyebrow": "By The Numbers",
+        "title": "Our stats"
+      },
+      "items": [
+        {
+          "decimals": 1,
+          "id": "rating",
+          "label": "Average Rating",
+          "suffix": "/5",
+          "value": 4.6
+        },
+        {
+          "id": "reviews",
+          "label": "Reviews",
+          "suffix": "+",
+          "value": 512
+        },
+        {
+          "id": "dishes",
+          "label": "Signature Dishes",
+          "suffix": "+",
+          "value": 60
+        },
+        {
+          "id": "guests",
+          "label": "Guests Served",
+          "suffix": "+",
+          "value": 25000
+        }
+      ]
+    },
+    "theme.json": {
+      "animations": {
+        "durationBase": "300ms",
+        "durationFast": "150ms",
+        "durationSlow": "600ms",
+        "ease": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+        "spring": "cubic-bezier(0.34, 1.56, 0.64, 1)"
+      },
+      "buttons": {
+        "primary": {
+          "fontWeight": "600",
+          "paddingX": "1.5rem",
+          "paddingY": "0.7rem",
+          "radius": "0.75rem"
+        },
+        "secondary": {
+          "fontWeight": "600",
+          "paddingX": "1.5rem",
+          "paddingY": "0.7rem",
+          "radius": "0.75rem"
+        }
+      },
+      "cards": {
+        "borderOpacity": "0.08",
+        "padding": "1.5rem",
+        "radius": "1rem"
+      },
+      "colors": {
+        "dark": {
+          "base": "26 18 15",
+          "base-deep": "17 12 10",
+          "ink": "250 245 240",
+          "ink-muted": "156 150 146",
+          "primary": "214 122 64",
+          "primary-dark": "167 95 50",
+          "primary-light": "221 146 98",
+          "surface": "58 51 49",
+          "surface-2": "86 80 77",
+          "surface-3": "113 108 106"
+        },
+        "light": {
+          "base": "232 231 231",
+          "base-deep": "205 203 202",
+          "ink": "21 14 12",
+          "ink-muted": "253 251 248",
+          "primary": "167 95 50",
+          "primary-dark": "128 73 38",
+          "primary-light": "214 122 64",
+          "surface": "255 255 255",
+          "surface-2": "205 203 202",
+          "surface-3": "163 160 159"
+        }
+      },
+      "defaultMode": "light",
+      "gradients": {
+        "hero": "linear-gradient(180deg, rgb(var(--c-base) / 0.92) 0%, rgb(var(--c-base) / 0.55) 45%, rgb(var(--c-base) / 0.92) 100%)",
+        "primaryFade": "linear-gradient(135deg, rgb(var(--c-primary) / 0.25), rgb(var(--c-primary) / 0.05))"
+      },
+      "icons": {
+        "sizeLg": "36px",
+        "sizeMd": "24px",
+        "sizeSm": "16px",
+        "strokeWidth": "1.8"
+      },
+      "name": "dis-cairo-010",
+      "radius": {
+        "full": "9999px",
+        "lg": "1rem",
+        "md": "0.75rem",
+        "sm": "0.5rem",
+        "xl": "1.25rem"
+      },
+      "shadows": {
+        "elevated": "0 12px 48px -12px rgba(0, 0, 0, 0.5)",
+        "primary": "0 4px 24px -4px rgb(var(--c-primary) / 0.35)",
+        "primary-lg": "0 8px 40px -8px rgb(var(--c-primary) / 0.3)"
+      },
+      "spacing": {
+        "2xl": "4rem",
+        "lg": "1.5rem",
+        "md": "1rem",
+        "sm": "0.5rem",
+        "xl": "2.5rem",
+        "xs": "0.25rem"
+      },
+      "storageKey": "site-theme",
+      "typography": {
+        "body": "'Inter', sans-serif",
+        "display": "'Playfair Display', serif",
+        "fontsUrl": "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+      }
+    }
+  },
+  "layout": {
+    "density": "spacious",
+    "extraBeforeFooter": [
+      "cta"
+    ],
+    "gridCols": 3,
+    "heroVariant": "fullbleed",
+    "id": "restaurant",
+    "includesPages": [
+      "menu",
+      "contact"
+    ],
+    "label": "Restaurant",
+    "sectionAltEvery": 2
+  },
+  "name": "Nile Terrace"
+}

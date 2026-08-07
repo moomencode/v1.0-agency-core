@@ -75,6 +75,7 @@ export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }
     return { icon: info.icon, title, subtitle };
   });
 
+  const ctaTarget = enabled.includes('menu') ? '#menu' : enabled.includes('services') ? '#services' : enabled.includes('features') ? '#features' : '#contact';
   out['hero.json'] = {
     eyebrow: n.profile.eyebrow || 'Welcome to',
     title: shortName,
@@ -84,7 +85,7 @@ export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }
     image: { dark: '/hero/dark-hero.jpg', light: '/hero/light-hero.jpg', alt: `${n.name} Ambiance` },
     ctaPrimary: enabled.includes('menu')
       ? { label: 'View Menu', href: '#menu', icon: 'utensils-crossed' }
-      : { label: 'Explore', href: '#services', icon: 'sparkles' },
+      : { label: 'Explore', href: ctaTarget, icon: 'sparkles' },
     ctaSecondary: n.hasBooking
       ? { label: 'Book Now', href: '#reservation', icon: 'calendar-check' }
       : { label: 'Contact Us', href: '#contact', icon: 'phone' },

@@ -149,7 +149,7 @@ export function categoryInfo(category) {
 }
 
 export function competitorNames(category, area) {
-  const base = {
+  const names = {
     cafe: ['Golden Bean Cafe', 'City Roast House', 'Corner Brew'],
     restaurant: ['Heritage Kitchen', 'City Plates', 'The Family Table'],
     gym: ['Powerhouse Gym', 'FitZone Studio', 'Iron Pulse'],
@@ -160,9 +160,11 @@ export function competitorNames(category, area) {
     clinic: ['City Health Clinic', 'WellCare Center', 'Prime Medical'],
     shop: ['Urban Market', 'Corner Store Plus', 'City Goods'],
     pharmacy: ['CarePoint Pharmacy', 'HealthPlus Drugs', 'Safe Dose'],
+    realestate: ['Prime Realty', 'Horizon Properties', 'Nile Homes'],
+    corporate: ['Apex Business Group', 'Metro Enterprises', 'City Works'],
     other: ['Local Pro Services', 'Neighborhood Experts', 'City Solutions']
-  }[category] || base.other;
-  return base;
+  };
+  return names[category] || names.other;
 }
 
 export function priceLevelInfo(category) {

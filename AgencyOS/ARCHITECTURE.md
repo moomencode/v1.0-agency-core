@@ -1,9 +1,10 @@
 # AgencyOS — Architecture (`ARCHITECTURE.md`)
 
-## Module Inventory — Phase 4.2 (Website Production Pipeline)
+## Module Inventory — Phase 4.3 (Universal Website Engine)
 
 | module | responsibility | API version | smoke |
 |---|---|---|---|
+| `website-engine/` | config bundle → production website (static/react/json/vercel) | 1.0 | 10 PASS (+22 unit, +2 visual, +2 regression) |
 | `pipeline/` | dossier → production website config bundle, 13 resumable stages | 1.0 | 9 PASS (+24 unit) |
 | `dossier/` | structured business knowledge: 20 documents + 5 reports, versioned | 1.0 | 75 PASS (+41 unit) |
 | `brain/` | facade + pipeline orchestration, Runtime wiring | 1.0 | 45 PASS |
@@ -18,12 +19,26 @@
 | `rules/` | rule registry + evaluation | 1.0 | 18 PASS |
 | `metrics/` | counters, sums, snapshot, persistence | 1.0 | 18 PASS |
 
-**Pipeline total: 33 PASS. Dossier total: 116 PASS. Brain total: 328 PASS.
-Full regression across phases 3.0–4.2: 896+ PASS.**
+**Website Engine total: 36 PASS. Pipeline total: 33 PASS. Dossier total: 116
+PASS. Brain total: 328 PASS. Full regression across phases 3.0–4.3:
+932+ PASS.**
 
 ## Dependency Graph
 
 ```
+website-engine/
+  ├── pipeline/          (input: 19-file website config bundle + manifest)
+  ├── renderer/          (node tree, escaping, HTML + JSX serializers)
+  ├── theme/             (tokens, CSS variables, component CSS, tailwind config)
+  ├── components/        (icons + semantic element helpers)
+  ├── sections/          (18 config-driven section builders)
+  ├── layouts/           (7 layouts + category auto-selection)
+  ├── builders/          (head, site, pages — home/menu/contact)
+  ├── assets/            (ref resolver, seeded SVG placeholders, report)
+  ├── validators/        (7 checks per page)
+  ├── export/            (static · react · json · vercel · write + checksums)
+  └── preview/           (single-file preview)
+
 pipeline/
   ├── dossier/          (input: validated business dossier)
   ├── registry.js       (pipelines, generators, dependency graph, versions)
@@ -84,6 +99,10 @@ via `context.estimates`; `planner/` delegates plan loading to
 | `pipeline.runner` | `PipelineRunner.run(dossier, { resume, runId })` — consumes any dossier, checkpoint/resume per stage |
 | pipeline events | `pipeline.started/stage.started/stage.completed/stage.failed/qa.completed/completed/failed` |
 | pipeline output | `storage/<root>/build/` — `website-config/` consumed by the Website Engine |
+| `website-engine.engine` | `createWebsiteEngine().build(configs, { manifest, structuredData, overrideLayout })` — consumes the 19-file bundle |
+| engine validation | `validate(site)` — 7 checks per page (links/sections/ids/seo/a11y/wcag/responsive), gates export |
+| engine export | `export(site, { format, root, validation })` — static/react/json/vercel/all + `site-manifest.json` checksums |
+| engine preview | `preview(site, { root })` — single-file preview for sales review |
 | metrics persistence | `storage/<root>/metrics.json` via `atomicWrite` (gitignored) |
 
 ## Future Extension Points (AI reasoning)
@@ -106,26 +125,33 @@ via `context.estimates`; `planner/` delegates plan loading to
   palettes and copy in `profiles/index.js` are operator-editable data.
 - `pipeline/` is deterministic by construction — an AI or human can review
   the `summary.json` checksums to verify reproducible builds.
+- `website-engine/` sections, layouts, icons and validators are additive —
+  new sections/layouts are new builder files + registry entries; export
+  formats are additive cases; the node tree serializes to any target.
+- `website-engine/` is deterministic by construction — seeded placeholder
+  SVGs + `stableJson`; `site-manifest.json` sha256 verifies byte-reproducible
+  builds.
 
 ## Production Readiness
 
 | area | status |
 |---|---|
 | determinism | guaranteed except timestamps/durationMs; seeded generation |
-| validation | schemas for context, policy, plan, instance, decision, brain-run |
+| validation | schemas for context, policy, plan, instance, decision, brain-run + 7-check site gate |
 | observability | bus events, per-step results, metrics snapshot, reasoning traces |
 | resilience | retry policy per state, timeout actions, escalation records, gate failures are handled results |
-| configurability | policies, strategies, plan catalog, gates, executors all injectable |
-| test coverage | 21 suites, 896+ assertions, all green |
+| configurability | policies, strategies, plan catalog, gates, executors all injectable; sections/layouts additive |
+| test coverage | 25 suites, 932+ assertions, all green |
 | persistence | metrics + state summaries to `storage/` (gitignored) |
 | runtime footprint | zero runtime deps, Node 24 ESM only |
 
 ## Run It
 
 ```bash
-node AgencyOS/pipeline/demo.mjs       # production pipeline demo (3 businesses)
-node AgencyOS/dossier/demo.mjs        # dossier demo (20 documents, 5 reports)
-node AgencyOS/brain/smoke.mjs         # 45 PASS — facade end-to-end
-node AgencyOS/demo.mjs                # 6-business market through the pipeline
+node AgencyOS/website-engine/demo/demo.mjs  # universal engine demo (7 real websites)
+node AgencyOS/pipeline/demo.mjs             # production pipeline demo (3 businesses)
+node AgencyOS/dossier/demo.mjs              # dossier demo (20 documents, 5 reports)
+node AgencyOS/brain/smoke.mjs               # 45 PASS — facade end-to-end
+node AgencyOS/demo.mjs                      # 6-business market through the pipeline
 # per-module: node AgencyOS/<module>/smoke.mjs
 ```

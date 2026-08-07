@@ -1,0 +1,26 @@
+{
+  "businessId": "dis-heliopolis-011",
+  "layout": {
+    "density": "clean",
+    "extraBeforeFooter": [],
+    "gridCols": 3,
+    "heroVariant": "centered",
+    "id": "medical",
+    "includesPages": [
+      "contact"
+    ],
+    "label": "Medical",
+    "sectionAltEvery": 1
+  },
+  "name": "Heliopolis Clinic",
+  "pages": [
+    {
+      "id": "home",
+      "title": "Heliopolis Clinic | Medical Clinic in Cairo"
+    },
+    {
+      "id": "contact",
+      "title": "Contact Heliopolis Clinic | Heliopolis Clinic"
+    }
+  ]
+}

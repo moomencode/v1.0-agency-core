@@ -1,0 +1,28 @@
+{
+  "businessId": "dis-zamalek-014",
+  "layout": {
+    "density": "gallery",
+    "extraBeforeFooter": [
+      "cta"
+    ],
+    "gridCols": 4,
+    "heroVariant": "split",
+    "id": "portfolio",
+    "includesPages": [
+      "contact"
+    ],
+    "label": "Portfolio",
+    "sectionAltEvery": 2
+  },
+  "name": "Atelier Cairo",
+  "pages": [
+    {
+      "id": "home",
+      "title": "Atelier Cairo | Tailor & Alterations in Cairo"
+    },
+    {
+      "id": "contact",
+      "title": "Contact Atelier Cairo | Atelier Cairo"
+    }
+  ]
+}

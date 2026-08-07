@@ -1,0 +1,19 @@
+{
+  "display": "standalone",
+  "icons": [
+    {
+      "sizes": "any",
+      "src": "/favicon.svg",
+      "type": "image/svg+xml"
+    },
+    {
+      "sizes": "180x180",
+      "src": "/apple-touch-icon.png",
+      "type": "image/png"
+    }
+  ],
+  "name": "Nile Terrace",
+  "short_name": "NILE",
+  "start_url": "/",
+  "theme_color": "#a75f32"
+}
