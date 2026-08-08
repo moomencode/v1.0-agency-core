@@ -2,7 +2,7 @@ import { SECTION_MAP, SECTION_DEFS, SECTION_BUILDERS } from '../sections/index.j
 import { layoutFor, layoutIdFor } from '../layouts/index.js';
 import { parseTheme } from '../theme/index.js';
 import { resolveAssets } from '../assets/index.js';
-import { el, text } from '../renderer/tree.js';
+import { el, text, collectNodes } from '../renderer/tree.js';
 import { webError, WEB_CODES } from '../errors.js';
 import { buildHead } from './head.js';
 
@@ -138,5 +138,43 @@ export function buildPages({ sections, ctx, seo }) {
     pages.push({ id: 'menu', path: 'menu.html', route: '/menu', sections: menuSections, head: head('menu') });
   }
   pages.push({ id: 'contact', path: 'contact.html', route: '/contact', sections: contactPageSections, head: head('contact') });
+  return normalizePageAnchors(pages);
+}
+
+function collectNodeIds(page) {
+  const ids = [];
+  for (const n of collectNodes(page, (node) => node.type === 'element' && node.props?.id)) {
+    if (n.props.id) ids.push(n.props.id);
+  }
+  return ids;
+}
+
+function rewriteAnchors(node, localIds, anchorPages) {
+  if (!node || node.type !== 'element') return node;
+  const props = { ...node.props };
+  const href = props.href;
+  if (typeof href === 'string' && href.startsWith('#')) {
+    const id = href.slice(1);
+    if (localIds.has(id)) return node;
+    const pagePath = anchorPages.get(id);
+    if (!pagePath) return null;
+    props.href = `${pagePath}${href}`;
+    return { ...node, props };
+  }
+  const children = (node.children || []).map((c) => rewriteAnchors(c, localIds, anchorPages)).filter(Boolean);
+  return { ...node, props, children: children.length ? children : undefined };
+}
+
+function normalizePageAnchors(pages) {
+  const anchorPages = new Map();
+  for (const page of pages) {
+    for (const id of collectNodeIds(page)) {
+      if (!anchorPages.has(id)) anchorPages.set(id, page.path);
+    }
+  }
+  for (const page of pages) {
+    const localIds = new Set(collectNodeIds(page));
+    page.sections = page.sections.map((s) => rewriteAnchors(s, localIds, anchorPages)).filter(Boolean);
+  }
   return pages;
 }

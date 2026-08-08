@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/orchestrator/execution-trace",
+  "title": "Orchestrator Execution Trace",
+  "type": "object",
+  "required": ["executionId", "campaignId", "businessId"],
+  "additionalProperties": true,
+  "properties": {
+    "schema": { "type": "string" },
+    "executionId": { "type": "string" },
+    "campaignId": { "type": "string" },
+    "businessId": { "type": "string" },
+    "workflowId": { "type": "string" },
+    "dossierVersion": { "type": ["integer", "null"] },
+    "pipelineRunId": { "type": ["string", "null"] },
+    "engineRunId": { "type": ["string", "null"] },
+    "deliveryRecordId": { "type": ["string", "null"] },
+    "outcome": { "type": ["object", "null"] },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "step": { "type": ["string", "null"] },
+          "detail": { "type": ["string", "null"] },
+          "at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "assembledAt": { "type": "string", "format": "date-time" }
+  }
+}

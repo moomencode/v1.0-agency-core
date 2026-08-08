@@ -1,0 +1,14 @@
+{
+  "name": "agencyos-orchestrator",
+  "version": "1.0.0",
+  "description": "Autonomous agency workflow orchestration layer (Phase 4.5) - coordinates Discovery, Brain, Dossier, Pipeline, Website Engine, Delivery into campaign-driven, resumable, traceable workflows",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "node tests/smoke.mjs",
+    "demo": "node demo/demo.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

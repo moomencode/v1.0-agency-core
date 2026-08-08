@@ -4,7 +4,7 @@ import { layoutFor, layoutIdFor, LAYOUTS } from '../layouts/index.js';
 import { parseTheme, contrastRatio } from '../theme/index.js';
 import { cssVariables, themeBootstrapScript, generateTailwindConfig } from '../theme/index.js';
 import { generateSiteCss } from '../theme/site-css.js';
-import { serializeTreeHtml, serializeBodyJsx } from '../renderer/index.js';
+import { serializeTreeHtml, serializeBodyJsx, serializeBodyHtml } from '../renderer/index.js';
 import { escapeHtml } from '../renderer/escape.js';
 import { collectRefs, resolveAssets, placeholderSvg } from '../assets/index.js';
 import { placeholderMap, resolvePlaceholders, faviconSvg } from '../export/assets-utils.js';
@@ -122,8 +122,10 @@ const refs = collectRefs(configs);
 assert.ok(refs.includes('/hero/dark-hero.jpg'), 'collects hero ref');
 const assets = resolveAssets(configs, { manifest: MANIFEST });
 assert.ok(assets.missing.every((r) => !MANIFEST.references.includes(r)), 'manifest refs not missing');
-assert.ok(assets.refs.some((r) => r.status === 'in-manifest'), 'in-manifest status');
+assert.ok(assets.refs.some((r) => r.status === 'placeholder'), 'undownloaded images resolve to placeholders');
 assert.strictEqual(assets.count, refs.length, 'all refs resolved');
+const downloaded = resolveAssets(configs, { manifest: { ...MANIFEST, downloaded: true } });
+assert.ok(downloaded.refs.some((r) => r.status === 'in-manifest'), 'downloaded manifest refs stay in-manifest');
 assertOk('asset resolver');
 
 // 12 — placeholders
@@ -177,15 +179,13 @@ assert.strictEqual(sha256(staticFiles(site)['index.html']), sha256(staticFiles(s
 assert.strictEqual(sha256(JSON.stringify(exportFiles(site, { format: 'json' }))), sha256(JSON.stringify(exportFiles(site2, { format: 'json' }))), 'identical json');
 assertOk('100% deterministic across builds');
 
-// 17 — broken links detected
+// 17 — unresolvable anchors are dropped at build time
 {
   const badConfigs = bundleOf({ 'navigation.json': { items: [{ label: 'Ghost', href: '#ghost-anchor' }], cta: { label: 'X', href: '#ghost-cta' } } });
   const badSite = engine.build(badConfigs, { manifest: MANIFEST });
-  const v = engine.validate(badSite);
-  const links = v.pages.flatMap((p) => p.checks.filter((c) => c.id === 'links' && !c.ok));
-  assert.ok(links.length >= 1, 'broken anchor flagged');
-  assert.ok(v.failedChecks.some((c) => c.errors.some((e) => e.includes('#ghost-anchor'))), 'ghost anchor error');
-  assertOk('broken link validation');
+  const html = serializeBodyHtml(badSite.pages.flatMap((p) => p.sections));
+  assert.ok(!html.includes('#ghost-anchor') && !html.includes('#ghost-cta'), 'unresolvable anchors dropped at build time');
+  assertOk('broken link normalization');
 }
 
 // 18 — missing assets flagged

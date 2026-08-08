@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/orchestrator/checkpoint",
+  "title": "Orchestrator Execution Checkpoint",
+  "type": "object",
+  "required": ["executionId", "campaignId", "businessId", "status", "stepIndex"],
+  "additionalProperties": true,
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "executionId": { "type": "string" },
+    "campaignId": { "type": "string" },
+    "businessId": { "type": "string" },
+    "status": { "type": "string" },
+    "stepIndex": { "type": "integer", "minimum": 0 },
+    "attempts": { "type": "object" },
+    "outputs": { "type": "object" },
+    "error": { "type": ["object", "null"] },
+    "outcome": { "type": ["object", "null"] },
+    "timeline": { "type": "array", "maxItems": 10 },
+    "startedAt": { "type": ["string", "null"] },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  }
+}

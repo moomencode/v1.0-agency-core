@@ -33,9 +33,18 @@ export function renderDocument({ head = {}, bodyNodes = [], css = '', inlineScri
     script,
     '</head>',
     '<body>',
-    serializeBodyHtml(bodyNodes),
+    serializeBodyHtml(bodyWithMain(bodyNodes)),
     '</body>',
     '</html>',
     ''
   ].filter((s) => s !== '').join('\n');
+}
+
+function bodyWithMain(bodyNodes) {
+  const nodes = (bodyNodes || []).filter(Boolean);
+  let start = 0;
+  let end = nodes.length;
+  if (nodes[start]?.type === 'element' && nodes[start].tag === 'header') start = 1;
+  if (nodes[end - 1]?.type === 'element' && nodes[end - 1].tag === 'footer') end -= 1;
+  return [...nodes.slice(0, start), el('main', {}, nodes.slice(start, end)), ...nodes.slice(end)];
 }

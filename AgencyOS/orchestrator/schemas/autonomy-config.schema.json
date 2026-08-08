@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/orchestrator/autonomy-config",
+  "title": "Orchestrator Autonomy Configuration",
+  "type": "object",
+  "required": ["L0", "L1", "L2", "L3", "L4", "L5"],
+  "additionalProperties": true,
+  "properties": {
+    "L0": { "$ref": "#/definitions/level" },
+    "L1": { "$ref": "#/definitions/level" },
+    "L2": { "$ref": "#/definitions/level" },
+    "L3": { "$ref": "#/definitions/level" },
+    "L4": { "$ref": "#/definitions/level" },
+    "L5": { "$ref": "#/definitions/level" }
+  },
+  "definitions": {
+    "level": {
+      "type": "object",
+      "required": ["name", "autoSteps", "humanApprovals", "autoGrant"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string" },
+        "autoSteps": { "type": "array", "items": { "type": "string" } },
+        "humanApprovals": {
+          "type": "array",
+          "items": { "enum": ["ESCALATE", "DEPLOY", "QA_OVERRIDE", "SENSITIVE", "POLICY_VIOLATION", "MANUAL_STEP"] }
+        },
+        "autoGrant": {
+          "type": "array",
+          "items": { "enum": ["ESCALATE", "DEPLOY", "QA_OVERRIDE", "SENSITIVE", "POLICY_VIOLATION", "MANUAL_STEP"] }
+        }
+      }
+    }
+  }
+}

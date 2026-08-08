@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/orchestrator/approval",
+  "title": "Orchestrator Approval Record",
+  "type": "object",
+  "required": ["id", "executionId", "kind", "terminal"],
+  "additionalProperties": true,
+  "properties": {
+    "schema": { "type": "string" },
+    "id": { "type": "string", "pattern": "^apr-[a-f0-9]{16}$" },
+    "executionId": { "type": "string" },
+    "campaignId": { "type": ["string", "null"] },
+    "kind": {
+      "enum": ["ESCALATE", "DEPLOY", "QA_OVERRIDE", "SENSITIVE", "POLICY_VIOLATION", "MANUAL_STEP"]
+    },
+    "step": { "type": ["string", "null"] },
+    "requestedBy": { "type": "string" },
+    "requestedAt": { "type": "string", "format": "date-time" },
+    "evidence": { "type": "object" },
+    "decision": {
+      "type": ["object", "null"],
+      "properties": {
+        "granted": { "type": "boolean" },
+        "decidedBy": { "type": "string" },
+        "decidedAt": { "type": "string", "format": "date-time" },
+        "reason": { "type": ["string", "null"] }
+      }
+    },
+    "terminal": { "type": "boolean" }
+  }
+}

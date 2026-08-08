@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/orchestrator/campaign-report",
+  "title": "Orchestrator Campaign Report",
+  "type": "object",
+  "required": ["campaignId", "name", "state", "metrics"],
+  "additionalProperties": true,
+  "properties": {
+    "schema": { "type": "string" },
+    "campaignId": { "type": "string" },
+    "name": { "type": "string" },
+    "state": { "type": "string" },
+    "autonomyLevel": { "type": "string" },
+    "metrics": { "type": "object" },
+    "budget": { "type": "object" },
+    "executions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "executionId": { "type": "string" },
+          "businessId": { "type": "string" },
+          "status": { "type": "string" },
+          "outcome": { "type": ["object", "null"] },
+          "links": { "type": "object" }
+        }
+      }
+    },
+    "timeline": { "type": "array" },
+    "generatedAt": { "type": "string", "format": "date-time" }
+  }
+}

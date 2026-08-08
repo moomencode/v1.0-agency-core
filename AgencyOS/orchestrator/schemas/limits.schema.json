@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/orchestrator/limits",
+  "title": "Orchestrator Budget Ledger",
+  "type": "object",
+  "required": ["limits", "counters"],
+  "additionalProperties": true,
+  "properties": {
+    "limits": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "maxBusinesses": { "type": "integer", "minimum": 1 },
+        "maxConcurrent": { "type": "integer", "minimum": 1, "maximum": 4 },
+        "maxRetries": { "type": "integer", "minimum": 0 },
+        "maxDeployments": { "type": "integer", "minimum": 1 },
+        "maxAiCalls": { "type": "integer", "minimum": 1 },
+        "maxProviderCalls": { "type": "integer", "minimum": 1 },
+        "maxExecutionDurationMs": { "type": "integer", "minimum": 1 },
+        "maxCampaignDurationMs": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "counters": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "businesses": { "type": "integer" },
+        "deployments": { "type": "integer" },
+        "aiCalls": { "type": "integer" },
+        "providerCalls": { "type": "integer" },
+        "retries": { "type": "integer" },
+        "steps": { "type": "integer" }
+      }
+    },
+    "startedAt": { "type": "string", "format": "date-time" },
+    "reached": { "type": "array", "items": { "type": "string" } }
+  }
+}

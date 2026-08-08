@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/orchestrator/orchestration-error",
+  "title": "Orchestrator Classified Error",
+  "type": "object",
+  "required": ["class", "code"],
+  "additionalProperties": true,
+  "properties": {
+    "class": { "enum": ["BUSINESS", "POLICY", "VALIDATION", "TRANSIENT", "SYSTEM"] },
+    "code": { "type": "string" },
+    "message": { "type": "string" },
+    "attempts": { "type": ["integer", "null"] },
+    "at": { "type": "string", "format": "date-time" },
+    "phase": { "type": ["string", "null"] },
+    "retryable": { "type": "boolean" }
+  }
+}

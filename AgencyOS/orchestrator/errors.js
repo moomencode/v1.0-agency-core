@@ -1,0 +1,65 @@
+export const ORC_CODES = {
+  STATE_INVALID: 'E_ORC_STATE_INVALID',
+  CAMPAIGN_INVALID: 'E_ORC_CAMPAIGN_INVALID',
+  CAMPAIGN_NOT_FOUND: 'E_ORC_CAMPAIGN_NOT_FOUND',
+  CAMPAIGN_BUSY: 'E_ORC_CAMPAIGN_BUSY',
+  EXECUTION_NOT_FOUND: 'E_ORC_EXECUTION_NOT_FOUND',
+  APPROVAL_NOT_PENDING: 'E_ORC_APPROVAL_NOT_PENDING',
+  APPROVAL_INVALID: 'E_ORC_APPROVAL_INVALID',
+  APPROVAL_REQUIRED: 'E_ORC_APPROVAL_REQUIRED',
+  LOCK_CONFLICT: 'E_ORC_LOCK_CONFLICT',
+  LIMIT_REACHED: 'E_ORC_LIMIT_REACHED',
+  LIMITS_REACHED: 'E_ORC_LIMITS_REACHED',
+  KILL_SWITCH: 'E_ORC_KILL_SWITCH',
+  EMERGENCY_STOP: 'E_ORC_EMERGENCY_STOP',
+  SECRET_DETECTED: 'E_ORC_SECRET_DETECTED',
+  NOT_RUNNING: 'E_ORC_NOT_RUNNING',
+  SCHEMA_INVALID: 'E_ORC_SCHEMA_INVALID',
+  BUSINESS_FAILURE: 'E_ORC_BUSINESS',
+  POLICY_FAILURE: 'E_ORC_POLICY',
+  VALIDATION_FAILURE: 'E_ORC_VALIDATION',
+  TRANSIENT_FAILURE: 'E_ORC_TRANSIENT',
+  SYSTEM_FAILURE: 'E_ORC_SYSTEM',
+  UNKNOWN: 'E_ORC_UNKNOWN'
+};
+
+const CLASS_OF = {
+  [ORC_CODES.BUSINESS_FAILURE]: 'BUSINESS',
+  [ORC_CODES.POLICY_FAILURE]: 'POLICY',
+  [ORC_CODES.VALIDATION_FAILURE]: 'VALIDATION',
+  [ORC_CODES.TRANSIENT_FAILURE]: 'TRANSIENT',
+  [ORC_CODES.SYSTEM_FAILURE]: 'SYSTEM'
+};
+
+export const FAILURE_CLASSES = ['BUSINESS', 'POLICY', 'VALIDATION', 'TRANSIENT', 'SYSTEM'];
+
+const NEVER_RETRY = new Set([
+  ORC_CODES.STATE_INVALID,
+  ORC_CODES.CAMPAIGN_INVALID,
+  ORC_CODES.APPROVAL_NOT_PENDING,
+  ORC_CODES.APPROVAL_INVALID,
+  ORC_CODES.SECRET_DETECTED,
+  ORC_CODES.SCHEMA_INVALID
+]);
+
+export function orcError(code, message, meta = {}) {
+  const err = new Error(message);
+  err.name = 'OrchestratorError';
+  err.code = code;
+  err.meta = meta;
+  if (meta.retryable !== undefined) err.retryable = Boolean(meta.retryable);
+  else err.retryable = !NEVER_RETRY.has(code);
+  if (meta.class) err.class = meta.class;
+  if (meta.status !== undefined) err.status = meta.status;
+  return err;
+}
+
+export function classOf(code) {
+  return CLASS_OF[code] || 'SYSTEM';
+}
+
+export function failureOf(code) {
+  const cls = classOf(code);
+  const out = { class: cls, code, retryable: cls === 'TRANSIENT' };
+  return out;
+}

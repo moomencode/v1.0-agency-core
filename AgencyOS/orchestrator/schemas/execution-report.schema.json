@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/orchestrator/execution-report",
+  "title": "Orchestrator Execution Report",
+  "type": "object",
+  "required": ["executionId", "campaignId", "businessId", "status"],
+  "additionalProperties": true,
+  "properties": {
+    "schema": { "type": "string" },
+    "executionId": { "type": "string" },
+    "campaignId": { "type": "string" },
+    "businessId": { "type": "string" },
+    "workflowVersion": { "type": "integer" },
+    "status": { "type": "string" },
+    "outcome": { "type": ["object", "null"] },
+    "outputs": { "type": "object" },
+    "error": { "type": ["object", "null"] },
+    "timeline": { "type": "array" },
+    "approvals": { "type": "array" },
+    "generatedAt": { "type": "string", "format": "date-time" }
+  }
+}

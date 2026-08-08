@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agency.os/orchestrator/workflow-instance",
+  "title": "Orchestrator Workflow Instance",
+  "type": "object",
+  "required": ["id", "campaignId", "businessId", "status", "stepIndex"],
+  "additionalProperties": true,
+  "properties": {
+    "schema": { "type": "string" },
+    "id": { "type": "string", "pattern": "^orc-[a-f0-9]{16}$" },
+    "campaignId": { "type": "string", "pattern": "^cmp-" },
+    "businessId": { "type": "string", "minLength": 1 },
+    "workflowVersion": { "type": "integer", "minimum": 1 },
+    "status": { "type": "string" },
+    "stepIndex": { "type": "integer", "minimum": 0 },
+    "attempts": { "type": "object" },
+    "outputs": { "type": "object" },
+    "error": { "type": ["object", "null"] },
+    "outcome": { "type": ["object", "null"] },
+    "timeline": { "type": "array" },
+    "startedAt": { "type": ["string", "null"] }
+  }
+}

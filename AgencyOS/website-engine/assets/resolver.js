@@ -33,7 +33,10 @@ function classify(ref, manifest) {
   if (/^(https?:|mailto:|tel:|wa\.me)/.test(ref)) return 'external';
   if (/^#/.test(ref)) return 'anchor';
   const manifestPaths = new Set(ensureArray(manifest?.references));
-  if (manifestPaths.has(ref)) return 'in-manifest';
+  if (manifestPaths.has(ref)) {
+    if (manifest?.downloaded === false && /\.(jpg|jpeg|png|webp)$/.test(ref)) return 'placeholder';
+    return 'in-manifest';
+  }
   if (/^\/placeholders\//.test(ref)) return 'placeholder';
   return 'missing';
 }
