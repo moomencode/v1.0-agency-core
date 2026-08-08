@@ -108,8 +108,8 @@ export const STEPS = {
     retryable: false,
     async run(execution, deps) {
       const record = instanceRead(deps, execution, 'record.json') || execution.record || deps.adapters.discovery.loadRecord(execution.businessId);
-      const brainResult = await deps.adapters.brain.evaluate(record);
       if (!deps.budget.tryConsume('aiCalls', 1)) throw budgetError('ai-call limit reached');
+      const brainResult = await deps.adapters.brain.evaluate(record);
       execution.brainResult = brainResult;
       instanceWrite(deps, execution, 'decision.json', brainResult);
       const decision = brainResult.decision;
@@ -282,6 +282,10 @@ export const STEPS = {
       deps.policy.assertProviderAllowed(provider, campaign);
       const buildId = execution.outputs.buildId;
       if (!buildId) throw new Error('buildId missing before delivery request');
+      if (mode === 'auto') {
+        if (!deps.budget.markDeployment()) throw budgetError('deployment limit reached');
+        if (!deps.budget.markProviderCall()) throw budgetError('provider-call limit reached');
+      }
       const record = await deps.adapters.delivery.deliver({
         buildId,
         mode,
@@ -300,9 +304,6 @@ export const STEPS = {
       execution.outputs.deliveryRecordId = record.id;
       execution.outputs.deliveryMode = mode;
       execution.outputs.deliveryStatus = record.status;
-      if (mode === 'auto' && !deps.budget.markProviderCall()) {
-        throw budgetError('provider-call limit reached');
-      }
       deps.trace.append({ step: 'request-delivery', detail: 'delivery-record-created', deliveryRecordId: record.id, mode, status: record.status });
       deps.audit.append({ action: 'delivery_requested', executionId: execution.executionId, recordId: record.id, mode, provider });
 
@@ -391,9 +392,6 @@ export const STEPS = {
       } else if (mode === 'auto') {
         const refreshed = deps.adapters.delivery.getRecord(recordId);
         execution.outputs.deliveryStatus = refreshed.status;
-        if (['recorded', 'deployed'].includes(execution.outputs.deliveryStatus)) {
-          if (!deps.budget.markDeployment()) throw budgetError('deployment limit reached');
-        }
       } else if (mode === 'dry-run') {
         const refreshed = deps.adapters.delivery.getRecord(recordId);
         execution.outputs.deliveryStatus = refreshed.status;
