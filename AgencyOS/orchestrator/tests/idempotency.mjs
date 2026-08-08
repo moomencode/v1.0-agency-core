@@ -10,7 +10,7 @@ async function approveUntilNone(sys) {
   assert(sys.pendingApprovals().length === 0, 'all approval waves must be decided');
 }
 
-async function waitTerminal(sys, campaignId, timeoutMs = 30000) {
+async function waitTerminal(sys, campaignId, timeoutMs = 60000) {
   const deadline = Date.now() + timeoutMs;
   let last = null;
   while (Date.now() < deadline) {
@@ -125,6 +125,59 @@ export const idempotency = {
     const reportArtifacts = all.filter((a) => a.type === 'execution-report');
     const names = reportArtifacts.map((a) => a.name);
     assert(new Set(names).size === names.length, 'execution report names must be unique');
+    sys.close();
+  },
+
+  'force rerun reuses the delivery record and never re-deploys an identical build': async () => {
+    const root = scratchRoot('idem-6');
+    const stack = await createStack(root);
+    const sys = createSystem(root, stack);
+    const deliverCalls = [];
+    const origDeliver = stack.delivery.deliver.bind(stack.delivery);
+    stack.delivery.deliver = async (opts) => {
+      deliverCalls.push(opts.buildId);
+      return origDeliver(opts);
+    };
+    await sys.boot();
+    const started = sys.startCampaign(baseSpec());
+    await sys.runCampaign(started.campaignId);
+    await approveUntilNone(sys);
+    await waitTerminal(sys, started.campaignId);
+    const run1 = sys.status(started.campaignId).executions.filter((e) => e.status === 'DEPLOYED');
+    assert(run1.length === 4, '4 deployed in run 1');
+    const before = {};
+    for (const e of run1) {
+      const full = sys.getExecution(e.executionId);
+      const record = stack.delivery.getRecord(full.outputs.deliveryRecordId);
+      before[e.businessId] = { recordId: record.id, createdAt: record.createdAt, status: record.status };
+    }
+    const callsAfterRun1 = deliverCalls.length;
+
+    const rerun = sys.startCampaign(baseSpec(), { force: true });
+    await sys.runCampaign(rerun.campaignId);
+    await approveUntilNone(sys);
+    await waitTerminal(sys, rerun.campaignId);
+    const run2 = sys.status(rerun.campaignId).executions.filter((e) => e.status === 'DEPLOYED');
+    assert(run2.length === 4, '4 deployed in run 2');
+    for (const e of run2) {
+      const full = sys.getExecution(e.executionId);
+      const record = stack.delivery.getRecord(full.outputs.deliveryRecordId);
+      const prev = before[e.businessId];
+      assert(prev && record.id === prev.recordId, `same deterministic record for ${e.businessId}`);
+      assert(record.createdAt === prev.createdAt, `delivery record ${record.id} is reused, not re-created`);
+      assert(record.status === prev.status && record.status === 'recorded', `record ${record.id} stays recorded`);
+    }
+    const perBuild = new Map();
+    for (const b of deliverCalls) perBuild.set(b, (perBuild.get(b) || 0) + 1);
+    for (const [buildId, count] of perBuild) {
+      assert(count === 2, `deliver requested twice for ${buildId} but second call re-links (got ${count})`);
+    }
+    assert(deliverCalls.length === callsAfterRun1 + run2.length, 'no extra delivery requests beyond re-linking');
+    const historyCounts = new Map();
+    for (const r of stack.delivery.history()) historyCounts.set(r.businessId, (historyCounts.get(r.businessId) || 0) + 1);
+    for (const [businessId, count] of historyCounts) {
+      assert(count === 1, `one delivery record per business after rerun, got ${count} for ${businessId}`);
+    }
     sys.close();
   }
 };

@@ -184,6 +184,13 @@ export class CampaignManager {
     };
   }
 
+  markExecutionResumed(campaignId, execution) {
+    const campaign = this._campaign(campaignId);
+    if (!campaign) return;
+    this._updateExecutionMeta(campaign, execution);
+    this._save(campaign);
+  }
+
   startCampaign(spec, { force = false } = {}) {
     if (!spec || typeof spec !== 'object') throw orcError(ORC_CODES.CAMPAIGN_INVALID, 'campaign spec required');
     this.validation.assertValid('campaign', spec);
@@ -493,6 +500,14 @@ export class CampaignManager {
     if (campaign.state === 'PAUSED') {
       campaign._halted = false;
       if (applyCampaignTransitionSafe(campaign, 'RESUME')) this._save(campaign);
+      this.events.emit(this.events.ORC_EVENTS.CAMPAIGN_RESUMED, { campaignId });
+      await this._dispatchRemaining(campaign);
+      this._finalize(campaign, []);
+      return this.summary(campaignId);
+    }
+    if (campaign.state === 'RUNNING') {
+      campaign._halted = false;
+      this._save(campaign);
       this.events.emit(this.events.ORC_EVENTS.CAMPAIGN_RESUMED, { campaignId });
       await this._dispatchRemaining(campaign);
       this._finalize(campaign, []);

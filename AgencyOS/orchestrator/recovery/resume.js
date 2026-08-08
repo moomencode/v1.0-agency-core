@@ -37,7 +37,9 @@ export class RecoveryManager {
         const executionId = executionIdFor(campaign.id, meta.businessId, campaign.workflowVersion);
         const execution = this.checkpoint.load(executionId);
         if (!execution) continue;
-        if (isTerminal(execution.status)) {
+        const resumableFailure =
+          execution.status === 'FAILED' && execution.error && ['TRANSIENT', 'SYSTEM'].includes(execution.error.class);
+        if (isTerminal(execution.status) && !resumableFailure) {
           summary.terminal++;
           continue;
         }
@@ -45,20 +47,22 @@ export class RecoveryManager {
           summary.waiting++;
           continue;
         }
+        if (resumableFailure) {
+          execution.status = entryStateFor(execution.stepIndex) || 'CREATED';
+          execution.error = { ...execution.error, resumedAt: new Date().toISOString() };
+          this.checkpoint.save(execution);
+          this.campaigns?.markExecutionResumed?.(campaign.id, execution);
+          summary.resumable++;
+          this.audit?.append({ action: 'boot_resume_marked', executionId, class: execution.error.class });
+          continue;
+        }
         if (execution.status === 'FAILED') {
-          if (execution.error && ['TRANSIENT', 'SYSTEM'].includes(execution.error.class)) {
-            execution.status = entryStateFor(execution.stepIndex) || 'CREATED';
-            execution.error = { ...execution.error, resumedAt: new Date().toISOString() };
-            this.checkpoint.save(execution);
-            summary.resumable++;
-            this.audit?.append({ action: 'boot_resume_marked', executionId, class: execution.error.class });
-          } else {
-            summary.terminal++;
-          }
+          summary.terminal++;
           continue;
         }
         execution.status = entryStateFor(execution.stepIndex) || 'CREATED';
         this.checkpoint.save(execution);
+        this.campaigns?.markExecutionResumed?.(campaign.id, execution);
         summary.resumable++;
       }
     }

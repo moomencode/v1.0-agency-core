@@ -112,6 +112,7 @@ export class StepEngine {
       try {
         const result = await step.run(execution, deps);
         execution.attempts[step.id] = 0;
+        execution.error = null;
         if (result.outputs) Object.assign(execution.outputs, result.outputs);
         const stepEntry = entryStateFor(execution.stepIndex) || execution.status;
         if (result.terminal) {

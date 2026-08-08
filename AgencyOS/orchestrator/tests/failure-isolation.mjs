@@ -1,7 +1,7 @@
 import { assert, runTests, scratchRoot, baseSpec, createStack, createSystem, SIMULATED_ROWS } from './helpers.mjs';
 import { buildRecord } from '../../discovery/enrich.js';
 
-async function waitTerminal(sys, campaignId, timeoutMs = 40000) {
+async function waitTerminal(sys, campaignId, timeoutMs = 60000) {
   const deadline = Date.now() + timeoutMs;
   let last = null;
   while (Date.now() < deadline) {

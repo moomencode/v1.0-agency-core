@@ -1,9 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { SchedulerSystem, SCHEDULER_API_VERSION } from './index.js';
 import { SCH_CODES } from './errors.js';
 import { sleep } from '../runtime/utils.js';
 
+const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const TEST_ROOT = path.resolve('storage', 'scheduler-smoke');
 fs.rmSync(TEST_ROOT, { recursive: true, force: true });
 
@@ -321,7 +323,7 @@ const main = async () => {
   const real = new SchedulerSystem({
     root: path.join(TEST_ROOT, 'real'),
     executor: async (job, ctx) => {
-      const rt = new Executor({ root: path.resolve('AgencyOS') });
+      const rt = new Executor({ root: REPO_ROOT });
       return rt.run(job.workflowId, ctx.input, { seed: `sched-smoke:${ctx.runNumber}` });
     }
   });

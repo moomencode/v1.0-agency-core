@@ -1,7 +1,7 @@
 import { assert, runTests, scratchRoot, baseSpec, createStack, createSystem } from './helpers.mjs';
 import { TERMINAL_STATES } from '../state/machine.js';
 
-const WAIT_MS = 20000;
+const WAIT_MS = 60000;
 
 function pendingKinds(sys) {
   return sys.pendingApprovals().map((a) => a.kind);

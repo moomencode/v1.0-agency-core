@@ -141,12 +141,22 @@ export class DeploymentManager {
       });
     }
 
+    const recordId = recordIdFor(buildId);
+    if (this.store.has(recordId)) {
+      const existing = this.store.load(recordId);
+      if (['recorded', 'deployed', 'simulated'].includes(existing.status)) {
+        this._audit({ action: 'record_reused', recordId, businessId: buildRecord.businessId, mode, status: existing.status });
+        this.logger?.info?.(`delivery deploy: reuse existing record ${recordId} (${existing.status})`, { businessId: buildRecord.businessId });
+        return existing;
+      }
+    }
+
     const tree = this.builds.readTree(buildId);
     const { manifest } = this.packaging.packageBuild({ buildId, buildRecord, qaReport, tree });
 
     const record = {
       schema: 'https://agency.os/delivery/deployment-record',
-      id: recordIdFor(buildId),
+      id: recordId,
       businessId: buildRecord.businessId,
       trace: {
         businessId: buildRecord.businessId,
