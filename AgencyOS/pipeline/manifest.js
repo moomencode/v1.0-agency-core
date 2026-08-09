@@ -46,10 +46,11 @@ export function generateAssetsManifest(n) {
     placeholders: [
       { path: '/placeholders/logo.svg', role: 'logo', source: 'generated' },
       { path: '/placeholders/profile.jpg', role: 'avatar', source: 'generated' },
-      { path: '/placeholders/gallery-1.jpg', role: 'gallery', source: 'generated' },
-      { path: '/placeholders/gallery-2.jpg', role: 'gallery', source: 'generated' },
-      { path: '/placeholders/gallery-3.jpg', role: 'gallery', source: 'generated' },
-      { path: '/placeholders/gallery-4.jpg', role: 'gallery', source: 'generated' },
+      ...Array.from({ length: galleryCount }, (_, i) => ({
+        path: `/placeholders/gallery-${i + 1}.jpg`,
+        role: 'gallery',
+        source: 'generated'
+      })),
       { path: '/placeholders/food-1.jpg', role: 'food', source: 'generated' },
       { path: '/placeholders/food-2.jpg', role: 'food', source: 'generated' },
       { path: '/placeholders/food-3.jpg', role: 'food', source: 'generated' }

@@ -1,18 +1,7 @@
-import { scanText, isHighEntropy } from './scan.js';
+import { scanText } from './scan.js';
 
 const REDACT_KEYS = /(token|secret|api[_-]?key|apikey|password|passwd|authorization|bearer|credential)/i;
 const REDACTED = '[REDACTED]';
-
-function isKnownSecret(value, vault) {
-  if (!value || typeof value !== 'string') return false;
-  if (scanText(value).length > 0) return true;
-  if (vault) {
-    for (const known of vault.knownSecretValues()) {
-      if (known && known.length >= 8 && value === known) return true;
-    }
-  }
-  return false;
-}
 
 export function redactText(text, { vault = null } = {}) {
   let out = String(text);
@@ -38,7 +27,7 @@ export function redact(value, { vault = null } = {}) {
     }
     return out;
   }
-  if (typeof value === 'string') return isKnownSecret(value, vault) ? REDACTED : value;
+  if (typeof value === 'string') return redactText(value, { vault });
   return value;
 }
 

@@ -23,7 +23,7 @@ export default function buildContact(ctx) {
     cfg.mapsUrl ? el('div', {}, [
       el('strong', {}, [text('Find us on the map')]),
       Link({ href: cfg.mapsUrl, external: true, ariaLabel: 'Open map in new tab' }, [
-        el('img', { src: '/backgrounds/map-dark.png', alt: 'Map', className: 'img--cover map-frame', width: '600', height: '320' })
+        el('img', { src: cfg.mapImage || '/backgrounds/map-dark.png', alt: 'Map', className: 'img--cover map-frame', width: '600', height: '320' })
       ])
     ]) : null
   ]));

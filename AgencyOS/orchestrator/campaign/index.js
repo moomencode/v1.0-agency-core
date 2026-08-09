@@ -258,10 +258,18 @@ export class CampaignManager {
     this._live.set(campaignId, campaign);
     if (TERMINAL_CAMPAIGN_STATES.has(campaign.state)) {
       if (!force) return { campaignId, state: campaign.state, note: 'campaign already finished' };
+      this._purgeRunState(campaign);
       campaign.executions = [];
       campaign.queue = [];
       campaign.timeline = [];
       campaign.metrics = { discovered: 0, qualified: 0, filtered: 0, approved: 0, rejected: 0, escalated: 0, generated: 0, deployed: 0, failed: 0, archived: 0, executed: 0, waiting: 0 };
+      campaign.budget = {
+        limits: resolveLimits((campaign.specCanonical && campaign.specCanonical.limits) || campaign.budget.limits || {}),
+        counters: { businesses: 0, deployments: 0, aiCalls: 0, providerCalls: 0, retries: 0, steps: 0 },
+        startedAt: nowIso(),
+        reached: []
+      };
+      campaign._halted = false;
       campaign.state = 'DRAFT';
     }
     if (campaign.state === 'RUNNING') return { campaignId, state: 'RUNNING', note: 'already running' };
@@ -521,11 +529,13 @@ export class CampaignManager {
   }
 
   async _dispatchRemaining(campaign) {
-    const remaining = (campaign.queue || []).filter((id) => {
-      const executionId = executionIdFor(campaign.id, id, campaign.workflowVersion);
-      const cp = this.checkpoint.load(executionId);
-      return !cp || !isTerminal(cp.status);
-    });
+    const seen = new Set(campaign.queue || []);
+    for (const meta of campaign.executions || []) {
+      if (seen.has(meta.businessId)) continue;
+      const cp = this.checkpoint.load(executionIdFor(campaign.id, meta.businessId, campaign.workflowVersion));
+      if (cp && !isTerminal(cp.status)) seen.add(meta.businessId);
+    }
+    const remaining = [...seen];
     campaign.queue = remaining;
     this._save(campaign);
     if (remaining.length) await this._dispatchAll(campaign);
@@ -610,7 +620,7 @@ export class CampaignManager {
     else if (execution.status === 'QA_FAILED' && record.kind === 'QA_OVERRIDE') applyOrcTransition(execution, 'QA_OVERRIDDEN', { approvalId: record.id });
     this.checkpoint.save(execution);
     execution._trace.append({ step: null, detail: 'approval-granted', approvalId: record.id, kind: record.kind });
-    if (campaign.state === 'RUNNING' || campaign.state === 'PAUSED') {
+    if (campaign.state === 'RUNNING' && !campaign._halted) {
       const pool = this._activePools.get(campaign.id);
       if (pool && !pool.stopped) {
         pool.submit(() => this._continueExecution(execution.executionId, campaign)).catch(() => {});
@@ -694,7 +704,7 @@ export class CampaignManager {
     this.checkpoint.save(execution);
     execution._trace.append({ step: null, detail: 'execution-retried', reason });
     this.audit.append({ action: 'execution_retried', executionId, reason });
-    if (campaign && (campaign.state === 'RUNNING' || campaign.state === 'PAUSED')) {
+    if (campaign && campaign.state === 'RUNNING' && !campaign._halted) {
       const pool = this._activePools.get(campaignId);
       if (pool && !pool.stopped) {
         pool.submit(() => this._continueExecution(executionId, campaign)).catch(() => {});

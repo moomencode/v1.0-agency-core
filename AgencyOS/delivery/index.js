@@ -185,6 +185,10 @@ export class DeliverySystem {
     return this.manager.getRecord(recordId);
   }
 
+  recover(recordId, opts = {}) {
+    return this.manager.recover(recordId, opts);
+  }
+
   attachScheduler() {
     this.schedulerBridge.attach();
     return this;

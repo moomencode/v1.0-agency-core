@@ -12,9 +12,10 @@ export class PipelineAdapter {
   async run({ dossier, businessId }) {
     if (!this.pipeline) throw new Error('pipeline adapter requires a PipelineRunner');
     const runId = this.runIdFor(businessId);
+    const hasState = typeof this.pipeline.hasRunState === 'function' ? await this.pipeline.hasRunState(runId) : false;
     const ctx = await this.pipeline.run(dossier, {
       runId,
-      resume: true,
+      resume: hasState,
       businessId,
       pipelineId: 'website-production'
     });

@@ -38,6 +38,10 @@ export class DeliveryAdapter {
     return this.delivery.getRecord(recordId);
   }
 
+  recover(recordId, opts = {}) {
+    return this.delivery.recover(recordId, opts);
+  }
+
   history(businessId = null) {
     return this.delivery.history(businessId);
   }

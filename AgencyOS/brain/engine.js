@@ -127,6 +127,7 @@ export class Brain {
 
     return {
       businessId: record.id,
+      record,
       context,
       policy: policySummary,
       decision,

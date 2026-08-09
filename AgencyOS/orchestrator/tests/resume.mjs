@@ -43,7 +43,7 @@ export const resume = {
     const escalated = s.executions.filter((e) => e.status === 'ESCALATED');
     assert(escalated.length === 1, 'the escalation must survive restart');
     for (const a of sys2.pendingApprovals()) sys2.approve(a.id, { by: 'ops', reason: 'resume' });
-    await new Promise((r) => setTimeout(r, 1500));
+    await waitForPending(sys2, started.campaignId, 1);
     const escDeploy = sys2.pendingApprovals().filter((a) => a.kind === 'DEPLOY');
     assert(escDeploy.length === 1, '006 deploy approval pending after restart');
     sys2.approve(escDeploy[0].id, { by: 'ops', reason: 'resume 006' });

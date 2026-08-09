@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { stableJson } from '../website-engine/utils.js';
+import { deliveryError, DEL_CODES } from './errors.js';
 
 export { stableJson };
 
@@ -24,6 +25,13 @@ export function computeEngineChecksum(site, files) {
 
 export function recordIdFor(buildId) {
   return `dep_${buildId}`;
+}
+
+export function assertBuildId(buildId) {
+  if (typeof buildId !== 'string' || !/^[0-9a-f]{16}$/.test(buildId)) {
+    throw deliveryError(DEL_CODES.UNKNOWN_BUILD, `malformed buildId "${String(buildId)}"`, { buildId: String(buildId), retryable: false });
+  }
+  return buildId;
 }
 
 export function posixPath(p) {

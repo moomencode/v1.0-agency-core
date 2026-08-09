@@ -14,7 +14,7 @@ export default function buildLocation(ctx) {
       Button({ label: 'Get Directions', href: cfg.mapsUrl, external: true, variant: 'secondary', iconName: 'map-pin' })
     ]),
     Link({ href: cfg.mapsUrl, external: true, ariaLabel: 'Open map in new tab' }, [
-      el('img', { src: '/backgrounds/map-dark.png', alt: `Map to ${cfg.address || cfg.area || 'our location'}`, className: 'map-frame', width: '600', height: '320' })
+      el('img', { src: cfg.mapImage || '/backgrounds/map-dark.png', alt: `Map to ${cfg.address || cfg.area || 'our location'}`, className: 'map-frame', width: '600', height: '320' })
     ])
   ]));
   return Section({ id: 'location', name: 'location', variant: 'alt', ariaLabel: 'Location' }, [Container({}, children)]);

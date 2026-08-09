@@ -60,6 +60,11 @@ export class StepEngine {
         return { stopped: true, status: execution.status };
       }
 
+      if (campaign && campaign._halted) {
+        this.checkpoint.save(execution);
+        return { halted: true, status: execution.status };
+      }
+
       if (isTerminal(execution.status)) {
         return { completed: true, status: execution.status };
       }

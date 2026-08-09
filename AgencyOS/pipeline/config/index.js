@@ -164,6 +164,7 @@ export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }
     area: area || null,
     mapsUrl: n.mapsUrl || (area ? `https://maps.google.com/?q=${encodeURIComponent(area)}` : null),
     mapsEmbed: null,
+    mapImage: '/backgrounds/map-dark.png',
     hours: hoursList,
     hoursShort: n.hoursShort || `${hoursList[0].days}: ${hoursList[0].time}`
   };

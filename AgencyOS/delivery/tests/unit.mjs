@@ -84,6 +84,16 @@ const tests = [
     applyTransition(record, DEPLOY_EVENTS.RETRY);
     assert(record.status === 'deploying', 'self-loop');
   }],
+  ['state machine: retry is a legal self-loop on rollback_requested and reverting', () => {
+    assert(canTransition('rollback_requested', DEPLOY_EVENTS.RETRY), 'rollback_requested accepts RETRY');
+    assert(canTransition('reverting', DEPLOY_EVENTS.RETRY), 'reverting accepts RETRY');
+    const rb = { id: 'dep_rb', status: 'rollback_requested', timeline: [] };
+    applyTransition(rb, DEPLOY_EVENTS.RETRY);
+    assert(rb.status === 'rollback_requested', 'rollback self-loop');
+    const rv = { id: 'dep_rv', status: 'reverting', timeline: [] };
+    applyTransition(rv, DEPLOY_EVENTS.RETRY);
+    assert(rv.status === 'reverting', 'revert self-loop');
+  }],
   ['DEPLOY_STATES covers all terminal states', () => {
     for (const s of TERMINAL_STATES) assert(DEPLOY_STATES.includes(s), `state ${s} listed`);
   }],

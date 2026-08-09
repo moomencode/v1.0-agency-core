@@ -14,6 +14,14 @@ function haltError(message) {
   return err;
 }
 
+function deliveryStateError(message, code = 'E_DEL_PROVIDER_ERROR') {
+  const err = new Error(message);
+  err.code = code;
+  err.retryable = false;
+  err.meta = { class: 'BUSINESS' };
+  return err;
+}
+
 function providerAttemptGuard(deps) {
   return () => {
     if (deps.campaign && deps.campaign._halted) throw haltError('campaign halted before provider attempt');
@@ -396,10 +404,15 @@ export const STEPS = {
       if (!recordId) throw new Error('delivery record missing before deploy');
       const record = deps.adapters.delivery.getRecord(recordId);
       const mode = execution.outputs.deliveryMode;
-      if (mode === 'explicit' && record.status === 'awaiting_approval') {
+
+      if (['deploying', 'deployed', 'verified'].includes(record.status)) {
+        const recovered = await deps.adapters.delivery.recover(recordId);
+        execution.outputs.deliveryStatus = recovered.status;
+        deps.trace.append({ step: 'deploy', detail: 'delivery-recovered-after-interruption', deliveryRecordId: recordId, status: recovered.status });
+      } else if (mode === 'explicit' && record.status === 'awaiting_approval') {
         const approval = deps.approvals.byExecution(execution.executionId).find((a) => a.kind === 'DEPLOY' && a.decision && a.decision.granted);
         if (!approval) {
-          throw new Error(`DEPLOY approval not decided for execution "${execution.executionId}"`);
+          throw deliveryStateError(`DEPLOY approval not decided for execution "${execution.executionId}"`, 'E_DEL_APPROVAL_NOT_PENDING');
         }
         if (!deps.budget.markDeployment()) throw budgetError('deployment limit reached');
         const deployed = await deps.adapters.delivery.approve(recordId, {
@@ -407,12 +420,15 @@ export const STEPS = {
           onProviderAttempt: providerAttemptGuard(deps)
         });
         execution.outputs.deliveryStatus = deployed.status;
-      } else if (mode === 'auto') {
+      } else if (mode === 'explicit' && record.status === 'recorded') {
+        execution.outputs.deliveryStatus = record.status;
+      } else if (mode === 'explicit' && ['failed', 'rejected'].includes(record.status)) {
+        throw deliveryStateError(`delivery record "${record.id}" ended in state ${record.status}`, (record.error && record.error.code) || 'E_DEL_PROVIDER_ERROR');
+      } else if (mode === 'auto' || mode === 'dry-run') {
         const refreshed = deps.adapters.delivery.getRecord(recordId);
         execution.outputs.deliveryStatus = refreshed.status;
-      } else if (mode === 'dry-run') {
-        const refreshed = deps.adapters.delivery.getRecord(recordId);
-        execution.outputs.deliveryStatus = refreshed.status;
+      } else {
+        throw deliveryStateError(`delivery record "${record.id}" cannot be deployed from state ${record.status}`, 'E_DEL_BAD_STATE');
       }
       return { event: 'DEPLOYED', outputs: { deliveryStatus: execution.outputs.deliveryStatus } };
     }
@@ -427,10 +443,10 @@ export const STEPS = {
       const status = record.status;
       execution.outputs.deliveryStatus = status;
       if (['failed', 'rejected'].includes(status)) {
-        throw new Error(`delivery record "${record.id}" ended in state ${status}`);
+        throw deliveryStateError(`delivery record "${record.id}" ended in state ${status}`, (record.error && record.error.code) || 'E_DEL_PROVIDER_ERROR');
       }
-      if (!['recorded', 'simulated', 'deployed', 'rolled_back', 'reverted'].includes(status)) {
-        throw new Error(`delivery record "${record.id}" not verified (state ${status})`);
+      if (!['recorded', 'simulated', 'deployed', 'verified', 'rolled_back', 'reverted'].includes(status)) {
+        throw deliveryStateError(`delivery record "${record.id}" not verified (state ${status})`, 'E_DEL_BAD_STATE');
       }
       return { event: null, outputs: { deliveryStatus: status, url: record.deployment ? record.deployment.url : null } };
     }

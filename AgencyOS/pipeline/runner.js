@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, rm } from 'node:fs/promises';
 import { createRegistry } from './registry.js';
 import { normalizeDossier } from './normalize.js';
 import { planSections } from './sections.js';
@@ -51,11 +51,11 @@ export class PipelineRunner {
     this.registry = registry || createRegistry();
   }
 
-  _emit(name, detail) {
+  _emit(name, runId, detail) {
     if (this.bus && typeof this.bus.emitEvent === 'function') {
-      try { this.bus.emitEvent(name, { runId: this._runId }, detail); } catch { /* bus is best-effort */ }
+      try { this.bus.emitEvent(name, { runId }, detail); } catch { /* bus is best-effort */ }
     } else if (this.bus && typeof this.bus.emitter?.emit === 'function') {
-      try { this.bus.emitter.emit(name, { runId: this._runId, ...detail }); } catch { }
+      try { this.bus.emitter.emit(name, { runId, ...detail }); } catch { }
     }
   }
 
@@ -63,52 +63,77 @@ export class PipelineRunner {
     this.logger?.[level]?.(message, meta);
   }
 
+  _safeRunId(runId) {
+    return String(runId || 'run').replace(/[^A-Za-z0-9._-]/g, '_');
+  }
+
   _checkpointDir() {
     if (!this.root) return null;
     return path.join(this.root, 'checkpoints');
   }
 
-  async _saveCheckpoint(stageId, payload) {
+  async _saveCheckpoint(runId, stageId, payload) {
     const dir = this._checkpointDir();
     if (!dir) return;
-    await mkdir(dir, { recursive: true });
-    await writeFile(path.join(dir, `${stageId}.json`), stableJson(payload), 'utf8');
+    const runDir = path.join(dir, this._safeRunId(runId));
+    await mkdir(runDir, { recursive: true });
+    await writeFile(path.join(runDir, `${stageId}.json`), stableJson(payload), 'utf8');
   }
 
-  async _loadCheckpoint(stageId) {
+  async _loadCheckpoint(runId, stageId) {
     const dir = this._checkpointDir();
     if (!dir) return null;
     try {
-      return JSON.parse(await readFile(path.join(dir, `${stageId}.json`), 'utf8'));
+      return JSON.parse(await readFile(path.join(dir, this._safeRunId(runId), `${stageId}.json`), 'utf8'));
     } catch {
       return null;
     }
   }
 
-  async _saveRunState(state) {
+  async _saveRunState(runId, state) {
     if (!this.root) return;
+    const safe = this._safeRunId(runId);
     await mkdir(this.root, { recursive: true });
-    await writeFile(path.join(this.root, 'run-state.json'), stableJson(state), 'utf8');
+    await writeFile(path.join(this.root, `run-state-${safe}.json`), stableJson(state), 'utf8');
   }
 
-  async _loadRunState() {
+  async _loadRunState(runId) {
     if (!this.root) return null;
     try {
-      return JSON.parse(await readFile(path.join(this.root, 'run-state.json'), 'utf8'));
+      return JSON.parse(await readFile(path.join(this.root, `run-state-${this._safeRunId(runId)}.json`), 'utf8'));
     } catch {
       return null;
+    }
+  }
+
+  async _removeRunState(runId) {
+    if (!this.root) return;
+    try {
+      await rm(path.join(this.root, `run-state-${this._safeRunId(runId)}.json`));
+    } catch {
+      /* best effort cleanup */
+    }
+  }
+
+  async hasRunState(runId) {
+    if (!this.root) return false;
+    try {
+      const raw = await readFile(path.join(this.root, `run-state-${this._safeRunId(runId)}.json`), 'utf8');
+      return Boolean(raw);
+    } catch {
+      return false;
     }
   }
 
   async run(dossier, { runId = null, resume = false, businessId = null, pipelineId = 'website-production' } = {}) {
     const pipelineDef = this.registry.get(pipelineId);
-    this._runId = runId || `run-${hashShort(businessId || 'dossier', 10)}-${pipelineDef.id}`;
+    const runIdFinal = runId || `run-${hashShort(businessId || 'dossier', 10)}-${pipelineDef.id}`;
 
-    let state = resume ? await this._loadRunState() : null;
+    let state = resume ? await this._loadRunState(runIdFinal) : null;
     const fresh = !state;
     const completed = new Set(fresh ? [] : state.completedStages || []);
     const ctx = {
-      runId: this._runId,
+      runId: runIdFinal,
       pipelineId,
       pipelineVersion: pipelineDef.apiVersion || '1.0',
       businessId,
@@ -138,43 +163,44 @@ export class PipelineRunner {
       }
     }
 
-    this._emit(PIPELINE_EVENTS.PIPELINE_STARTED, { runId: ctx.runId, pipelineId, resumed: ctx.resumed });
+    this._emit(PIPELINE_EVENTS.PIPELINE_STARTED, runIdFinal, { pipelineId, resumed: ctx.resumed });
 
     const sorted = this.registry.sortStages(pipelineId);
     for (const stageId of sorted) {
       const def = pipelineDef.stages.find((s) => s.id === stageId);
       const start = Date.now();
       if (completed.has(stageId)) {
-        const checkpoint = await this._loadCheckpoint(stageId);
+        const checkpoint = await this._loadCheckpoint(runIdFinal, stageId);
         if (checkpoint) this._mergeCheckpoint(ctx, stageId, checkpoint);
         ctx.stages.push({ id: stageId, ok: true, resumed: true, durationMs: 0, detail: 'resumed from checkpoint' });
         continue;
       }
-      this._emit(PIPELINE_EVENTS.STAGE_STARTED, { runId: ctx.runId, stage: stageId });
+      this._emit(PIPELINE_EVENTS.STAGE_STARTED, runIdFinal, { stage: stageId });
       this._log('info', `pipeline stage: ${stageId}`, { runId: ctx.runId });
       try {
         const payload = await this._runStage(stageId, ctx, dossier);
-        if (payload !== undefined) await this._saveCheckpoint(stageId, payload);
+        if (payload !== undefined) await this._saveCheckpoint(runIdFinal, stageId, payload);
         completed.add(stageId);
         const durationMs = Date.now() - start;
         ctx.stages.push({ id: stageId, ok: true, resumed: false, durationMs, detail: payload?.detail || '' });
-        this._emit(PIPELINE_EVENTS.STAGE_COMPLETED, { runId: ctx.runId, stage: stageId, durationMs });
+        this._emit(PIPELINE_EVENTS.STAGE_COMPLETED, runIdFinal, { stage: stageId, durationMs });
       } catch (e) {
         const durationMs = Date.now() - start;
         ctx.stages.push({ id: stageId, ok: false, resumed: false, durationMs, detail: e.message });
         ctx.status = 'failed';
         ctx.failedStage = stageId;
         ctx.error = { message: e.message, code: e.code || 'PIP_STAGE_FAILED' };
-        await this._saveRunState({ ...ctx, completedStages: [...completed] });
-        this._emit(PIPELINE_EVENTS.STAGE_FAILED, { runId: ctx.runId, stage: stageId, error: e.message });
-        this._emit(PIPELINE_EVENTS.PIPELINE_FAILED, { runId: ctx.runId, stage: stageId, error: e.message });
+        await this._saveRunState(runIdFinal, { ...ctx, completedStages: [...completed] });
+        this._emit(PIPELINE_EVENTS.STAGE_FAILED, runIdFinal, { stage: stageId, error: e.message });
+        this._emit(PIPELINE_EVENTS.PIPELINE_FAILED, runIdFinal, { stage: stageId, error: e.message });
         throw pipError(e.code || PIP_CODES.STAGE_FAILED, `stage "${stageId}" failed: ${e.message}`, { runId: ctx.runId, stage: stageId });
       }
     }
 
     ctx.status = 'ready';
     ctx.finishedAt = new Date().toISOString();
-    this._emit(PIPELINE_EVENTS.PIPELINE_COMPLETED, { runId: ctx.runId, businessId: ctx.businessId, configCount: ctx.configCount });
+    await this._removeRunState(ctx.runId);
+    this._emit(PIPELINE_EVENTS.PIPELINE_COMPLETED, runIdFinal, { businessId: ctx.businessId, configCount: ctx.configCount });
     return ctx;
   }
 
@@ -315,7 +341,7 @@ export class PipelineRunner {
         ctx.qa = qa;
         ctx.qaPassed = qa.passed;
         ctx.qaChecks = qa.checkCount;
-        this._emit(PIPELINE_EVENTS.QA_COMPLETED, { runId: ctx.runId, passed: qa.passed, checks: qa.checkCount });
+        this._emit(PIPELINE_EVENTS.QA_COMPLETED, ctx.runId, { passed: qa.passed, checks: qa.checkCount });
         if (!qa.passed) {
           const failed = qa.failedChecks.map((c) => c.name).join(', ');
           await this._writeReports(ctx);

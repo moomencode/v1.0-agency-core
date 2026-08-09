@@ -93,6 +93,25 @@ const tests = [
     const b = JSON.stringify(redact({ t: { key: 'ghp_abcdefghijklmnopqrstuvwxyz123456' } }, { vault }));
     assert(a === b, 'deterministic redaction');
   }],
+  ['vault secret embedded in a larger string is redacted without nuking the text', () => {
+    const text = 'configured endpoint vercel-secret-token-12345 used as the deploy token';
+    const out = redact(text, { vault });
+    assert(!out.includes('vercel-secret-token-12345'), 'embedded secret removed');
+    assert(out.includes('[REDACTED]'), 'redaction marker present');
+    assert(out.includes('configured endpoint') && out.includes('used as the deploy token'), 'surrounding text preserved');
+    assert(out !== '[REDACTED]', 'whole string is not destroyed');
+  }],
+  ['scan-detected secret embedded in text keeps legitimate business text', () => {
+    const text = 'Acme Cafe config token ghp_abcdefghijklmnopqrstuvwxyz123456 deploys nightly';
+    const out = redact(text, { vault });
+    assert(!out.includes('ghp_abcdefghijklmnopqrstuvwxyz123456'), 'github token removed');
+    assert(out.includes('Acme Cafe') && out.includes('deploys nightly'), 'business text preserved');
+  }],
+  ['safeForLog redacts embedded secrets inside string values', () => {
+    const out = safeForLog('deployment uses vercel-secret-token-12345 in the pipeline', { vault });
+    assert(!out.includes('vercel-secret-token-12345'), 'no raw secret in log line');
+    assert(out.includes('deployment uses') && out.includes('in the pipeline'), 'surrounding line kept');
+  }],
   ['vault requires are case-sensitive and env-only', () => {
     assert(vault.get('VERCEL_TOKEN') === 'vercel-secret-token-12345', 'token present');
     assert(!vault.has('token'), 'lowercase not matched');

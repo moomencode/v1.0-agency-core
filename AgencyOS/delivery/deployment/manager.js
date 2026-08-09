@@ -1,12 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { deliveryError, DEL_CODES } from '../errors.js';
-import { recordIdFor, ensureDir } from '../utils.js';
+import { recordIdFor, ensureDir, assertBuildId, buildIdFrom } from '../utils.js';
 import { applyTransition, DEPLOY_EVENTS, canTransition } from './state.js';
 import { ApprovalGate } from './approval.js';
 import { buildDryRunReport } from './dryrun.js';
 import { deliveryRetry, pollUntil } from './retry.js';
-import { redact } from '../security/redaction.js';
+import { redact, redactText } from '../security/redaction.js';
 
 export const DEPLOY_MODES = ['dry-run', 'explicit', 'auto'];
 
@@ -106,7 +106,7 @@ export class DeploymentManager {
 
   _fail(record, note, code) {
     if (canTransition(record.status, DEPLOY_EVENTS.ABORT)) {
-      applyTransition(record, DEPLOY_EVENTS.ABORT, { actor: 'manager', note });
+      applyTransition(record, DEPLOY_EVENTS.ABORT, { actor: 'manager', note: redactText(note, { vault: this.vault }) });
     }
     record.error = redact({ code, note }, { vault: this.vault });
     this.store.save(record);
@@ -115,6 +115,7 @@ export class DeploymentManager {
   }
 
   async createDeployment({ buildId, mode = 'dry-run', provider = 'local', target = {}, trace = {}, rollbackOf = null, onProviderAttempt = null } = {}) {
+    assertBuildId(buildId);
     if (!DEPLOY_MODES.includes(mode)) {
       throw deliveryError(DEL_CODES.BAD_MODE, `unknown deployment mode "${mode}"`, { known: DEPLOY_MODES, retryable: false });
     }
@@ -129,6 +130,26 @@ export class DeploymentManager {
     }
 
     const buildRecord = this.builds.loadBuild(buildId);
+    // DEL-7/8: reject malformed/inconsistent build identities before any record
+    // lookup. assertBuildId above covers the syntax; here the STORED build record
+    // must be a consistent identity for the requested buildId — its declared
+    // buildId must match the lookup key, and recomputing the deterministic
+    // buildId from the persisted trace + engine checksum must reproduce it.
+    // (buildId derivation excludes businessId — pipeline/delivery callers pass
+    // the build trace without it, so the recompute must reproduce that identity.)
+    if (buildRecord.buildId !== buildId) {
+      throw deliveryError(DEL_CODES.BAD_BUILD_ID, `buildId "${buildId}" inconsistent with stored build record (record declares "${buildRecord.buildId}")`, { buildId, declared: buildRecord.buildId, retryable: false });
+    }
+    const recomputedBuildId = buildIdFrom(
+      {
+        dossierVersion: buildRecord.trace?.dossierVersion,
+        pipelineRunId: buildRecord.trace?.pipelineRunId
+      },
+      buildRecord.engineOutputChecksum
+    );
+    if (recomputedBuildId !== buildId) {
+      throw deliveryError(DEL_CODES.BAD_BUILD_ID, `buildId "${buildId}" inconsistent with stored build record (recomputed "${recomputedBuildId}")`, { buildId, recomputed: recomputedBuildId, retryable: false });
+    }
     const qaReport = this.qa.loadReport(buildId);
     if (!qaReport) {
       throw deliveryError(DEL_CODES.QA_FAILED, `no QA report for build "${buildId}"`, { buildId, retryable: false });
@@ -144,10 +165,38 @@ export class DeploymentManager {
     const recordId = recordIdFor(buildId);
     if (this.store.has(recordId)) {
       const existing = this.store.load(recordId);
-      if (['recorded', 'deployed', 'simulated'].includes(existing.status)) {
+      if (['recorded', 'deployed'].includes(existing.status)) {
         this._audit({ action: 'record_reused', recordId, businessId: buildRecord.businessId, mode, status: existing.status });
         this.logger?.info?.(`delivery deploy: reuse existing record ${recordId} (${existing.status})`, { businessId: buildRecord.businessId });
         return existing;
+      }
+      if (existing.status === 'simulated') {
+        if (mode === 'dry-run') {
+          this._audit({ action: 'record_reused', recordId, businessId: buildRecord.businessId, mode, status: existing.status });
+          this.logger?.info?.(`delivery deploy: reuse simulated record ${recordId} for dry-run`, { businessId: buildRecord.businessId });
+          return existing;
+        }
+        existing.mode = mode;
+        // Rearm refresh: promoting a dry-run simulation into a real deployment
+        // applies the caller's chosen provider/target/rollback target to the
+        // existing record (the simulation may have been run against different
+        // values), then re-runs the deployment-record schema validation on the
+        // updated record. No new record is created — identity stays `dep_<buildId>`
+        // and the deterministic record id is preserved.
+        existing.provider = provider;
+        existing.target = redact(target, { vault: this.vault });
+        existing.rollbackOf = rollbackOf || null;
+        this._schemaValidate(existing, 'deployment-record');
+        this._audit({ action: 'record_promoted', recordId, businessId: buildRecord.businessId, mode, rearmed: true });
+        this.logger?.info?.(`delivery deploy: promote simulated record ${recordId} to real deployment (${mode})`, { businessId: buildRecord.businessId });
+        if (mode === 'explicit') {
+          applyTransition(existing, DEPLOY_EVENTS.APPROVAL_NEEDED, { actor: 'manager', note: 'promoted from dry-run simulation — waiting for explicit approval', mode });
+          this.store.save(existing);
+          return existing;
+        }
+        applyTransition(existing, DEPLOY_EVENTS.APPROVED, { actor: 'manager', note: 'promoted from dry-run simulation to real deployment', mode });
+        this.store.save(existing);
+        return this.executeDeploy(existing.id, { onProviderAttempt });
       }
       if (existing.status === 'awaiting_approval' || existing.status === 'approved') {
         this._audit({ action: 'record_reused', recordId, businessId: buildRecord.businessId, mode, status: existing.status });
@@ -203,6 +252,12 @@ export class DeploymentManager {
     this._audit({ action: 'record_created', recordId: record.id, businessId: record.businessId, mode, provider, status: record.status });
 
     if (mode === 'dry-run') {
+      const manifest = this.packaging.loadManifest(buildId);
+      const actualSha = this.packaging.bundleSha256(buildId);
+      if (actualSha !== manifest.bundle.sha256) {
+        this._fail(record, 'package checksum mismatch before dry-run', DEL_CODES.PACKAGE_MISSING);
+        throw deliveryError(DEL_CODES.PACKAGE_MISSING, `package checksum mismatch for "${buildId}" — dry-run aborted`, { buildId, retryable: false });
+      }
       const providerInstance = this.registry.get(provider, { config: target, ctx: this._providerCtx() });
       const packageInfo = this._packageInfoFor(buildId);
       record.dryRun = buildDryRunReport({ record, packageInfo, provider: providerInstance, qaReport });
@@ -251,6 +306,12 @@ export class DeploymentManager {
 
   async executeDeploy(recordId, { onProviderAttempt = null } = {}) {
     const record = this.store.load(recordId);
+    if (!/^[0-9a-f]{16}$/.test(record.trace?.buildId || '')) {
+      throw deliveryError(DEL_CODES.RECORD_CONFLICT, `record "${recordId}" carries an invalid build identity`, { recordId, retryable: false });
+    }
+    if (recordIdFor(record.trace.buildId) !== record.id) {
+      throw deliveryError(DEL_CODES.RECORD_CONFLICT, `record "${recordId}" build identity does not match its deterministic id`, { recordId, buildId: record.trace.buildId, retryable: false });
+    }
     if (!canTransition(record.status, DEPLOY_EVENTS.DEPLOY_START)) {
       throw deliveryError(DEL_CODES.BAD_STATE, `record "${recordId}" cannot start deployment from state ${record.status}`, { recordId, status: record.status, retryable: false });
     }
@@ -328,6 +389,60 @@ export class DeploymentManager {
       this._fail(record, `deployment failed: ${err.message}`, code);
       throw err;
     }
+  }
+
+  async recover(recordId, { onProviderAttempt = null } = {}) {
+    const record = this.store.load(recordId);
+    if (!['deploying', 'deployed', 'verified'].includes(record.status)) {
+      throw deliveryError(DEL_CODES.BAD_STATE, `record "${recordId}" is not in an interrupted deployment state (got ${record.status})`, {
+        recordId,
+        status: record.status,
+        retryable: false
+      });
+    }
+    const deploymentId = record.deployment && record.deployment.id;
+    if (!deploymentId) {
+      this._fail(record, 'deployment interrupted before a provider deployment id existed — refusing to re-deploy, evidence preserved', DEL_CODES.PROVIDER_ERROR);
+      throw deliveryError(DEL_CODES.PROVIDER_ERROR, `deployment of "${recordId}" interrupted mid-flight; provider state unknown — refusing to re-deploy`, {
+        recordId,
+        retryable: false
+      });
+    }
+
+    const provider = this.registry.get(record.provider, { config: record.target, ctx: this._providerCtx() });
+    let verified = null;
+    try {
+      verified = await pollUntil(
+        () => provider.verify(deploymentId),
+        { maxAttempts: 10, initialDelayMs: 25, predicate: (v) => v && v.status === 'READY' }
+      );
+    } catch {
+      verified = null;
+    }
+    if (!verified || verified.status !== 'READY') {
+      this._fail(record, `deployment "${deploymentId}" could not be confirmed READY after interruption — no re-deploy (last: ${verified ? verified.status : 'unknown'})`, DEL_CODES.PROVIDER_ERROR);
+      throw deliveryError(DEL_CODES.PROVIDER_ERROR, `deployment "${deploymentId}" state ambiguous after interruption; refusing to re-deploy`, {
+        recordId,
+        deploymentId,
+        retryable: false
+      });
+    }
+
+    if (canTransition(record.status, DEPLOY_EVENTS.DEPLOY_OK)) {
+      applyTransition(record, DEPLOY_EVENTS.DEPLOY_OK, { actor: 'manager', note: `recovered after interruption — deployment ${deploymentId} confirmed` });
+    }
+    if (canTransition(record.status, DEPLOY_EVENTS.VERIFY_OK)) {
+      applyTransition(record, DEPLOY_EVENTS.VERIFY_OK, { actor: 'manager', note: `recovered after interruption — provider confirmed READY (${verified.url || record.deployment.url || ''})` });
+    }
+    record.deployment.url = record.deployment.url || verified.url || null;
+    this.store.save(record);
+    if (canTransition(record.status, DEPLOY_EVENTS.RECORDED)) {
+      applyTransition(record, DEPLOY_EVENTS.RECORDED, { actor: 'manager', note: 'deployment recovered and recorded after interruption' });
+      this.store.save(record);
+    }
+    this._audit({ action: 'recovered', recordId: record.id, deploymentId, status: record.status });
+    this._finalizeRecord(record);
+    return record;
   }
 
   history(businessId = null) {

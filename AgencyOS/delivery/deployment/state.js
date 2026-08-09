@@ -54,6 +54,11 @@ const TRANSITIONS = {
     [DEPLOY_EVENTS.SIMULATED]: 'simulated',
     [DEPLOY_EVENTS.ABORT]: 'failed'
   },
+  simulated: {
+    [DEPLOY_EVENTS.APPROVED]: 'approved',
+    [DEPLOY_EVENTS.APPROVAL_NEEDED]: 'awaiting_approval',
+    [DEPLOY_EVENTS.ABORT]: 'failed'
+  },
   awaiting_approval: {
     [DEPLOY_EVENTS.APPROVED]: 'approved',
     [DEPLOY_EVENTS.REJECTED]: 'rejected',
@@ -87,6 +92,7 @@ const TRANSITIONS = {
   },
   rollback_requested: {
     [DEPLOY_EVENTS.ROLLBACK_OK]: 'rolled_back',
+    [DEPLOY_EVENTS.RETRY]: 'rollback_requested',
     [DEPLOY_EVENTS.ABORT]: 'failed'
   },
   rolled_back: {
@@ -95,15 +101,17 @@ const TRANSITIONS = {
   },
   revert_requested: {
     [DEPLOY_EVENTS.REVERT_OK]: 'reverted',
+    [DEPLOY_EVENTS.RETRY]: 'reverting',
     [DEPLOY_EVENTS.ABORT]: 'failed'
   },
   reverting: {
     [DEPLOY_EVENTS.REVERT_OK]: 'reverted',
+    [DEPLOY_EVENTS.RETRY]: 'reverting',
     [DEPLOY_EVENTS.ABORT]: 'failed'
   }
 };
 
-export const TERMINAL_STATES = new Set(['simulated', 'rejected', 'failed', 'recorded', 'rolled_back', 'reverted']);
+export const TERMINAL_STATES = new Set(['rejected', 'failed', 'recorded', 'rolled_back', 'reverted']);
 
 export function assertState(state) {
   if (!DEPLOY_STATES.includes(state)) {

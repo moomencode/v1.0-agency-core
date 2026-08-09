@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createDeliverySystem } from '../index.js';
+import { MockProvider } from '../providers/mock.js';
 import { cleanSite, scratchRoot, assert, runTests } from './helpers.mjs';
 
 const root = scratchRoot('rollback');
@@ -140,6 +141,70 @@ const tests = [
       assert(err.code === 'E_DEL_AUTO_DISABLED', `code ${err.code}`);
     }
     assert(threw, 'auto disabled by default');
+  }],
+  ['rollback retries transient promote failures and succeeds', async () => {
+    const businessId = 'rb-retry-trans-001';
+    const provider = new MockProvider({ project: businessId }, { root });
+    system.registerProvider(`${businessId}-mock`, provider);
+    const v1 = await buildAndQa(businessId, 1);
+    const first = await system.deliver({ buildId: v1.buildId, mode: 'explicit', provider: `${businessId}-mock` });
+    await system.approve(first.id, { by: 'operator-t1' });
+    const v2 = await buildAndQa(businessId, 2);
+    const second = await system.deliver({ buildId: v2.buildId, mode: 'explicit', provider: `${businessId}-mock` });
+    await system.approve(second.id, { by: 'operator-t1' });
+
+    provider.queueFailure({ op: 'promote', status: 500, retryable: true });
+    system.approveRollback(second.id, { by: 'operator-t1' });
+    const { original } = await system.rollback({ recordId: second.id, by: 'operator-t1', mode: 'explicit' });
+    assert(original.status === 'rolled_back', `rolled_back after retry (${original.status})`);
+    assert(original.rollback && original.rollback.buildId === v1.buildId, 'rolled back to v1');
+    assert(original.timeline.some((t) => t.event === 'RETRY' && t.from === 'rollback_requested'), 'retry recorded on rollback lane');
+    assert(provider.alias === `mock-${v1.buildId}`, 'alias re-pointed to v1');
+  }],
+  ['revert retries transient promote failures and stays legal', async () => {
+    const businessId = 'rb-retry-rev-001';
+    const provider = new MockProvider({ project: businessId }, { root });
+    system.registerProvider(`${businessId}-mock`, provider);
+    const v1 = await buildAndQa(businessId, 1);
+    const first = await system.deliver({ buildId: v1.buildId, mode: 'explicit', provider: `${businessId}-mock` });
+    await system.approve(first.id, { by: 'operator-t2' });
+    const v2 = await buildAndQa(businessId, 2);
+    const second = await system.deliver({ buildId: v2.buildId, mode: 'explicit', provider: `${businessId}-mock` });
+    await system.approve(second.id, { by: 'operator-t2' });
+    system.approveRollback(second.id, { by: 'operator-t2' });
+    await system.rollback({ recordId: second.id, by: 'operator-t2', mode: 'explicit' });
+
+    provider.queueFailure({ op: 'promote', status: 502, retryable: true });
+    system.approveRollback(second.id, { by: 'operator-t2' });
+    const reverted = await system.revert({ recordId: second.id, by: 'operator-t2', mode: 'explicit' });
+    assert(reverted.status === 'reverted', `reverted after retry (${reverted.status})`);
+    assert(reverted.timeline.some((t) => t.event === 'RETRY' && t.from === 'reverting'), 'retry recorded on revert lane');
+  }],
+  ['auth failure during rollback promote is terminal and never retried', async () => {
+    const businessId = 'rb-retry-auth-001';
+    const provider = new MockProvider({ project: businessId }, { root });
+    system.registerProvider(`${businessId}-mock`, provider);
+    const v1 = await buildAndQa(businessId, 1);
+    const first = await system.deliver({ buildId: v1.buildId, mode: 'explicit', provider: `${businessId}-mock` });
+    await system.approve(first.id, { by: 'operator-t3' });
+    const v2 = await buildAndQa(businessId, 2);
+    const second = await system.deliver({ buildId: v2.buildId, mode: 'explicit', provider: `${businessId}-mock` });
+    await system.approve(second.id, { by: 'operator-t3' });
+
+    provider.queueFailure({ op: 'promote', status: 401, retryable: false, code: 'E_DEL_AUTH_FAILED' });
+    system.approveRollback(second.id, { by: 'operator-t3' });
+    let threw = false;
+    try {
+      await system.rollback({ recordId: second.id, by: 'operator-t3', mode: 'explicit' });
+    } catch (err) {
+      threw = true;
+      assert(err.code === 'E_DEL_AUTH_FAILED', `code ${err.code}`);
+    }
+    assert(threw, 'auth error surfaced');
+    const failed = system.getRecord(second.id);
+    assert(failed.status === 'failed', `record terminal failed (${failed.status})`);
+    assert(!failed.timeline.some((t) => t.event === 'RETRY'), 'no retry attempts');
+    assert(failed.timeline.some((t) => t.event === 'ABORT'), 'aborted to failed');
   }]
 ];
 
