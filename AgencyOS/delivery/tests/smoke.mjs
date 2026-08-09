@@ -173,6 +173,86 @@ const tests = [
     assert(entry.content && entry.content.recordId && entry.content.recordId.startsWith('dep_'), 'memory entry carries record facts');
     assert(entry.content.businessId === 'smk-local-001', 'memory entry scoped to business');
   }],
+  ['identical-build re-request preserves an awaiting_approval record', async () => {
+    const { buildId } = await buildFor('smk-await-reuse-001', 1);
+    const provider = new MockProvider({ project: 'smk-await-reuse-001' }, { root });
+    system.registerProvider('smk-await-reuse-provider', provider);
+    const first = await system.deliver({ buildId, mode: 'explicit', provider: 'smk-await-reuse-provider' });
+    assert(first.status === 'awaiting_approval', `first request awaits approval (${first.status})`);
+    const again = await system.deliver({ buildId, mode: 'explicit', provider: 'smk-await-reuse-provider' });
+    assert(again.id === first.id, 'same deterministic record id');
+    assert(again.status === 'awaiting_approval', 'approval state preserved');
+    assert(again.createdAt === first.createdAt, 'createdAt preserved');
+    assert(again.approvals.length === 0, 'no approval tokens clobbered');
+    assert(again.timeline.length === first.timeline.length, 'timeline preserved');
+    const approved = await system.approve(again.id, { by: 'operator-smoke' });
+    assert(approved.status === 'recorded', `approval flow still works after reuse (${approved.status})`);
+    assert(provider.deployments.size === 1, 'provider contacted exactly once');
+  }],
+  ['identical-build re-request preserves an approved record', async () => {
+    const { buildId } = await buildFor('smk-approved-reuse-001', 1);
+    const provider = new MockProvider({ project: 'smk-approved-reuse-001' }, { root });
+    system.registerProvider('smk-approved-reuse-provider', provider);
+    const first = await system.deliver({ buildId, mode: 'explicit', provider: 'smk-approved-reuse-provider' });
+    const approved = await system.approve(first.id, { by: 'operator-smoke' });
+    assert(approved.status === 'recorded', 'deploys normally first');
+    const storePath = path.join(root, 'storage', 'delivery', 'records', `${first.id}.json`);
+    const staged = JSON.parse(fs.readFileSync(storePath, 'utf8'));
+    staged.status = 'approved';
+    staged.timeline.push({ event: 'APPROVED', from: 'awaiting_approval', to: 'approved', at: new Date().toISOString(), actor: 'operator-smoke' });
+    fs.writeFileSync(storePath, JSON.stringify(staged, null, 2));
+    const again = await system.deliver({ buildId, mode: 'explicit', provider: 'smk-approved-reuse-provider' });
+    assert(again.id === first.id, 'same deterministic record id');
+    assert(again.status === 'approved', 'approved state preserved');
+    assert(again.createdAt === first.createdAt, 'createdAt preserved');
+    assert(again.timeline.length === staged.timeline.length, 'timeline preserved, no reset');
+    assert(again.approvals.length === staged.approvals.length, 'approval tokens preserved');
+    assert(provider.deployments.size === 1, 'no re-deploy');
+  }],
+  ['identical-build re-request after failure is refused without clobbering the record', async () => {
+    const { buildId } = await buildFor('smk-failed-reuse-001', 1);
+    const failing = new MockProvider({ project: 'smk-failed-reuse-001' }, { root });
+    failing.queueFailure({ op: 'deploy', status: 401, retryable: false, code: 'E_DEL_AUTH_FAILED' });
+    system.registerProvider('smk-failed-reuse-provider', failing);
+    const first = await system.deliver({ buildId, mode: 'explicit', provider: 'smk-failed-reuse-provider' });
+    let threw = false;
+    try {
+      await system.approve(first.id, { by: 'operator-smoke' });
+    } catch {
+      threw = true;
+    }
+    assert(threw, 'first deployment failed');
+    const failed = system.getRecord(first.id);
+    assert(failed.status === 'failed', `record failed (${failed.status})`);
+    const failedError = JSON.stringify(failed.error);
+    const timelineCount = failed.timeline.length;
+    let refused = false;
+    try {
+      await system.deliver({ buildId, mode: 'explicit', provider: 'smk-failed-reuse-provider' });
+    } catch (err) {
+      refused = true;
+      assert(err.code === 'E_DEL_RECORD_CONFLICT', `conflict code (${err.code})`);
+    }
+    assert(refused, 'identical re-request refused');
+    const after = system.getRecord(first.id);
+    assert(after.status === 'failed', 'record stays failed');
+    assert(JSON.stringify(after.error) === failedError, 'error preserved');
+    assert(after.timeline.length === timelineCount, 'timeline preserved');
+    assert(failing.deployments.size === 0, 'no provider contact on refused re-request');
+  }],
+  ['deployed/recorded reuse remains intact after the guard extension', async () => {
+    const { buildId } = await buildFor('smk-recorded-reuse-001', 1);
+    const provider = new MockProvider({ project: 'smk-recorded-reuse-001' }, { root });
+    system.registerProvider('smk-recorded-reuse-provider', provider);
+    const first = await system.deliver({ buildId, mode: 'explicit', provider: 'smk-recorded-reuse-provider' });
+    const approved = await system.approve(first.id, { by: 'operator-smoke' });
+    assert(approved.status === 'recorded', 'recorded');
+    const again = await system.deliver({ buildId, mode: 'explicit', provider: 'smk-recorded-reuse-provider' });
+    assert(again.id === first.id, 'same record reused');
+    assert(again.status === 'recorded', 'recorded reuse intact');
+    assert(again.createdAt === first.createdAt, 'createdAt preserved on reuse');
+    assert(provider.deployments.size === 1, 'no second deployment');
+  }],
   ['deployed event emitted', () => {
     let emitted = 0;
     const system2 = createDeliverySystem({ root: scratchRoot('smoke-events'), autoAllowed: false });

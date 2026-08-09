@@ -53,6 +53,7 @@ const BUSINESS_CODES = new Set([
 const SYSTEM_CODES = new Set([
   'E_ORC_KILL_SWITCH',
   'E_ORC_EMERGENCY_STOP',
+  'E_ORC_HALTED',
   'E_ORC_SYSTEM',
   'E_ORC_STATE_INVALID'
 ]);

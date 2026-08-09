@@ -149,8 +149,8 @@ export class DeliverySystem {
     return this;
   }
 
-  deliver({ buildId, mode = 'dry-run', provider = PROVIDER_IDS.LOCAL, target = {}, trace = {}, rollbackOf = null }) {
-    return this.manager.createDeployment({ buildId, mode, provider, target, trace, rollbackOf });
+  deliver({ buildId, mode = 'dry-run', provider = PROVIDER_IDS.LOCAL, target = {}, trace = {}, rollbackOf = null, onProviderAttempt = null }) {
+    return this.manager.createDeployment({ buildId, mode, provider, target, trace, rollbackOf, onProviderAttempt });
   }
 
   deploy(recordId) {

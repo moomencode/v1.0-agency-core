@@ -240,6 +240,29 @@ const tests = [
     const bad = system.validator.validate({ ...record, id: 'nope' }, system.schemas['deployment-record'], { schemaPath: 'delivery:deployment-record' });
     assert(!bad.valid, 'invalid id rejected');
   }],
+  ['build records carry createdAt metadata without touching deterministic identity', async () => {
+    const files = { 'index.html': '<h1>hi</h1>' };
+    const engine = { export: () => files };
+    const system = createDeliverySystem({ root: scratchRoot('unit-build-created'), engine });
+    const site = { businessId: 'unit-created-001', engineVersion: 'test-engine-1.0', pages: [] };
+    const validation = { passed: true, totals: {} };
+    const trace = { businessId: 'unit-created-001', dossierVersion: 1, pipelineRunId: 'run-created' };
+    const a = await system.builds.build('unit-created-001', { site, validation, trace });
+    assert(a.record.createdAt && typeof a.record.createdAt === 'string', 'createdAt present');
+    assert(!Number.isNaN(Date.parse(a.record.createdAt)), 'createdAt is an ISO date-time');
+    const b = await system.builds.build('unit-created-001', { site, validation, trace });
+    assert(a.buildId === b.buildId, 'deterministic buildId unchanged by createdAt');
+    assert(a.record.createdAt === b.record.createdAt, 'reused record keeps original createdAt');
+    const schema = system.schemas['build-record'];
+    const ok = system.validator.validate(a.record, schema, { schemaPath: 'delivery:build-record' });
+    assert(ok.valid, `build record satisfies build-record schema: ${JSON.stringify(ok.errors)}`);
+    const c = await system.builds.build('unit-created-002', {
+      site: { ...site, businessId: 'unit-created-002' },
+      validation,
+      trace: { ...trace, businessId: 'unit-created-002' }
+    });
+    assert(c.record.createdAt && !Number.isNaN(Date.parse(c.record.createdAt)), 'fresh build also carries createdAt');
+  }],
   ['DELIVERY modes are enumerable and fixed', () => {
     assert(JSON.stringify(DEPLOY_MODES) === JSON.stringify(['dry-run', 'explicit', 'auto']), 'modes');
   }]

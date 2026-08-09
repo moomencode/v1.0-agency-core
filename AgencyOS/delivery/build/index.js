@@ -78,7 +78,8 @@ export class ProductionBuildManager {
       engineOutputChecksum: engineChecksum,
       files: fileEntries,
       fileCount: fileEntries.length,
-      budget
+      budget,
+      createdAt: new Date().toISOString()
     };
 
     const dir = ensureDir(path.join(this.buildDir(buildId), 'production'));

@@ -114,7 +114,7 @@ export class DeploymentManager {
     this._audit({ action: 'failed', recordId: record.id, status: record.status, error: record.error });
   }
 
-  async createDeployment({ buildId, mode = 'dry-run', provider = 'local', target = {}, trace = {}, rollbackOf = null } = {}) {
+  async createDeployment({ buildId, mode = 'dry-run', provider = 'local', target = {}, trace = {}, rollbackOf = null, onProviderAttempt = null } = {}) {
     if (!DEPLOY_MODES.includes(mode)) {
       throw deliveryError(DEL_CODES.BAD_MODE, `unknown deployment mode "${mode}"`, { known: DEPLOY_MODES, retryable: false });
     }
@@ -149,6 +149,16 @@ export class DeploymentManager {
         this.logger?.info?.(`delivery deploy: reuse existing record ${recordId} (${existing.status})`, { businessId: buildRecord.businessId });
         return existing;
       }
+      if (existing.status === 'awaiting_approval' || existing.status === 'approved') {
+        this._audit({ action: 'record_reused', recordId, businessId: buildRecord.businessId, mode, status: existing.status });
+        this.logger?.info?.(`delivery deploy: reuse existing record ${recordId} (${existing.status})`, { businessId: buildRecord.businessId });
+        return existing;
+      }
+      throw deliveryError(DEL_CODES.RECORD_CONFLICT, `record "${recordId}" already exists in state ${existing.status}; identical-build re-request refused to protect record history`, {
+        recordId,
+        status: existing.status,
+        retryable: false
+      });
     }
 
     const tree = this.builds.readTree(buildId);
@@ -211,14 +221,14 @@ export class DeploymentManager {
 
     applyTransition(record, DEPLOY_EVENTS.APPROVED, { actor: 'auto', note: 'auto mode enabled by policy', mode });
     this.store.save(record);
-    return this.executeDeploy(record.id);
+    return this.executeDeploy(record.id, { onProviderAttempt });
   }
 
   async approve(recordId, opts = {}) {
     const gate = new ApprovalGate({ store: this.store, logger: this.logger, vault: this.vault });
     gate.approve(recordId, opts);
     this._audit({ action: 'approved', recordId, by: opts.by });
-    return this.executeDeploy(recordId);
+    return this.executeDeploy(recordId, { onProviderAttempt: opts.onProviderAttempt || null });
   }
 
   async reject(recordId, opts = {}) {
@@ -239,7 +249,7 @@ export class DeploymentManager {
     return this.executeDeploy(recordId);
   }
 
-  async executeDeploy(recordId) {
+  async executeDeploy(recordId, { onProviderAttempt = null } = {}) {
     const record = this.store.load(recordId);
     if (!canTransition(record.status, DEPLOY_EVENTS.DEPLOY_START)) {
       throw deliveryError(DEL_CODES.BAD_STATE, `record "${recordId}" cannot start deployment from state ${record.status}`, { recordId, status: record.status, retryable: false });
@@ -262,6 +272,12 @@ export class DeploymentManager {
     record.deployment = { id: null, url: null, state: 'DEPLOYING' };
     this.store.save(record);
 
+    const beforeAttempt = () => {
+      if (onProviderAttempt && onProviderAttempt() === false) {
+        throw deliveryError(DEL_CODES.PROVIDER_BUDGET, `provider attempt refused before deployment for "${buildId}"`, { buildId, retryable: false });
+      }
+    };
+
     try {
       const preflight = await provider.validateConfig();
       if (!preflight || preflight.ok !== true) {
@@ -270,7 +286,10 @@ export class DeploymentManager {
 
       const packageInfo = this._packageInfoFor(buildId);
       const deliveryResult = await deliveryRetry(
-        () => provider.deploy(packageInfo),
+        () => {
+          beforeAttempt();
+          return provider.deploy(packageInfo);
+        },
         {
           ...this.retryConfig,
           onAttempt: ({ attempt }) => {

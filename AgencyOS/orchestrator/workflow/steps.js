@@ -7,6 +7,21 @@ function budgetError(message) {
   return err;
 }
 
+function haltError(message) {
+  const err = new Error(message);
+  err.code = 'E_ORC_HALTED';
+  err.meta = { class: 'SYSTEM' };
+  return err;
+}
+
+function providerAttemptGuard(deps) {
+  return () => {
+    if (deps.campaign && deps.campaign._halted) throw haltError('campaign halted before provider attempt');
+    if (!deps.budget.markProviderCall()) throw budgetError('provider-call limit reached');
+    return true;
+  };
+}
+
 export const STEP_IDS = [
   'discover',
   'qualify',
@@ -284,7 +299,6 @@ export const STEPS = {
       if (!buildId) throw new Error('buildId missing before delivery request');
       if (mode === 'auto') {
         if (!deps.budget.markDeployment()) throw budgetError('deployment limit reached');
-        if (!deps.budget.markProviderCall()) throw budgetError('provider-call limit reached');
       }
       const record = await deps.adapters.delivery.deliver({
         buildId,
@@ -299,7 +313,8 @@ export const STEPS = {
           campaignId: campaign.id,
           executionId: execution.executionId,
           workflowVersion: WORKFLOW_VERSION
-        }
+        },
+        onProviderAttempt: providerAttemptGuard(deps)
       });
       execution.outputs.deliveryRecordId = record.id;
       execution.outputs.deliveryMode = mode;
@@ -376,6 +391,7 @@ export const STEPS = {
     name: 'Execute deployment through delivery',
     retryable: true,
     async run(execution, deps) {
+      if (deps.campaign && deps.campaign._halted) throw haltError('campaign halted before deployment');
       const recordId = execution.outputs.deliveryRecordId;
       if (!recordId) throw new Error('delivery record missing before deploy');
       const record = deps.adapters.delivery.getRecord(recordId);
@@ -386,8 +402,10 @@ export const STEPS = {
           throw new Error(`DEPLOY approval not decided for execution "${execution.executionId}"`);
         }
         if (!deps.budget.markDeployment()) throw budgetError('deployment limit reached');
-        if (!deps.budget.markProviderCall()) throw budgetError('provider-call limit reached');
-        const deployed = await deps.adapters.delivery.approve(recordId, { by: approval.decision.decidedBy });
+        const deployed = await deps.adapters.delivery.approve(recordId, {
+          by: approval.decision.decidedBy,
+          onProviderAttempt: providerAttemptGuard(deps)
+        });
         execution.outputs.deliveryStatus = deployed.status;
       } else if (mode === 'auto') {
         const refreshed = deps.adapters.delivery.getRecord(recordId);

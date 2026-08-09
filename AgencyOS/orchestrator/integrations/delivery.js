@@ -26,9 +26,8 @@ export class DeliveryAdapter {
     return this.delivery.packaging.packageBuild({ buildId, buildRecord, qaReport, tree });
   }
 
-  deliver({ buildId, mode, provider, target, trace }) {
-    if (this.budget && mode !== 'dry-run') this.budget.tryConsume('providerCalls', 1);
-    return this.delivery.deliver({ buildId, mode, provider, target, trace });
+  deliver({ buildId, mode, provider, target, trace, onProviderAttempt = null }) {
+    return this.delivery.deliver({ buildId, mode, provider, target, trace, onProviderAttempt });
   }
 
   approve(recordId, opts = {}) {

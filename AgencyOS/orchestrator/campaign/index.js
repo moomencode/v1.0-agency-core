@@ -291,14 +291,18 @@ export class CampaignManager {
     campaign.metrics.qualified = queue.size();
     campaign.queue = queue.items();
 
+    const admissionBudget = this._budgetFor(campaign);
     for (const businessId of queue.items()) {
+      if (!admissionBudget.tryConsume('businesses', 1)) {
+        campaign.metrics.filtered++;
+        continue;
+      }
       const executionId = executionIdFor(campaignId, businessId, campaign.workflowVersion);
       if (!this.checkpoint.exists(executionId)) {
         const execution = newExecution({ campaignId, businessId, workflowVersion: campaign.workflowVersion });
         this.checkpoint.save(execution);
       }
       this._updateExecutionMeta(campaign, { executionId, businessId, status: 'CREATED', outcomes: {}, outputs: { artifactIds: [] } });
-      campaign.budget.counters.businesses = (campaign.budget.counters.businesses || 0) + 1;
       campaign.metrics.executed++;
     }
     this._save(campaign);

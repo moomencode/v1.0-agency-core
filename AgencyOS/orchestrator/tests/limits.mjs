@@ -1,4 +1,17 @@
 import { assert, runTests, scratchRoot, baseSpec, createStack, createSystem } from './helpers.mjs';
+import { LocalProvider } from '../../delivery/providers/local.js';
+
+class CountingLocalProvider extends LocalProvider {
+  constructor(config = {}, ctx = {}) {
+    super(config, ctx);
+    this.deployCalls = 0;
+  }
+
+  async deploy(packageInfo) {
+    this.deployCalls++;
+    return super.deploy(packageInfo);
+  }
+}
 
 async function waitTerminal(sys, campaignId, timeoutMs = 40000) {
   const deadline = Date.now() + timeoutMs;
@@ -21,20 +34,16 @@ function spyBrainCalls(sys) {
   return () => calls;
 }
 
-function spyProviderCalls(sys) {
-  const origApprove = sys.adapters.delivery.approve.bind(sys.adapters.delivery);
+function spyProviderCalls(sys, root) {
+  const counting = new CountingLocalProvider({ project: 'limits-count' }, { root });
+  sys.registerProvider('local', counting);
   const origDeliver = sys.adapters.delivery.deliver.bind(sys.adapters.delivery);
-  let approves = 0;
   let autoDelivers = 0;
-  sys.adapters.delivery.approve = (recordId, opts = {}) => {
-    approves++;
-    return origApprove(recordId, opts);
-  };
   sys.adapters.delivery.deliver = (args) => {
     if (args && args.mode === 'auto') autoDelivers++;
     return origDeliver(args);
   };
-  return () => ({ approves, autoDelivers });
+  return () => ({ approves: counting.deployCalls, autoDelivers });
 }
 
 async function approveAll(sys, rounds = 4) {
@@ -172,7 +181,7 @@ export const limits = {
     const stack = await createStack(root);
     const sys = createSystem(root, stack);
     await sys.boot();
-    const providerCalls = spyProviderCalls(sys);
+    const providerCalls = spyProviderCalls(sys, root);
     const spec = baseSpec({ limits: { maxProviderCalls: 0, maxDeployments: 50 } });
     const started = sys.startCampaign(spec);
     await sys.runCampaign(started.campaignId);
@@ -194,7 +203,7 @@ export const limits = {
     const stack = await createStack(root);
     const sys = createSystem(root, stack);
     await sys.boot();
-    const providerCalls = spyProviderCalls(sys);
+    const providerCalls = spyProviderCalls(sys, root);
     const spec = baseSpec({ limits: { maxProviderCalls: 2, maxDeployments: 50 } });
     const started = sys.startCampaign(spec);
     await sys.runCampaign(started.campaignId);
@@ -214,7 +223,7 @@ export const limits = {
     const stack = await createStack(root);
     const sys = createSystem(root, stack);
     await sys.boot();
-    const providerCalls = spyProviderCalls(sys);
+    const providerCalls = spyProviderCalls(sys, root);
     const spec = baseSpec({ limits: { maxDeployments: 0, maxProviderCalls: 50 } });
     const started = sys.startCampaign(spec);
     await sys.runCampaign(started.campaignId);
@@ -236,7 +245,7 @@ export const limits = {
     const stack = await createStack(root, { autoAllowed: true });
     const sys = createSystem(root, stack, { autoAllowed: true });
     await sys.boot();
-    const providerCalls = spyProviderCalls(sys);
+    const providerCalls = spyProviderCalls(sys, root);
     const spec = baseSpec({ limits: { maxProviderCalls: 1, maxDeployments: 1 } , autonomyLevel: 'L5' });
     const started = sys.startCampaign(spec);
     await sys.runCampaign(started.campaignId);
