@@ -88,6 +88,14 @@ export class RollbackManager {
     this._verifyPrevious(prevBuildId);
     const provider = this._providerFor(record);
 
+    if (mode === 'dry-run') {
+      const dryRun = await provider.dryRun({ packageId: prevBuildId });
+      record.dryRun = dryRun;
+      this.store.save(record);
+      this.logger?.info?.(`delivery rollback dry-run: ${record.id} -> ${prevBuildId}`);
+      return { original: record, previous, dryRun: true };
+    }
+
     applyTransition(record, DEPLOY_EVENTS.ROLLBACK_START, {
       actor: by,
       note: note || `rollback to previous deployment ${previous.deployment.id} (${prevBuildId})`,
@@ -96,32 +104,28 @@ export class RollbackManager {
     this.store.save(record);
 
     try {
-      if (mode === 'dry-run') {
-        record.dryRun = await provider.dryRun({ packageId: prevBuildId });
-      } else {
-        const promoted = (await deliveryRetry(() => provider.promote(previous.deployment.id), {
-          ...this.manager.retryConfig,
-          onAttempt: ({ attempt }) => {
-            applyTransition(record, DEPLOY_EVENTS.RETRY, { actor: 'manager', note: `promote attempt ${attempt + 1}` });
-          }
-        })).result;
-        const verified = await pollUntil(
-          () => provider.verify(previous.deployment.id),
-          { maxAttempts: 10, initialDelayMs: 25, predicate: (v) => v && v.status === 'READY' }
-        );
-        if (!verified || verified.status !== 'READY') {
-          throw deliveryError(DEL_CODES.PROVIDER_ERROR, `rollback verification did not reach READY (last: ${verified?.status})`, { retryable: false });
+      const promoted = (await deliveryRetry(() => provider.promote(previous.deployment.id), {
+        ...this.manager.retryConfig,
+        onAttempt: ({ attempt }) => {
+          applyTransition(record, DEPLOY_EVENTS.RETRY, { actor: 'manager', note: `promote attempt ${attempt + 1}` });
         }
-        record.rollback = {
-          recordId: previous.id,
-          deploymentId: previous.deployment.id,
-          buildId: prevBuildId,
-          url: previous.deployment.url,
-          mode,
-          promoted: promoted.deploymentId || previous.deployment.id,
-          completedAt: new Date().toISOString()
-        };
+      })).result;
+      const verified = await pollUntil(
+        () => provider.verify(previous.deployment.id),
+        { maxAttempts: 10, initialDelayMs: 25, predicate: (v) => v && v.status === 'READY' }
+      );
+      if (!verified || verified.status !== 'READY') {
+        throw deliveryError(DEL_CODES.PROVIDER_ERROR, `rollback verification did not reach READY (last: ${verified?.status})`, { retryable: false });
       }
+      record.rollback = {
+        recordId: previous.id,
+        deploymentId: previous.deployment.id,
+        buildId: prevBuildId,
+        url: previous.deployment.url,
+        mode,
+        promoted: promoted.deploymentId || previous.deployment.id,
+        completedAt: new Date().toISOString()
+      };
       applyTransition(record, DEPLOY_EVENTS.ROLLBACK_OK, { actor: by, note: `rolled back to ${prevBuildId}`, mode });
       this.store.save(record);
       this.memory?.record?.({ action: 'rollback', record });
@@ -152,28 +156,33 @@ export class RollbackManager {
     }
 
     const provider = this._providerFor(record);
+
+    if (mode === 'dry-run') {
+      const dryRun = await provider.dryRun({ packageId: record.trace.buildId });
+      record.dryRun = dryRun;
+      this.store.save(record);
+      this.logger?.info?.(`delivery revert dry-run: ${recordId}`);
+      return record;
+    }
+
     applyTransition(record, DEPLOY_EVENTS.REVERT_START, { actor: by, note: note || `re-promote deployment ${record.deployment?.id}`, mode });
     this.store.save(record);
 
     try {
-      if (mode === 'dry-run') {
-        record.dryRun = await provider.dryRun({ packageId: record.trace.buildId });
-      } else {
-        await deliveryRetry(() => provider.promote(record.deployment.id), {
-          ...this.manager.retryConfig,
-          onAttempt: ({ attempt }) => {
-            applyTransition(record, DEPLOY_EVENTS.RETRY, { actor: 'manager', note: `revert attempt ${attempt + 1}` });
-          }
-        });
-        const verified = await pollUntil(
-          () => provider.verify(record.deployment.id),
-          { maxAttempts: 10, initialDelayMs: 25, predicate: (v) => v && v.status === 'READY' }
-        );
-        if (!verified || verified.status !== 'READY') {
-          throw deliveryError(DEL_CODES.PROVIDER_ERROR, `revert verification did not reach READY (last: ${verified?.status})`, { retryable: false });
+      await deliveryRetry(() => provider.promote(record.deployment.id), {
+        ...this.manager.retryConfig,
+        onAttempt: ({ attempt }) => {
+          applyTransition(record, DEPLOY_EVENTS.RETRY, { actor: 'manager', note: `revert attempt ${attempt + 1}` });
         }
-        record.revertedTo = record.deployment.id;
+      });
+      const verified = await pollUntil(
+        () => provider.verify(record.deployment.id),
+        { maxAttempts: 10, initialDelayMs: 25, predicate: (v) => v && v.status === 'READY' }
+      );
+      if (!verified || verified.status !== 'READY') {
+        throw deliveryError(DEL_CODES.PROVIDER_ERROR, `revert verification did not reach READY (last: ${verified?.status})`, { retryable: false });
       }
+      record.revertedTo = record.deployment.id;
       applyTransition(record, DEPLOY_EVENTS.REVERT_OK, { actor: by, note: `reverted to ${record.deployment?.id}`, mode });
       this.store.save(record);
       this.memory?.record?.({ action: 'revert', record });

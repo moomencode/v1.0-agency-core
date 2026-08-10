@@ -87,21 +87,39 @@ const tests = [
     const { original } = await system.rollback({ recordId: v2.id, by: 'operator-4', mode: 'explicit' });
     assert(original.status === 'rolled_back', 'approved rollback succeeds');
   }],
-  ['rollback dry-run touches no provider state', async () => {
+  ['rollback dry-run touches no provider state and leaves the record usable', async () => {
     await deployRecorded('rb-lawn-001', 1);
     const v2 = await deployRecorded('rb-lawn-001', 2);
     const before = fs.readFileSync(path.join(root, 'storage', 'delivery', 'local', 'local-rb-lawn-001', 'current.json'), 'utf8');
     const { original } = await system.rollback({ recordId: v2.id, by: 'operator-5', mode: 'dry-run' });
-    assert(original.status === 'rolled_back', 'dry-run rollback recorded');
-    assert(original.dryRun && original.dryRun.simulated === true, 'simulated plan');
+    assert(original.status === 'recorded', `dry-run must not terminalize the record, got ${original.status}`);
+    assert(!original.timeline.some((t) => t.event === 'ROLLBACK_START' || t.event === 'ROLLBACK_OK'), 'no rollback transitions during dry-run');
+    assert(original.dryRun && original.dryRun.simulated === true, 'simulated plan attached');
     const after = fs.readFileSync(path.join(root, 'storage', 'delivery', 'local', 'local-rb-lawn-001', 'current.json'), 'utf8');
     assert(before === after, 'alias untouched by dry-run');
+  }],
+  ['dry-run rollback never promotes and a real rollback still succeeds after it', async () => {
+    const v1 = await deployRecorded('rb-dry-001', 1);
+    const v2 = await deployRecorded('rb-dry-001', 2);
+    const currentBefore = JSON.parse(fs.readFileSync(path.join(root, 'storage', 'delivery', 'local', 'local-rb-dry-001', 'current.json'), 'utf8'));
+    assert(currentBefore.deploymentId === `local-${v2.trace.buildId}`, 'v2 live before dry-run');
+    const dry = await system.rollback({ recordId: v2.id, by: 'operator-9', mode: 'dry-run' });
+    assert(dry.original.status === 'recorded', `record still usable after dry-run (${dry.original.status})`);
+    assert(dry.original.rollback === undefined, 'no rollback metadata claims a real rollback');
+    const currentMid = JSON.parse(fs.readFileSync(path.join(root, 'storage', 'delivery', 'local', 'local-rb-dry-001', 'current.json'), 'utf8'));
+    assert(currentMid.deploymentId === `local-${v2.trace.buildId}`, 'no promote happened during dry-run');
+    system.approveRollback(v2.id, { by: 'operator-9' });
+    const real = await system.rollback({ recordId: v2.id, by: 'operator-9', mode: 'explicit' });
+    assert(real.original.status === 'rolled_back', `real rollback after dry-run succeeds (${real.original.status})`);
+    assert(real.original.rollback && real.original.rollback.buildId === v1.trace.buildId, 'real rollback reached v1');
+    const currentAfter = JSON.parse(fs.readFileSync(path.join(root, 'storage', 'delivery', 'local', 'local-rb-dry-001', 'current.json'), 'utf8'));
+    assert(currentAfter.deploymentId === `local-${v1.trace.buildId}`, 'alias re-pointed to v1 only by the real rollback');
   }],
   ['revert re-promotes the original deployment', async () => {
     const v1 = await deployRecorded('rb-phar-001', 1);
     const v2 = await deployRecorded('rb-phar-001', 2);
-    await system.rollback({ recordId: v2.id, by: 'operator-6', mode: 'dry-run' });
     system.approveRollback(v2.id, { by: 'operator-6' });
+    await system.rollback({ recordId: v2.id, by: 'operator-6', mode: 'explicit' });
     const reverted = await system.revert({ recordId: v2.id, by: 'operator-6', mode: 'explicit' });
     assert(reverted.status === 'reverted', `reverted, got ${reverted.status}`);
     const current = JSON.parse(fs.readFileSync(path.join(root, 'storage', 'delivery', 'local', 'local-rb-phar-001', 'current.json'), 'utf8'));

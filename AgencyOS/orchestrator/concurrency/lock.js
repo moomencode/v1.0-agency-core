@@ -4,6 +4,14 @@ import { randomUUID } from 'node:crypto';
 import { orcError, ORC_CODES } from '../errors.js';
 import { ensureDir, atomicWrite, readJson, nowIso } from '../utils.js';
 
+const SAFE_ID_CHARS = /[^a-z0-9._-]/gi;
+
+function lockIdFor(businessId) {
+  const cleaned = String(businessId ?? 'unknown').replace(SAFE_ID_CHARS, '_').slice(0, 96);
+  if (!cleaned || cleaned === '.' || cleaned === '..') return 'unknown';
+  return cleaned;
+}
+
 export class LockManager {
   constructor({ root = null, ttlMs = 300000 } = {}) {
     this.dir = root ? path.join(root, 'locks') : null;
@@ -12,7 +20,7 @@ export class LockManager {
   }
 
   _file(businessId) {
-    return path.join(this.dir, `${businessId}.lock`);
+    return path.join(this.dir, `${lockIdFor(businessId)}.lock`);
   }
 
   _fresh(lock, now) {

@@ -16,9 +16,11 @@ import { orcError, ORC_CODES } from '../errors.js';
 import {
   applyCampaignTransition,
   applyOrcTransition,
+  canTransition,
   TERMINAL_CAMPAIGN_STATES,
   isTerminal
 } from '../state/machine.js';
+import { classifyError } from '../failures/classifier.js';
 import { CandidateQueue } from './queue.js';
 import { BoundedPool } from '../concurrency/pool.js';
 import { TraceCollector } from '../execution/trace.js';
@@ -612,7 +614,7 @@ export class CampaignManager {
     execution._trace = new TraceCollector({ root: this.root, executionId: execution.executionId, campaignId: campaign.id, businessId: execution.businessId });
 
     if (execution.outputs.rollbackPending === record.id) {
-      this._performRollback(execution, campaign, record, by);
+      this._performRollback(execution, campaign, record, by).catch(() => {});
       return record;
     }
     if (execution.status === 'ESCALATED') applyOrcTransition(execution, 'APPROVAL_GRANTED', { approvalId: record.id });
@@ -649,7 +651,12 @@ export class CampaignManager {
       applyOrcTransition(execution, 'FAIL', { approvalId: record.id, reason: 'manual step denied' });
       execution.outcome = { verdict: 'DENIED', reason: reason || 'manual step denied' };
     }
-    if (isTerminal(execution.status)) execution.outcome = execution.outcome || { verdict: execution.status, reason: reason || 'denied' };
+    if (record.kind === 'SENSITIVE' && execution.outputs && execution.outputs.rollbackPending === record.id) {
+      delete execution.outputs.rollbackPending;
+    }
+    if (isTerminal(execution.status) && !execution.outcome && ['REJECTED', 'FAILED'].includes(execution.status)) {
+      execution.outcome = { verdict: execution.status, reason: reason || 'denied' };
+    }
     this.checkpoint.save(execution);
     execution._trace.append({ step: null, detail: 'approval-denied', approvalId: record.id, kind: record.kind });
     this._updateExecutionMeta(campaign, execution);
@@ -725,7 +732,7 @@ export class CampaignManager {
     if (!execution.outputs.deliveryRecordId) {
       throw orcError(ORC_CODES.STATE_INVALID, `execution "${executionId}" has no delivery record`, { retryable: false });
     }
-    const record = this.approvals.request({
+    let record = this.approvals.request({
       executionId,
       campaignId,
       kind: 'SENSITIVE',
@@ -733,6 +740,16 @@ export class CampaignManager {
       requestedBy: by || 'operator',
       evidence: { recordId: execution.outputs.deliveryRecordId }
     });
+    for (let suffix = 2; record.decision; suffix++) {
+      record = this.approvals.request({
+        executionId,
+        campaignId,
+        kind: 'SENSITIVE',
+        step: `rollback-${suffix}`,
+        requestedBy: by || 'operator',
+        evidence: { recordId: execution.outputs.deliveryRecordId }
+      });
+    }
     execution.outputs.rollbackPending = record.id;
     this.checkpoint.save(execution);
     this.events.emit(this.events.ORC_EVENTS.APPROVAL_REQUIRED, { approvalId: record.id, executionId, kind: 'SENSITIVE', step: 'rollback' });
@@ -740,10 +757,32 @@ export class CampaignManager {
     return { approvalId: record.id, status: 'approval_required' };
   }
 
-  _performRollback(execution, campaign, approval, by) {
+  async _performRollback(execution, campaign, approval, by) {
     const recordId = execution.outputs.deliveryRecordId;
-    this.adapters.delivery.approveRollback(recordId, { by: approval.decision.decidedBy });
-    this.adapters.delivery.rollback({ recordId, by: approval.decision.decidedBy, mode: 'explicit' });
+    try {
+      this.adapters.delivery.approveRollback(recordId, { by: approval.decision.decidedBy });
+      await this.adapters.delivery.rollback({ recordId, by: approval.decision.decidedBy, mode: 'explicit' });
+    } catch (err) {
+      const classified = classifyError(err, { phase: 'rollback' });
+      execution.error = classified;
+      delete execution.outputs.rollbackPending;
+      if (canTransition(execution.status, 'FAIL')) {
+        applyOrcTransition(execution, 'FAIL', { step: 'rollback', class: classified.class, approvalId: approval.id });
+      }
+      execution.outcome = { verdict: 'FAILED', class: classified.class, code: classified.code, message: classified.message };
+      execution._trace.append({ step: 'rollback', detail: 'rollback-failed', approvalId: approval.id, recordId, errorCode: classified.code });
+      this.checkpoint.save(execution);
+      this._updateExecutionMeta(campaign, execution);
+      this._save(campaign);
+      this.events.emit(this.events.ORC_EVENTS.FAILED, {
+        executionId: execution.executionId,
+        campaignId: campaign.id,
+        step: 'rollback',
+        error: { class: classified.class, code: classified.code }
+      });
+      this.audit.append({ action: 'rollback_failed', executionId: execution.executionId, recordId, errorClass: classified.class, errorCode: classified.code });
+      return;
+    }
     applyOrcTransition(execution, 'ROLLBACK_REQUESTED', { approvalId: approval.id });
     execution.outcome = { verdict: 'ROLLED_BACK', reason: approval.decision.reason };
     delete execution.outputs.rollbackPending;

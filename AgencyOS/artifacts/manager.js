@@ -14,6 +14,14 @@ function timestampPrefix(date = new Date()) {
   return date.toISOString().slice(0, 10);
 }
 
+const SAFE_ID_CHARS = /[^a-z0-9._-]/gi;
+
+function safeIdPart(value, fallback) {
+  const cleaned = String(value ?? '').replace(SAFE_ID_CHARS, '_').slice(0, 96);
+  if (!cleaned || cleaned === '.' || cleaned === '..') return fallback;
+  return cleaned;
+}
+
 function slugifyName(name) {
   const slug = sanitizeName(name).toLowerCase().replace(/[^a-z0-9._-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
   return slug || 'artifact';
@@ -52,16 +60,16 @@ export class ArtifactManager {
   }
 
   _dir(projectId, workflowId, type, runId = null) {
-    const parts = [this.base, projectId || 'unassigned', workflowId || 'manual', type];
-    if (runId) parts.push(runId);
+    const parts = [this.base, safeIdPart(projectId, 'unassigned'), safeIdPart(workflowId, 'manual'), type];
+    if (runId) parts.push(safeIdPart(runId, 'run'));
     const dir = path.join(...parts);
     ensureDir(dir);
     return dir;
   }
 
   _relPath(projectId, workflowId, type, runId, filename) {
-    const parts = [projectId || 'unassigned', workflowId || 'manual', type];
-    if (runId) parts.push(runId);
+    const parts = [safeIdPart(projectId, 'unassigned'), safeIdPart(workflowId, 'manual'), type];
+    if (runId) parts.push(safeIdPart(runId, 'run'));
     return path.join(...parts, filename);
   }
 
@@ -81,7 +89,7 @@ export class ArtifactManager {
   }
 
   _artifactKey(projectId, workflowId, type, name) {
-    return `${projectId || 'unassigned'}::${workflowId || 'manual'}::${type}::${slugifyName(name)}`;
+    return `${safeIdPart(projectId, 'unassigned')}::${safeIdPart(workflowId, 'manual')}::${type}::${slugifyName(name)}`;
   }
 
   latestVersion(key) {
@@ -93,6 +101,9 @@ export class ArtifactManager {
     const fmt = this._validateInput({ type, format });
     if (content === undefined || content === null) throw new TypeError('artifact content is required');
     const bytes = fmt.binary ? Buffer.from(content) : Buffer.from(String(content), 'utf8');
+    projectId = safeIdPart(projectId, 'unassigned');
+    workflowId = safeIdPart(workflowId, 'manual');
+    runId = runId ? safeIdPart(runId, 'run') : null;
 
     const now = new Date();
     const slug = slugifyName(name ?? (autoName ? `${type}-${workflowId}-${now.toISOString().slice(0, 19).replace(/[-:T]/g, '')}` : 'artifact'));
@@ -101,6 +112,12 @@ export class ArtifactManager {
     const filename = `${slug}-v${version}.${fmt.extension}`;
     const relativePath = this._relPath(projectId, workflowId, type, runId, filename);
     const dir = this._dir(projectId, workflowId, type, runId);
+
+    const baseResolved = path.resolve(this.base);
+    const dirResolved = path.resolve(dir);
+    if (dirResolved !== baseResolved && !dirResolved.startsWith(baseResolved + path.sep)) {
+      throw artError(ART_CODES.PATH_INVALID, `artifact path escapes storage base: ${relativePath}`, { projectId, workflowId, runId });
+    }
 
     const record = {
       schema: 'https://agency.os/artifacts/artifact',
