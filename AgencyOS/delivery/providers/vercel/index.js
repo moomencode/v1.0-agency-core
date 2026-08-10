@@ -2,6 +2,15 @@ import { VercelClient } from './client.js';
 import { validateVercelConfig } from './preflight.js';
 import { deliveryError, DEL_CODES } from '../../errors.js';
 
+// Vercel deployment readyState taxonomy. `verify()` maps each state onto
+// readiness metadata so the deployment manager can (a) treat READY as success,
+// (b) keep polling through the in-progress states, and (c) fast-fail as soon as
+// a deployment enters a terminal non-ready state instead of waiting out the
+// whole verification window.
+export const VERCEL_READY_STATE = 'READY';
+export const VERCEL_IN_PROGRESS_STATES = ['INITIALIZING', 'QUEUED', 'BUILDING'];
+export const VERCEL_TERMINAL_STATES = ['ERROR', 'CANCELED', 'ERRORED'];
+
 export class VercelProvider {
   constructor(config = {}, ctx = {}) {
     this.id = 'vercel';
@@ -58,7 +67,14 @@ export class VercelProvider {
 
   async verify(deploymentId) {
     const data = await this._client().getDeployment(deploymentId);
-    return { status: data?.readyState || 'BUILDING', url: data?.url || null };
+    const status = data?.readyState || 'BUILDING';
+    return {
+      status,
+      ready: status === VERCEL_READY_STATE,
+      terminal: VERCEL_TERMINAL_STATES.includes(status),
+      errorCode: data?.errorCode || null,
+      url: data?.url || null
+    };
   }
 
   async urlFor(deploymentId) {

@@ -10,6 +10,18 @@ import { redact, redactText } from '../security/redaction.js';
 
 export const DEPLOY_MODES = ['dry-run', 'explicit', 'auto'];
 
+// Real-world verification window for provider deploy/recover verification.
+// Vercel deployments build for tens of seconds before reaching READY; a window
+// of a few seconds (the previous hardcoded maxAttempts:10 / initialDelayMs:25)
+// false-failed every realistic build. `timeoutMs` bounds the total wall-clock
+// budget regardless of attempt count; callers can override via `verifyConfig`.
+export const DEFAULT_VERIFY_CONFIG = {
+  maxAttempts: 30,
+  initialDelayMs: 500,
+  backoff: 'linear',
+  timeoutMs: 120000
+};
+
 export class DeploymentManager {
   constructor({
     root,
@@ -24,6 +36,7 @@ export class DeploymentManager {
     vault = null,
     autoAllowed = false,
     retryConfig = { maxAttempts: 3, initialDelayMs: 50 },
+    verifyConfig = null,
     events = null
   } = {}) {
     this.root = root;
@@ -38,6 +51,7 @@ export class DeploymentManager {
     this.vault = vault;
     this.autoAllowed = Boolean(autoAllowed);
     this.retryConfig = retryConfig;
+    this.verifyConfig = verifyConfig || null;
     this.events = events;
     this.artifacts = null;
     this.memory = null;
@@ -87,6 +101,24 @@ export class DeploymentManager {
     const bundlePath = this.packaging.bundlePath(buildId);
     const tree = this.builds.readTree(buildId);
     return { packageId: buildId, bundlePath, manifest, tree, businessId: buildRecord.businessId };
+  }
+
+  _verifyWindow() {
+    return { ...DEFAULT_VERIFY_CONFIG, ...(this.verifyConfig || {}) };
+  }
+
+  // Poll a provider deployment until it is READY. Stops early (returns the
+  // terminal result) as soon as the provider reports a terminal non-ready
+  // state, so a failed build fails fast instead of burning the whole window.
+  async _pollVerify(provider, deploymentId) {
+    return pollUntil(
+      () => provider.verify(deploymentId),
+      {
+        ...this._verifyWindow(),
+        predicate: (v) => v && (v.ready === true || v.status === 'READY'),
+        stopWhen: (v) => v && v.terminal === true
+      }
+    );
   }
 
   _finalizeRecord(record) {
@@ -363,21 +395,22 @@ export class DeploymentManager {
       record.deployment = { id: deployed.deploymentId, url: deployed.url || null, state: deployed.state || 'READY' };
       this.store.save(record);
 
-      const verified = await pollUntil(
-        () => provider.verify(deployed.deploymentId),
-        {
-          maxAttempts: 10,
-          initialDelayMs: 25,
-          predicate: (v) => v && v.status === 'READY'
-        }
-      );
-      if (!verified || verified.status !== 'READY') {
-        const err = deliveryError(DEL_CODES.PROVIDER_ERROR, `deployment verification did not reach READY (last: ${verified?.status})`, { retryable: false });
-        this._fail(record, 'deployment verification failed', DEL_CODES.PROVIDER_ERROR);
+      const verified = await this._pollVerify(provider, deployed.deploymentId);
+      const ready = verified && (verified.ready === true || verified.status === 'READY');
+      if (!ready) {
+        const terminal = verified && verified.terminal === true;
+        const lastState = verified?.status || 'unknown';
+        const errorCode = verified?.errorCode || null;
+        const reason = terminal
+          ? `deployment entered terminal state ${lastState}${errorCode ? ` (${errorCode})` : ''}`
+          : `deployment did not reach READY within the verification window (last: ${lastState})`;
+        const err = deliveryError(DEL_CODES.PROVIDER_ERROR, reason, { retryable: false, deploymentId: deployed.deploymentId, lastState, errorCode });
+        this._fail(record, reason, DEL_CODES.PROVIDER_ERROR);
         throw err;
       }
       applyTransition(record, DEPLOY_EVENTS.VERIFY_OK, { actor: 'manager', note: `verified at ${verified.url || record.deployment.url}` });
       record.deployment.url = record.deployment.url || verified.url;
+      record.deployment.state = 'READY';
       this.store.save(record);
 
       applyTransition(record, DEPLOY_EVENTS.RECORDED, { actor: 'manager', note: 'deployment recorded' });
@@ -412,18 +445,23 @@ export class DeploymentManager {
     const provider = this.registry.get(record.provider, { config: record.target, ctx: this._providerCtx() });
     let verified = null;
     try {
-      verified = await pollUntil(
-        () => provider.verify(deploymentId),
-        { maxAttempts: 10, initialDelayMs: 25, predicate: (v) => v && v.status === 'READY' }
-      );
+      verified = await this._pollVerify(provider, deploymentId);
     } catch {
       verified = null;
     }
-    if (!verified || verified.status !== 'READY') {
-      this._fail(record, `deployment "${deploymentId}" could not be confirmed READY after interruption — no re-deploy (last: ${verified ? verified.status : 'unknown'})`, DEL_CODES.PROVIDER_ERROR);
+    const ready = verified && (verified.ready === true || verified.status === 'READY');
+    if (!ready) {
+      const terminal = verified && verified.terminal === true;
+      const lastState = verified ? verified.status : 'unknown';
+      const errorCode = verified?.errorCode || null;
+      const reason = terminal
+        ? `deployment "${deploymentId}" is in terminal state ${lastState}${errorCode ? ` (${errorCode})` : ''} after interruption — no re-deploy`
+        : `deployment "${deploymentId}" could not be confirmed READY within the verification window after interruption (last: ${lastState}) — no re-deploy`;
+      this._fail(record, reason, DEL_CODES.PROVIDER_ERROR);
       throw deliveryError(DEL_CODES.PROVIDER_ERROR, `deployment "${deploymentId}" state ambiguous after interruption; refusing to re-deploy`, {
         recordId,
         deploymentId,
+        lastState,
         retryable: false
       });
     }
@@ -435,6 +473,7 @@ export class DeploymentManager {
       applyTransition(record, DEPLOY_EVENTS.VERIFY_OK, { actor: 'manager', note: `recovered after interruption — provider confirmed READY (${verified.url || record.deployment.url || ''})` });
     }
     record.deployment.url = record.deployment.url || verified.url || null;
+    record.deployment.state = 'READY';
     this.store.save(record);
     if (canTransition(record.status, DEPLOY_EVENTS.RECORDED)) {
       applyTransition(record, DEPLOY_EVENTS.RECORDED, { actor: 'manager', note: 'deployment recovered and recorded after interruption' });

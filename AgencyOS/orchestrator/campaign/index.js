@@ -743,7 +743,7 @@ export class CampaignManager {
   _performRollback(execution, campaign, approval, by) {
     const recordId = execution.outputs.deliveryRecordId;
     this.adapters.delivery.approveRollback(recordId, { by: approval.decision.decidedBy });
-    this.adapters.delivery.rollback({ recordId, by: approval.decision.decidedBy, mode: 'rollback' });
+    this.adapters.delivery.rollback({ recordId, by: approval.decision.decidedBy, mode: 'explicit' });
     applyOrcTransition(execution, 'ROLLBACK_REQUESTED', { approvalId: approval.id });
     execution.outcome = { verdict: 'ROLLED_BACK', reason: approval.decision.reason };
     delete execution.outputs.rollbackPending;

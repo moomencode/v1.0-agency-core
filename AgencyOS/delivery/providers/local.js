@@ -60,10 +60,11 @@ export class LocalProvider {
   async verify(deploymentId) {
     const dir = this._deployDir(deploymentId);
     if (!exists(path.join(dir, 'index.html'))) {
-      return { status: 'ERROR', url: null };
+      return { status: 'ERROR', ready: false, terminal: true, url: null };
     }
     const current = exists(this._currentPath()) ? readJson(this._currentPath()) : null;
-    return { status: 'READY', url: current && current.deploymentId === deploymentId ? current.url : `file://${path.join(dir, 'index.html')}` };
+    const url = current && current.deploymentId === deploymentId ? current.url : `file://${path.join(dir, 'index.html')}`;
+    return { status: 'READY', ready: true, terminal: false, url };
   }
 
   async urlFor(deploymentId) {

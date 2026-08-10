@@ -48,7 +48,7 @@ export class MockProvider {
     if (!d) {
       throw classifyProviderError(DEL_CODES.PROVIDER_ERROR, `unknown deployment ${deploymentId}`, { status: 404, retryable: false });
     }
-    return { status: d.state, url: d.url };
+    return { status: d.state, ready: d.state === 'READY', terminal: false, url: d.url };
   }
 
   async urlFor(deploymentId) {

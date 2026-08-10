@@ -41,7 +41,8 @@ export class DeliverySystem {
     scheduler = null,
     brain = null,
     registry = null,
-    retryConfig = { maxAttempts: 3, initialDelayMs: 50 }
+    retryConfig = { maxAttempts: 3, initialDelayMs: 50 },
+    verifyConfig = null
   } = {}) {
     this.root = path.resolve(root);
     this.logger = logger;
@@ -49,6 +50,7 @@ export class DeliverySystem {
     this.listeners = new Map();
     this.events = { emit: (event, payload) => this.emit(event, payload) };
     this.retryConfig = retryConfig;
+    this.verifyConfig = verifyConfig || null;
 
     this.schemas = this._loadSchemas();
     this.validator = validator || new Validator({ schemasDir: SCHEMAS_DIR });
@@ -76,6 +78,7 @@ export class DeliverySystem {
       vault,
       autoAllowed,
       retryConfig: this.retryConfig,
+      verifyConfig: this.verifyConfig,
       events: this.events
     });
 

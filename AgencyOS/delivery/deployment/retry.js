@@ -20,12 +20,21 @@ export async function deliveryRetry(fn, { maxAttempts = 3, initialDelayMs = 50, 
   return retry(fn, { maxAttempts, initialDelayMs, backoff, jitter: jitter ?? 0, retryable: shouldRetryDelivery, onAttempt });
 }
 
-export async function pollUntil(fn, { maxAttempts = 10, initialDelayMs = 50, backoff = 'linear', jitter = 0, predicate = null } = {}) {
+export async function pollUntil(fn, { maxAttempts = 10, initialDelayMs = 50, backoff = 'linear', jitter = 0, predicate = null, stopWhen = null, timeoutMs = null } = {}) {
   let last = null;
+  const deadline = timeoutMs && timeoutMs > 0 ? Date.now() + timeoutMs : null;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     last = await fn(attempt);
     if (predicate ? predicate(last) : last) return last;
-    if (attempt < maxAttempts) await sleep((initialDelayMs * attempt) * (jitter ? 1 + (Math.random() * 2 - 1) * jitter : 1));
+    // Terminal states (e.g. a Vercel readyState of ERROR/CANCELED) should stop
+    // the poll immediately instead of waiting out the remaining window.
+    if (stopWhen && stopWhen(last)) return last;
+    if (attempt < maxAttempts) {
+      const delay = (initialDelayMs * attempt) * (jitter ? 1 + (Math.random() * 2 - 1) * jitter : 1);
+      // Wall-clock budget: never schedule a sleep that would push us past it.
+      if (deadline && Date.now() + delay >= deadline) break;
+      await sleep(delay);
+    }
   }
   return last;
 }
