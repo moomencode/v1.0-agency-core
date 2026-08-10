@@ -21,6 +21,23 @@ export function crc32(buf) {
   return (crc ^ 0xffffffff) >>> 0;
 }
 
+export function sanitizeZipEntryName(name) {
+  let n = String(name).replace(/\\/g, '/');
+  if (n === '') return null;
+  if (n.startsWith('/')) return null;
+  if (/^[a-zA-Z]:/.test(n)) return null;
+  if (n.includes('\0')) return null;
+  const segments = [];
+  for (const seg of n.split('/')) {
+    if (seg === '' || seg === '.') continue;
+    if (seg === '..') return null;
+    segments.push(seg);
+  }
+  n = segments.join('/');
+  if (n === '') return null;
+  return n;
+}
+
 export function writeZip(files) {
   const names = Object.keys(files).sort();
   const localParts = [];
@@ -109,7 +126,10 @@ export function readZip(buf) {
     } catch {
       inflated = null;
     }
-    if (inflated && crc32(inflated) === crc) out[name] = inflated.toString('utf8');
+    if (inflated && crc32(inflated) === crc) {
+      const safe = sanitizeZipEntryName(name);
+      if (safe) out[safe] = inflated.toString('utf8');
+    }
     p += 46 + nameLen + extraLen + commentLen;
   }
   return out;

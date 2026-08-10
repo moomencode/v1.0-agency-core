@@ -2,6 +2,8 @@ import { CronSchedule } from './cron.js';
 import { JobQueue } from './queue.js';
 import { schError, SCH_CODES } from './errors.js';
 
+const IN_FLIGHT_DEFER_MS = 250;
+
 function clampPriority(p) {
   const n = Number(p);
   if (Number.isNaN(n)) return 5;
@@ -43,8 +45,10 @@ export class SchedulerEngine {
     this.logger = logger;
     this.queue = new JobQueue();
     this.active = 0;
+    this.inFlight = new Set();
     this.running = false;
     this.timer = null;
+    this.wakeTimer = null;
     this.resolvers = new Map();
     this.emitters = new Map();
     this.startedAt = null;
@@ -87,6 +91,10 @@ export class SchedulerEngine {
 
   close() {
     this.stop();
+    if (this.wakeTimer) {
+      clearTimeout(this.wakeTimer);
+      this.wakeTimer = null;
+    }
     for (const resolve of this.resolvers.values()) resolve(null);
     this.resolvers.clear();
   }
@@ -241,12 +249,29 @@ export class SchedulerEngine {
     this.queue.enqueue({ jobId: job.id, runNumber, attempt: 1, input: job.input, priority: job.priority, dueAt: Date.now(), trigger });
   }
 
+  _deferInFlight(entry) {
+    this.queue.enqueue({ ...entry, dueAt: Date.now() + IN_FLIGHT_DEFER_MS });
+    if (!this.wakeTimer) {
+      this.wakeTimer = setTimeout(() => {
+        this.wakeTimer = null;
+        this._drain();
+      }, IN_FLIGHT_DEFER_MS);
+      if (this.wakeTimer.unref) this.wakeTimer.unref();
+    }
+  }
+
   _drain() {
     while (this.active < this.maxWorkers) {
       const entry = this.queue.popEligible();
       if (!entry) break;
+      if (this.inFlight.has(entry.jobId)) {
+        this._deferInFlight(entry);
+        continue;
+      }
+      this.inFlight.add(entry.jobId);
       this.active++;
       this._execute(entry).finally(() => {
+        this.inFlight.delete(entry.jobId);
         this.active--;
         this._drain();
       });
@@ -255,8 +280,26 @@ export class SchedulerEngine {
 
   async _execute(entry) {
     const job = this.store.get(entry.jobId);
-    if (!job) return;
-    const token = `${job.id}:${entry.runNumber}`;
+    const token = `${entry.jobId}:${entry.runNumber}`;
+    if (!job) {
+      const resolve = this.resolvers.get(token);
+      if (resolve) {
+        this.resolvers.delete(token);
+        const at = new Date().toISOString();
+        resolve({
+          status: 'skipped',
+          runNumber: entry.runNumber,
+          attempt: entry.attempt,
+          trigger: entry.trigger || 'manual',
+          startedAt: at,
+          finishedAt: at,
+          durationMs: 0,
+          skipped: true,
+          reason: 'job-removed'
+        });
+      }
+      return;
+    }
     this._emit('job_started', { jobId: job.id, runNumber: entry.runNumber, attempt: entry.attempt, trigger: entry.trigger, at: new Date().toISOString() });
     const record = await this.runner.run(job, { runNumber: entry.runNumber, input: entry.input, attempt: entry.attempt });
     record.trigger = entry.trigger;

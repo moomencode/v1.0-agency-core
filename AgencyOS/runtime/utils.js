@@ -61,11 +61,26 @@ export function atomicWrite(file, data) {
   fs.renameSync(tmp, file);
 }
 
-export function readJson(file, fallback = null) {
+export function readJson(file, fallback = null, onError = null) {
+  let text;
   try {
-    return JSON.parse(fs.readFileSync(file, 'utf8'));
-  } catch {
-    return fallback;
+    text = fs.readFileSync(file, 'utf8');
+  } catch (err) {
+    if (err && err.code === 'ENOENT') return fallback;
+    if (typeof onError === 'function') {
+      onError(err);
+      return fallback;
+    }
+    throw err;
+  }
+  try {
+    return JSON.parse(text);
+  } catch (err) {
+    if (typeof onError === 'function') {
+      onError(err);
+      return fallback;
+    }
+    throw err;
   }
 }
 

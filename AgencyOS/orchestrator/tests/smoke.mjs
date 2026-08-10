@@ -46,7 +46,7 @@ async function run() {
     assert(decided.decision.granted === true);
   }
   sys.approve(escalateApprovals[0].id, { by: 'test-operator', reason: 'proceed with risk' });
-  await new Promise((r) => setTimeout(r, 1500));
+  await waitForExecution(sys, started.campaignId, byName['Corniche Electronics'], (exec) => exec.status === 'AWAITING_APPROVAL', '006 escalation approval must lead to deploy approval');
 
   const second = sys.status(started.campaignId);
   const esc = second.executions.find((e) => e.businessId === byName['Corniche Electronics']);
@@ -100,6 +100,19 @@ async function run() {
 
   sys.close();
   console.log('smoke: full happy path completed');
+}
+
+async function waitForExecution(sys, campaignId, businessId, predicate, label) {
+  const deadline = Date.now() + WAIT_MS;
+  let last = null;
+  while (Date.now() < deadline) {
+    last = sys.status(campaignId);
+    const exec = last.executions.find((e) => e.businessId === businessId);
+    if (exec && predicate(exec)) return exec;
+    await new Promise((r) => setTimeout(r, 100));
+  }
+  const status = last && last.executions && last.executions.find((e) => e.businessId === businessId);
+  throw new Error(`${label} — condition not met within ${WAIT_MS}ms (status=${status && status.status})`);
 }
 
 async function waitForTerminal(sys, campaignId, timeoutMs) {

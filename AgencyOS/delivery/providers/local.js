@@ -42,9 +42,13 @@ export class LocalProvider {
     }
     const deploymentId = `local-${packageInfo.packageId}`;
     const dir = ensureDir(this._deployDir(deploymentId));
+    const rootDir = path.resolve(dir);
     const files = readZip(fs.readFileSync(bundlePath));
     for (const [rel, content] of Object.entries(files)) {
-      const target = path.join(dir, rel);
+      const target = path.resolve(dir, rel);
+      if (target !== rootDir && !target.startsWith(rootDir + path.sep)) {
+        throw classifyProviderError(DEL_CODES.PROVIDER_ERROR, `bundle entry escapes deploy root: "${rel}"`, { status: 400, retryable: false });
+      }
       ensureDir(path.dirname(target));
       fs.writeFileSync(target, content);
     }
