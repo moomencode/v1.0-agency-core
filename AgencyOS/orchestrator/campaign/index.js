@@ -545,6 +545,19 @@ export class CampaignManager {
   }
 
   async _continueExecution(executionId, campaign) {
+    const beforeCounters = campaign && campaign.budget && campaign.budget.counters ? { ...campaign.budget.counters } : null;
+    try {
+      return await this._continueExecutionInner(executionId, campaign);
+    } catch (err) {
+      try {
+        return await this._failContinuation(executionId, campaign, err, beforeCounters);
+      } catch {
+        return null;
+      }
+    }
+  }
+
+  async _continueExecutionInner(executionId, campaign) {
     const execution = this.checkpoint.load(executionId);
     if (!execution) return null;
     execution._trace = new TraceCollector({ root: this.root, executionId, campaignId: campaign.id, businessId: execution.businessId });
@@ -575,6 +588,72 @@ export class CampaignManager {
       this._maybeFinalize(latest);
     });
     return result;
+  }
+
+  async _failContinuation(executionId, campaign, err, beforeCounters = null) {
+    try {
+      const execution = this.checkpoint.load(executionId);
+      if (!execution) {
+        this.audit.append({ action: 'continuation_failed', executionId, campaignId: campaign ? campaign.id : null, error: String((err && err.message) || err) });
+        return null;
+      }
+      const classified = classifyError(err, { phase: 'continue' });
+      execution.error = classified;
+      execution._trace = new TraceCollector({ root: this.root, executionId, campaignId: campaign.id, businessId: execution.businessId });
+      const wasTerminal = isTerminal(execution.status);
+      if (!wasTerminal && canTransition(execution.status, 'FAIL')) {
+        applyOrcTransition(execution, 'FAIL', { step: 'continue', class: classified.class, code: classified.code });
+        execution.outcome = { verdict: 'FAILED', class: classified.class, code: classified.code, message: classified.message };
+      }
+      this.checkpoint.save(execution);
+      if (!wasTerminal) {
+        try {
+          execution._trace.append({ step: null, detail: 'continuation-failed', errorClass: classified.class, errorCode: classified.code });
+        } catch {
+          /* trace is best effort */
+        }
+        this.events.emit(this.events.ORC_EVENTS.FAILED, {
+          executionId,
+          campaignId: campaign.id,
+          step: 'continue',
+          error: { class: classified.class, code: classified.code }
+        });
+        this.audit.append({ action: 'execution_failed', executionId, campaignId: campaign.id, errorClass: classified.class, errorCode: classified.code });
+      } else {
+        this.audit.append({ action: 'continuation_failed', executionId, campaignId: campaign.id, errorClass: classified.class, errorCode: classified.code });
+      }
+      await this._serialized(() => {
+        const latest = this._live.get(campaign.id) || this.load(campaign.id);
+        if (!latest) return null;
+        if (latest !== campaign && beforeCounters) {
+          for (const kind of Object.keys(latest.budget.counters)) {
+            const delta = (campaign.budget.counters[kind] || 0) - (beforeCounters[kind] || 0);
+            if (delta !== 0) latest.budget.counters[kind] = (latest.budget.counters[kind] || 0) + delta;
+          }
+          for (const kind of campaign.budget.reached) {
+            if (!latest.budget.reached.includes(kind)) latest.budget.reached.push(kind);
+          }
+        }
+        this._updateExecutionMeta(latest, execution);
+        this._save(latest);
+        this._maybeFinalize(latest);
+        return { executionId, status: execution.status };
+      });
+      return { executionId, status: execution.status };
+    } catch (innerErr) {
+      try {
+        this.audit.append({ action: 'continuation_failed_unrecoverable', executionId, campaignId: campaign ? campaign.id : null, error: String((innerErr && innerErr.message) || innerErr) });
+      } catch {
+        /* audit is best effort */
+      }
+      try {
+        const latest = this._live.get(campaign.id) || (campaign ? this.load(campaign.id) : null);
+        if (latest) this._maybeFinalize(latest);
+      } catch {
+        /* finalize is best effort */
+      }
+      return null;
+    }
   }
 
   _purgeRunState(campaign) {
@@ -625,9 +704,9 @@ export class CampaignManager {
     if (campaign.state === 'RUNNING' && !campaign._halted) {
       const pool = this._activePools.get(campaign.id);
       if (pool && !pool.stopped) {
-        pool.submit(() => this._continueExecution(execution.executionId, campaign)).catch(() => {});
+        pool.submit(() => this._continueExecution(execution.executionId, campaign));
       } else {
-        this._continueExecution(execution.executionId, campaign).catch(() => {});
+        this._continueExecution(execution.executionId, campaign);
       }
     }
     return record;
@@ -714,9 +793,9 @@ export class CampaignManager {
     if (campaign && campaign.state === 'RUNNING' && !campaign._halted) {
       const pool = this._activePools.get(campaignId);
       if (pool && !pool.stopped) {
-        pool.submit(() => this._continueExecution(executionId, campaign)).catch(() => {});
+        pool.submit(() => this._continueExecution(executionId, campaign));
       } else {
-        this._continueExecution(executionId, campaign).catch(() => {});
+        this._continueExecution(executionId, campaign);
       }
     }
     return { executionId, status: execution.status };
