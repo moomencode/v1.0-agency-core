@@ -14,6 +14,7 @@ import { runQA } from './qa.js';
 import { CONFIG_IDS, getConfigSchema } from './schemas/index.js';
 import { pipError, PIP_CODES } from './errors.js';
 import { hashShort, stableJson } from './utils.js';
+import { sanitizeRunId } from '../runtime/utils.js';
 
 export const PIPELINE_EVENTS = {
   PIPELINE_STARTED: 'pipeline.started',
@@ -63,8 +64,11 @@ export class PipelineRunner {
     this.logger?.[level]?.(message, meta);
   }
 
+  // SEC-01: runId is caller-controlled; it becomes a checkpoint directory
+  // segment. sanitizeRunId collapses `..`, separators and leading dots into a
+  // single safe segment so it can never traverse or escape the checkpoints root.
   _safeRunId(runId) {
-    return String(runId || 'run').replace(/[^A-Za-z0-9._-]/g, '_');
+    return sanitizeRunId(runId);
   }
 
   _checkpointDir() {

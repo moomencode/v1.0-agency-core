@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ensureDir } from './utils.js';
+import { ensureDir, sanitizeRunId } from './utils.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -9,7 +9,8 @@ const LEVELS = { debug: 10, info: 20, warn: 30, error: 40, fatal: 50 };
 
 export class Logger {
   constructor({ runId = 'global', level = 'info', root = ROOT } = {}) {
-    this.runId = runId;
+    // SEC-01: a caller-supplied runId must never become a path segment.
+    this.runId = sanitizeRunId(runId);
     this.level = level;
     this.buffer = [];
     this.runsDir = ensureDir(path.join(root, 'logs', 'runs'));
@@ -17,7 +18,7 @@ export class Logger {
     this.sink = null;
     this.daily = null;
     try {
-      this.sink = fs.createWriteStream(path.join(this.runsDir, `run-${runId}.ndjson`), { flags: 'a', fd: fs.openSync(path.join(this.runsDir, `run-${runId}.ndjson`), 'a') });
+      this.sink = fs.createWriteStream(path.join(this.runsDir, `run-${this.runId}.ndjson`), { flags: 'a', fd: fs.openSync(path.join(this.runsDir, `run-${this.runId}.ndjson`), 'a') });
       this.sink.on('error', () => { this.sink = null; });
       const stamp = new Date().toISOString().slice(0, 10);
       this.daily = fs.createWriteStream(path.join(this.dailyDir, `${stamp}.ndjson`), { flags: 'a', fd: fs.openSync(path.join(this.dailyDir, `${stamp}.ndjson`), 'a') });

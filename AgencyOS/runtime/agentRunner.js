@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
-import { stableStringify, shortHash, seededRng, nowIso, slugify, writeJson, ensureDir } from './utils.js';
+import { stableStringify, shortHash, seededRng, nowIso, slugify, writeJson, ensureDir, sanitizeRunId } from './utils.js';
 import { typedError, CODES } from './errors.js';
 import { retry as retryWithPolicy } from './retry.js';
 
@@ -212,7 +212,7 @@ export class AgentRunner {
   _runCommand(agent, input, context, stepId) {
     const command = agent.config.command;
     const args = Array.isArray(command) ? command : [command];
-    const inputFile = path.join(this.root, 'storage', 'tmp', `${slugify(agent.id)}-${context.runId}-${stepId || 'input'}.json`);
+    const inputFile = path.join(this.root, 'storage', 'tmp', `${slugify(agent.id)}-${sanitizeRunId(context.runId)}-${stepId || 'input'}.json`);
     ensureDir(path.dirname(inputFile));
     writeJson(inputFile, input);
     const result = spawnSync(args[0], [...args.slice(1), inputFile], { encoding: 'utf8', timeout: (agent.config.timeoutSeconds || 120) * 1000 });

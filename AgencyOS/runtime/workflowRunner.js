@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ensureDir, writeJson, readJson } from './utils.js';
+import { ensureDir, writeJson, readJson, sanitizeRunId } from './utils.js';
 import { typedError, CODES } from './errors.js';
 import { EventBus, EVENTS } from './eventBus.js';
 import { Logger } from './logger.js';
@@ -18,7 +18,7 @@ export class WorkflowRunner {
   }
 
   _runBus(context) {
-    const runLogger = new Logger({ runId: context.runId, root: this.root });
+    const runLogger = new Logger({ runId: sanitizeRunId(context.runId), root: this.root });
     const runBus = new EventBus(runLogger);
     const originalEmit = runBus.emitEvent.bind(runBus);
     runBus.emitEvent = (event, meta = {}, detail = null) => {
@@ -152,7 +152,7 @@ export class WorkflowRunner {
   }
 
   _writeArtifacts(context) {
-    const dir = ensureDir(path.join(this.root, 'storage', 'artifacts', 'runs', context.runId));
+    const dir = ensureDir(path.join(this.root, 'storage', 'artifacts', 'runs', sanitizeRunId(context.runId)));
     for (const [key, doc] of Object.entries(context.documents || {})) {
       writeJson(path.join(dir, `${key}.json`), {
         name: key,

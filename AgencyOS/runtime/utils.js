@@ -91,3 +91,18 @@ export function writeJson(file, value) {
 export function sanitizeName(s) {
   return String(s).replace(/[^a-zA-Z0-9._-]+/g, '_');
 }
+
+// SEC-01: caller-supplied run ids must never become path segments that can
+// escape their storage root. Transform any runId into a single safe segment:
+// strip path separators / control chars, collapse `..` runs, drop leading dots
+// and cap length. Legit ids (slugify-based, `run-<ts36>-<rand36>`) pass through
+// unchanged; hostile ids (`..\..\x`, absolute paths, `%2e%2e`) collapse to a
+// benign single segment and can never traverse or escape the root.
+export function sanitizeRunId(runId, fallback = 'run') {
+  const s = String(runId ?? '')
+    .replace(/[^A-Za-z0-9._-]/g, '_')
+    .replace(/\.{2,}/g, '.')
+    .replace(/^\.+/, '')
+    .slice(0, 96);
+  return s || fallback;
+}

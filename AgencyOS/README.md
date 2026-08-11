@@ -65,7 +65,8 @@ AgencyOS/
 8. `reports/PHASE4_5_BRAIN_IMPLEMENTATION.md` — agency brain report
 9. `reports/PHASE4_1_DOSSIER_IMPLEMENTATION.md` — business dossier engine report
 10. `reports/PHASE4_2_PIPELINE_IMPLEMENTATION.md` — website production pipeline report
-11. `reports/PHASE4_3_WEBSITE_ENGINE_IMPLEMENTATION.md` — universal website engine report
+ 11. `reports/PHASE4_3_WEBSITE_ENGINE_IMPLEMENTATION.md` — universal website engine report
+ 12. `reports/PHASE4_5_ORCHESTRATOR_IMPLEMENTATION.md` — autonomous agency workflow orchestrator report
 ## Runtime, Communication, Memory, Artifacts, Validation & Scheduler (Phases 3.0 – 3.5)
 
 Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
@@ -204,6 +205,22 @@ Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
   log, `deployment-report`/`qa-report` artifacts, business-scoped memory
   facts, scheduler + brain integration. Offline providers: `local` (disk +
   alias), `mock` (failure injection), `vercel` (recorded fixtures). 7 test
-  suites — 97 PASS, 0 FAIL, all offline. `demo.mjs` runs the full lifecycle
-  (dry-run, approval, rejection, QA block, retry, auth, rollback/revert).
-  Docs: `README.md`, `Architecture.md`.
+   suites — 97 PASS, 0 FAIL, all offline. `demo.mjs` runs the full lifecycle
+   (dry-run, approval, rejection, QA block, retry, auth, rollback/revert).
+   Docs: `README.md`, `Architecture.md`.
+- `orchestrator/` — **autonomous agency workflow orchestrator** (Phase 4.5):
+   coordinates the full agency loop as campaigns of executions with a
+   persistent 20-state execution + 8-state campaign state machine, six
+   autonomy levels (L0–L5; L4 = humans decide deploy/escalation, L5 =
+   auto-approve with an immutable approval ledger), per-business concurrency
+   with bounded pools and lock files, budget limits (businesses,
+   deployments, AI/provider calls, retries, steps, wall-clock) that move
+   campaigns to LIMITS_REACHED, emergency killswitch (file + env), crash
+   recovery (stale-lock breaking + resumable scan + checkpoints; pending
+   approvals survive restarts), failure isolation (one business never sinks
+   a campaign), and full observability (redacted traces + audit + execution
+   reports + campaign reports). Never re-scores: every verdict comes from
+   the Brain. SEC-01 fixed: caller-supplied run ids are sanitized at every
+   filesystem boundary. 18 offline suites — 119 PASS — plus `demo/demo.mjs`
+   (6 businesses, L4, 3 APPROVE/2 REJECT/1 ESCALATE, local deploys, crash
+   recovery, emergency stop). Docs: `README.md`, `Architecture.md`.

@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ensureDir, readJson, writeJson, slugify, nowIso, stableStringify, shortHash } from './utils.js';
+import { ensureDir, readJson, writeJson, slugify, nowIso, stableStringify, shortHash, sanitizeRunId } from './utils.js';
 import { typedError, CODES } from './errors.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -13,8 +13,11 @@ export class ContextManager {
     this.runsDir = ensureDir(path.join(root, 'storage', 'documents', 'runs'));
   }
 
+  // SEC-01: runIds are caller-controlled; every on-disk path derived from a
+  // runId must go through _runDir, which sanitizes the id into a single safe
+  // segment before joining. Hostile ids can never escape storage/documents/runs.
   _runDir(runId) {
-    return ensureDir(path.join(this.runsDir, runId));
+    return ensureDir(path.join(this.runsDir, sanitizeRunId(runId)));
   }
 
   _contextFile(runId) {
@@ -22,7 +25,14 @@ export class ContextManager {
   }
 
   create({ workflowId, input = {}, options = {} }) {
-    const runId = options.runId || this._newRunId(workflowId);
+    // SEC-01 boundary: a caller-supplied runId that does not survive
+    // sanitization unchanged (traversal, separators, dots, oversized) is
+    // discarded in favor of a fresh generated id. All on-disk uses still pass
+    // through _runDir (sanitizeRunId) as a second line of defense.
+    const requested = options.runId != null ? String(options.runId) : null;
+    const runId = requested != null && sanitizeRunId(requested) === requested
+      ? requested
+      : this._newRunId(workflowId);
     const seed = options.seed ?? 'agency-os';
     const context = {
       runId,
