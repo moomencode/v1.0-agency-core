@@ -37,18 +37,21 @@ function validateSchedule(schedule) {
 }
 
 export class SchedulerEngine {
-  constructor({ store, runner, tickMs = 1000, maxWorkers = 4, logger = null } = {}) {
+  constructor({ store, runner, tickMs = 1000, maxWorkers = 4, logger = null, bridge = null } = {}) {
     this.store = store;
     this.runner = runner;
     this.tickMs = Math.max(1, tickMs);
     this.maxWorkers = Math.max(1, maxWorkers);
     this.logger = logger;
+    this.bridge = bridge;
     this.queue = new JobQueue();
     this.active = 0;
     this.inFlight = new Set();
     this.running = false;
+    this.stopped = false;
     this.timer = null;
     this.wakeTimer = null;
+    this.retryTimers = new Set();
     this.resolvers = new Map();
     this.emitters = new Map();
     this.startedAt = null;
@@ -66,15 +69,23 @@ export class SchedulerEngine {
 
   _emit(event, payload) {
     const set = this.emitters.get(event);
-    if (!set) return;
-    for (const cb of set) {
-      try { cb(payload); } catch { /* listener errors never break the scheduler */ }
+    if (set) {
+      for (const cb of set) {
+        try { cb(payload); } catch { /* listener errors never break the scheduler */ }
+      }
+    }
+    if (this.bridge) {
+      try { this.bridge(event, payload); } catch { /* bridge is best-effort */ }
     }
   }
 
   start() {
     if (this.running) return;
+    if (this.queue.peek() === null) {
+      this._recoverDispatches();
+    }
     this.running = true;
+    this.stopped = false;
     this.startedAt = new Date();
     this.tick();
     this.timer = setInterval(() => this.tick(), this.tickMs);
@@ -83,18 +94,46 @@ export class SchedulerEngine {
 
   stop() {
     this.running = false;
+    this.stopped = true;
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
     }
-  }
-
-  close() {
-    this.stop();
     if (this.wakeTimer) {
       clearTimeout(this.wakeTimer);
       this.wakeTimer = null;
     }
+    this._clearRetryTimers();
+  }
+
+  _clearRetryTimers() {
+    for (const timer of this.retryTimers) clearTimeout(timer);
+    this.retryTimers.clear();
+  }
+
+  // SCH-01: replay persisted dispatch intents left by a crash between the job
+  // persist and the in-memory enqueue. Runs are re-enqueued exactly once; job
+  // run numbers / schedule bookkeeping are reconciled from the journal.
+  _recoverDispatches() {
+    const pending = this.store.listDispatches();
+    if (!pending.length) return 0;
+    const now = Date.now();
+    for (const entry of pending) {
+      const job = this.store.get(entry.jobId);
+      if (!job) continue;
+      if (entry.runNumber > job.runNumber) job.runNumber = entry.runNumber;
+      if (entry.lastRunAt) job.lastRunAt = entry.lastRunAt;
+      if (entry.nextRunAt !== undefined) job.nextRunAt = entry.nextRunAt;
+      job.attempts = 0;
+      this.store.saveJob(job);
+      this.queue.enqueue({ ...entry, dueAt: now });
+      this.store.removeDispatch(entry.id);
+    }
+    return pending.length;
+  }
+
+  close() {
+    this.stop();
     for (const resolve of this.resolvers.values()) resolve(null);
     this.resolvers.clear();
   }
@@ -203,13 +242,16 @@ export class SchedulerEngine {
     const job = this.store.get(String(id));
     if (!job) throw schError(SCH_CODES.UNKNOWN_JOB, `unknown job "${id}"`, { id });
     if (!job.enabled) throw schError(SCH_CODES.JOB_DISABLED, `job "${id}" is disabled`, { id });
-    const runNumber = ++job.runNumber;
+    const runNumber = job.runNumber + 1;
+    const dispatch = { id: `disp-${job.id}-${runNumber}`, jobId: job.id, runNumber, attempt: 1, input: input ?? job.input, priority: job.priority, trigger: 'manual', dueAt: Date.now(), createdAt: new Date().toISOString() };
+    this.store.saveDispatch(dispatch);
+    job.runNumber = runNumber;
     job.attempts = 0;
     this.store.saveJob(job);
     const token = `${job.id}:${runNumber}`;
     const promise = new Promise((resolve) => this.resolvers.set(token, resolve));
-    this.queue.enqueue({ jobId: job.id, runNumber, attempt: 1, input: input ?? job.input, priority: job.priority, dueAt: Date.now(), trigger: 'manual' });
-    this._drain();
+    this.queue.enqueue(dispatch);
+    this._drain(true);
     return promise;
   }
 
@@ -243,10 +285,13 @@ export class SchedulerEngine {
   }
 
   _enqueueScheduled(job, trigger) {
-    const runNumber = ++job.runNumber;
+    const runNumber = job.runNumber + 1;
+    const dispatch = { id: `disp-${job.id}-${runNumber}`, jobId: job.id, runNumber, attempt: 1, input: job.input, priority: job.priority, trigger, dueAt: Date.now(), createdAt: new Date().toISOString() };
+    this.store.saveDispatch(dispatch);
+    job.runNumber = runNumber;
     job.attempts = 0;
     this.store.saveJob(job);
-    this.queue.enqueue({ jobId: job.id, runNumber, attempt: 1, input: job.input, priority: job.priority, dueAt: Date.now(), trigger });
+    this.queue.enqueue(dispatch);
   }
 
   _deferInFlight(entry) {
@@ -260,8 +305,8 @@ export class SchedulerEngine {
     }
   }
 
-  _drain() {
-    while (this.active < this.maxWorkers) {
+  _drain(force = false) {
+    while (this.active < this.maxWorkers && (force || !this.stopped)) {
       const entry = this.queue.popEligible();
       if (!entry) break;
       if (this.inFlight.has(entry.jobId)) {
@@ -279,6 +324,9 @@ export class SchedulerEngine {
   }
 
   async _execute(entry) {
+    if (entry.dispatchId || (entry.id && entry.id.startsWith('disp-'))) {
+      this.store.removeDispatch(entry.dispatchId || entry.id);
+    }
     const job = this.store.get(entry.jobId);
     const token = `${entry.jobId}:${entry.runNumber}`;
     if (!job) {
@@ -310,11 +358,14 @@ export class SchedulerEngine {
       this.store.saveJob(job);
       const delay = backoffDelay(job, entry.attempt);
       this._emit('job_retry', { jobId: job.id, runNumber: entry.runNumber, attempt: entry.attempt, delayMs: delay, error: record.error });
-      this.queue.enqueue({ jobId: job.id, runNumber: entry.runNumber, attempt: entry.attempt + 1, input: entry.input, priority: job.priority, dueAt: Date.now() + delay, trigger: 'retry' });
-      const timer = setTimeout(() => this._drain(), Math.min(delay, 30000));
+      const retryDispatch = { id: `disp-${job.id}-${entry.runNumber}-r${entry.attempt + 1}`, jobId: job.id, runNumber: entry.runNumber, attempt: entry.attempt + 1, input: entry.input, priority: job.priority, dueAt: Date.now() + delay, trigger: 'retry', createdAt: new Date().toISOString() };
+      this.store.saveDispatch(retryDispatch);
+      this.queue.enqueue(retryDispatch);
+      const timer = setTimeout(() => this._drain(true), Math.min(delay, 30000));
       if (!this.resolvers.has(token)) {
         if (timer.unref) timer.unref();
       }
+      this.retryTimers.add(timer);
       return;
     }
 

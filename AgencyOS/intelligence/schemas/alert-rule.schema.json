@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "alert-rule",
+  "description": "Operator-owned alert rule; references registered metric keys or incident kinds",
+  "type": "object",
+  "required": ["ruleId", "severity", "enabled"],
+  "properties": {
+    "ruleId": { "type": "string", "minLength": 1 },
+    "metric": { "type": "string", "pattern": "^[a-zA-Z0-9.\\-]+$" },
+    "kind": { "type": "string", "enum": ["step_failed", "limits_reached", "escalation", "provider_error", "campaign_stuck", "data_quality"] },
+    "op": { "type": "string", "enum": ["gt", "gte", "lt", "lte", "eq", "ne"] },
+    "threshold": { "type": "number" },
+    "windowMs": { "type": "integer", "minimum": 60000 },
+    "severity": { "type": "string", "enum": ["info", "warning", "critical"] },
+    "minSamples": { "type": "integer", "minimum": 0 },
+    "cooldownMs": { "type": "integer", "minimum": 0 },
+    "scopeType": { "type": "string", "enum": ["agency", "campaign", "provider", "job"] },
+    "enabled": { "type": "boolean" },
+    "description": { "type": "string" }
+  },
+  "additionalProperties": true
+}

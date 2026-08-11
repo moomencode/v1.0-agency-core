@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "metric-point",
+  "description": "A single derived metric point in the intelligence series",
+  "type": "object",
+  "required": ["schema", "ts", "metric", "value", "kind", "scope", "source"],
+  "properties": {
+    "schema": { "type": "string", "const": "https://agency.os/intelligence/metric-point" },
+    "ts": { "type": "string", "format": "date-time" },
+    "metric": { "type": "string", "pattern": "^[a-zA-Z0-9.\\-]+$" },
+    "value": { "type": "number" },
+    "kind": { "type": "string", "enum": ["counter", "gauge", "ratio", "duration"] },
+    "scope": {
+      "type": "object",
+      "required": ["type", "id"],
+      "properties": {
+        "type": { "type": "string", "enum": ["agency", "campaign", "execution", "business", "provider", "step", "job"] },
+        "id": { "type": "string" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "type": "string", "enum": ["event", "job", "record", "import"] },
+        "event": { "type": "string" },
+        "eventId": { "type": "string", "pattern": "^evt-[0-9a-f]{16}$" },
+        "jobId": { "type": "string" },
+        "recordId": { "type": "string" }
+      }
+    },
+    "correlation": { "type": "object" }
+  },
+  "additionalProperties": true
+}

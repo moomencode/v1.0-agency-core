@@ -1,0 +1,119 @@
+{
+  "schema": "https://agency.os/intelligence/config",
+  "version": 1,
+  "enabled": true,
+  "storageRoot": "storage/intelligence",
+  "sink": {
+    "lruCap": 10000,
+    "bufferCap": 1000,
+    "events": [
+      "orchestrator.campaign_started",
+      "orchestrator.campaign_paused",
+      "orchestrator.campaign_resumed",
+      "orchestrator.campaign_completed",
+      "orchestrator.campaign_stopped",
+      "orchestrator.limits_reached",
+      "orchestrator.execution_started",
+      "orchestrator.step_completed",
+      "orchestrator.step_failed",
+      "orchestrator.step_retrying",
+      "orchestrator.state_changed",
+      "orchestrator.approval_required",
+      "orchestrator.approved",
+      "orchestrator.denied",
+      "orchestrator.deployed",
+      "orchestrator.failed",
+      "orchestrator.archived",
+      "orchestrator.rolled_back",
+      "orchestrator.kill_switch",
+      "brain.lead_discovered",
+      "brain.decision_made",
+      "brain.strategy_selected",
+      "brain.plan_started",
+      "brain.plan_completed",
+      "delivery.deployed",
+      "delivery.failed",
+      "scheduler.job_started",
+      "scheduler.job_retry",
+      "scheduler.job_succeeded",
+      "scheduler.job_failed"
+    ]
+  },
+  "metrics": {
+    "registry": [
+      "agency.discovered",
+      "agency.approved",
+      "agency.websitesGenerated",
+      "agency.executions",
+      "agency.deployed",
+      "agency.failed",
+      "agency.escalations",
+      "campaign.started",
+      "campaign.completed",
+      "campaign.stopped",
+      "campaign.limitsReached",
+      "campaign.deployments",
+      "execution.succeeded",
+      "execution.failed",
+      "execution.retries",
+      "execution.steps",
+      "step.completed",
+      "step.failed",
+      "step.retried",
+      "step.durationMs",
+      "provider.attempts",
+      "provider.failures",
+      "provider.verifyDurationMs",
+      "provider.dryRuns",
+      "scheduler.jobsSucceeded",
+      "scheduler.jobsFailed",
+      "scheduler.jobsRetried",
+      "budget.utilizationPct",
+      "budget.burnPerHour",
+      "budget.remainingPct"
+    ],
+    "derived": [
+      "agency.successRatePct",
+      "agency.failureRatePct",
+      "campaign.successRatePct",
+      "provider.failureRatePct",
+      "provider.verifyAvgMs",
+      "scheduler.jobSuccessRatePct"
+    ]
+  },
+  "jobs": {
+    "funnel": { "version": 1, "schedule": "0 2 * * *", "windowMs": 86400000, "maxWindows": 4, "maxCampaigns": 200 },
+    "reliability": { "version": 1, "schedule": "0 * * * *", "windowMs": 3600000, "maxWindows": 24, "maxRows": 50000 },
+    "durations": { "version": 1, "schedule": "0 * * * *", "windowMs": 3600000, "maxWindows": 24, "maxExecutions": 500 },
+    "providers": { "version": 1, "schedule": "0 3 * * *", "windowMs": 86400000, "maxWindows": 7, "maxRecords": 2000 },
+    "budget": { "version": 1, "schedule": "0 * * * *", "windowMs": 3600000, "maxWindows": 24, "maxCampaigns": 200 },
+    "scheduler_stats": { "version": 1, "schedule": "0 4 * * *", "windowMs": 86400000, "maxWindows": 7, "maxHistory": 10000 }
+  },
+  "incidents": {
+    "evidenceCap": 50,
+    "staleApprovalMs": 86400000,
+    "stuckThresholdMs": 3600000
+  },
+  "alerts": {
+    "windowMs": 86400000,
+    "minSamples": 1,
+    "cooldownMs": 3600000,
+    "rulesFile": "config/alerts.json"
+  },
+  "reports": {
+    "generatedBy": "intelligence",
+    "projectId": "agency",
+    "workflowId": "intelligence"
+  },
+  "retention": {
+    "rawEventsDays": 90,
+    "rawMetricsDays": 90,
+    "incidentsDays": 730,
+    "alertsDays": 730
+  },
+  "limits": {
+    "maxEventsPerDay": 200000,
+    "maxPointsPerDay": 500000,
+    "maxReportSizeBytes": 1048576
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "agency-intelligence",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AgencyOS Operations & Intelligence plane: metrics series, insights, incidents, alerts, deterministic reports",
+  "type": "module",
+  "exports": {
+    ".": "./index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

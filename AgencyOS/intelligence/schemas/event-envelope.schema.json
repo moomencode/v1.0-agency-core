@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "event-envelope",
+  "description": "Canonical redacted envelope stored by the intelligence event sink",
+  "type": "object",
+  "required": ["schema", "ev", "at", "module", "eventId", "correlation", "payload"],
+  "properties": {
+    "schema": { "type": "string", "const": "https://agency.os/intelligence/event-envelope" },
+    "ev": { "type": "string", "pattern": "^[a-zA-Z0-9.\\-_]+$" },
+    "at": { "type": "string", "format": "date-time" },
+    "module": { "type": "string", "enum": ["orchestrator", "brain", "delivery", "scheduler", "agency"] },
+    "eventId": { "type": "string", "pattern": "^evt-[0-9a-f]{16}$" },
+    "correlation": { "type": "object", "properties": { "campaignId": { "type": "string" }, "executionId": { "type": "string" }, "businessId": { "type": "string" }, "jobId": { "type": "string" }, "provider": { "type": "string" }, "step": { "type": "string" }, "recordId": { "type": "string" }, "approvalId": { "type": "string" } } },
+    "payload": { "type": "object" }
+  },
+  "additionalProperties": true
+}

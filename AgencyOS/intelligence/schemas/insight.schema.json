@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "insight",
+  "description": "Deterministic aggregation record over a fixed input window",
+  "type": "object",
+  "required": ["schema", "insightId", "kind", "schemaVersion", "job", "scope", "window", "computedAt", "inputs", "data", "summary"],
+  "properties": {
+    "schema": { "type": "string", "const": "https://agency.os/intelligence/insight" },
+    "insightId": { "type": "string", "pattern": "^ins-[0-9a-f]{16}$" },
+    "kind": { "type": "string", "enum": ["funnel", "reliability", "durations", "provider_reliability", "budget_burn", "cost_efficiency", "scheduler_stats", "experiment"] },
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "job": { "type": "string" },
+    "scope": {
+      "type": "object",
+      "required": ["type", "id"],
+      "properties": { "type": { "type": "string", "enum": ["campaign", "agency", "provider", "execution"] }, "id": { "type": "string" } }
+    },
+    "window": {
+      "type": "object",
+      "required": ["start", "end"],
+      "properties": { "start": { "type": "string", "format": "date-time" }, "end": { "type": "string", "format": "date-time" } }
+    },
+    "computedAt": { "type": "string", "format": "date-time" },
+    "inputs": { "type": "object" },
+    "data": { "type": "object" },
+    "summary": { "type": "string" },
+    "artifactIds": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "intelligence-config",
+  "description": "Validated shape of intelligence.config.json",
+  "type": "object",
+  "required": ["schema", "version", "enabled", "metrics"],
+  "properties": {
+    "schema": { "type": "string", "const": "https://agency.os/intelligence/config" },
+    "version": { "type": "integer", "minimum": 1 },
+    "enabled": { "type": "boolean" },
+    "storageRoot": { "type": "string" },
+    "sink": {
+      "type": "object",
+      "properties": {
+        "lruCap": { "type": "integer", "minimum": 1 },
+        "bufferCap": { "type": "integer", "minimum": 1 },
+        "events": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "required": ["registry", "derived"],
+      "properties": {
+        "registry": { "type": "array", "items": { "type": "string" } },
+        "derived": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "jobs": { "type": "object" },
+    "incidents": { "type": "object" },
+    "alerts": { "type": "object" },
+    "reports": { "type": "object" },
+    "retention": { "type": "object" },
+    "limits": { "type": "object" }
+  },
+  "additionalProperties": true
+}

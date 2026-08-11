@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "job-marker",
+  "description": "Idempotent progress marker for intelligence jobs (crash resume point)",
+  "type": "object",
+  "required": ["schema", "jobId", "lastWindowStart", "lastWindowEnd", "status", "updatedAt"],
+  "properties": {
+    "schema": { "type": "string", "const": "https://agency.os/intelligence/job-marker" },
+    "jobId": { "type": "string" },
+    "lastWindowStart": { "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }] },
+    "lastWindowEnd": { "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }] },
+    "status": { "type": "string", "enum": ["idle", "running", "completed", "failed"] },
+    "error": { "type": "string" },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": true
+}

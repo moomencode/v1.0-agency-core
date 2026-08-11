@@ -1,0 +1,72 @@
+{
+  "schema": "https://agency.os/intelligence/alert-rule-registry",
+  "version": 1,
+  "rules": [
+    {
+      "ruleId": "alert-execution-failure-rate-high",
+      "metric": "agency.failureRatePct",
+      "op": "gt",
+      "threshold": 50,
+      "windowMs": 86400000,
+      "severity": "critical",
+      "minSamples": 3,
+      "cooldownMs": 3600000,
+      "scopeType": "agency",
+      "enabled": true,
+      "description": "Agency execution failure rate above 50% over the last day"
+    },
+    {
+      "ruleId": "alert-provider-failure-rate-high",
+      "metric": "provider.failureRatePct",
+      "op": "gt",
+      "threshold": 30,
+      "windowMs": 86400000,
+      "severity": "warning",
+      "minSamples": 2,
+      "cooldownMs": 3600000,
+      "scopeType": "provider",
+      "enabled": true,
+      "description": "Provider failure rate above 30% over the last day"
+    },
+    {
+      "ruleId": "alert-scheduler-success-low",
+      "metric": "scheduler.jobSuccessRatePct",
+      "op": "lt",
+      "threshold": 70,
+      "windowMs": 86400000,
+      "severity": "warning",
+      "minSamples": 3,
+      "cooldownMs": 3600000,
+      "scopeType": "agency",
+      "enabled": true,
+      "description": "Scheduler job success rate below 70% over the last day"
+    },
+    {
+      "ruleId": "alert-budget-burn-high",
+      "metric": "budget.burnPerHour",
+      "op": "gt",
+      "threshold": 8,
+      "windowMs": 3600000,
+      "severity": "warning",
+      "minSamples": 1,
+      "cooldownMs": 3600000,
+      "scopeType": "campaign",
+      "enabled": true,
+      "description": "Campaign resource burn above 8 units per hour in a window"
+    },
+    {
+      "ruleId": "alert-limits-reached",
+      "kind": "limits_reached",
+      "severity": "warning",
+      "enabled": true,
+      "description": "Campaign limit/budget exhaustion surfaced as an alert"
+    },
+    {
+      "ruleId": "alert-provider-error",
+      "kind": "provider_error",
+      "severity": "warning",
+      "enabled": true,
+      "description": "Provider failure incident surfaced as an alert"
+    }
+  ]
+}

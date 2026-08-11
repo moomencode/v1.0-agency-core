@@ -11,7 +11,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const SCHEDULER_API_VERSION = '1.0';
 
 export class SchedulerSystem {
-  constructor({ root = ROOT, tickMs = 1000, maxWorkers = 4, executor = null, validator = null, store = null, logger = null } = {}) {
+  constructor({ root = ROOT, tickMs = 1000, maxWorkers = 4, executor = null, validator = null, store = null, logger = null, bridge = null } = {}) {
     this.root = path.resolve(root);
     this.store = store || new JobStore({ baseDir: path.join(this.root, 'storage', 'scheduler-engine') });
     this.handlers = new Map();
@@ -32,7 +32,7 @@ export class SchedulerSystem {
         };
 
     this.runner = new JobRunner({ executor: adapter, validator, logger });
-    this.engine = new SchedulerEngine({ store: this.store, runner: this.runner, tickMs, maxWorkers, logger });
+    this.engine = new SchedulerEngine({ store: this.store, runner: this.runner, tickMs, maxWorkers, logger, bridge });
   }
 
   registerJob(spec) { return this.engine.registerJob(spec); }

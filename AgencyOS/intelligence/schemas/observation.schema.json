@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "observation",
+  "description": "Explicitly imported outcome signal (4.6.1 infrastructure; schema committed now)",
+  "type": "object",
+  "required": ["schema", "observationId", "batchId", "kind", "businessId", "at", "importedAt", "source", "payload"],
+  "properties": {
+    "schema": { "type": "string", "const": "https://agency.os/intelligence/observation" },
+    "observationId": { "type": "string", "pattern": "^obs-[0-9a-f]{16}$" },
+    "batchId": { "type": "string", "pattern": "^batch-[0-9a-f]{16}$" },
+    "kind": { "type": "string", "enum": ["site_up", "lead_inquiry", "conversion", "manual_review", "deployment_signal"] },
+    "businessId": { "type": "string", "minLength": 1 },
+    "executionId": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
+    "deliveryRecordId": { "anyOf": [{ "type": "string" }, { "type": "null" }] },
+    "at": { "type": "string", "format": "date-time" },
+    "importedAt": { "type": "string", "format": "date-time" },
+    "source": { "type": "string" },
+    "payload": { "type": "object" },
+    "integrity": { "type": "string", "pattern": "^sha256-[0-9a-f]{64}$" }
+  },
+  "additionalProperties": true
+}

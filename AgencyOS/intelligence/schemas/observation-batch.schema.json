@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "observation-batch",
+  "description": "Import batch and its receipt (4.6.1 infrastructure; schema committed now)",
+  "type": "object",
+  "required": ["schema", "batchId", "items", "receipt"],
+  "properties": {
+    "schema": { "type": "string", "const": "https://agency.os/intelligence/observation-batch" },
+    "batchId": { "type": "string", "pattern": "^batch-[0-9a-f]{16}$" },
+    "items": { "type": "array", "items": { "type": "object" } },
+    "receipt": {
+      "type": "object",
+      "required": ["accepted", "rejected", "duplicates", "reasons"],
+      "properties": {
+        "accepted": { "type": "integer", "minimum": 0 },
+        "rejected": { "type": "integer", "minimum": 0 },
+        "duplicates": { "type": "integer", "minimum": 0 },
+        "reasons": { "type": "array", "items": { "type": "object" } }
+      }
+    }
+  },
+  "additionalProperties": true
+}

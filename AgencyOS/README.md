@@ -67,6 +67,7 @@ AgencyOS/
 10. `reports/PHASE4_2_PIPELINE_IMPLEMENTATION.md` — website production pipeline report
  11. `reports/PHASE4_3_WEBSITE_ENGINE_IMPLEMENTATION.md` — universal website engine report
  12. `reports/PHASE4_5_ORCHESTRATOR_IMPLEMENTATION.md` — autonomous agency workflow orchestrator report
+ 13. `reports/PHASE4_6_OPERATIONS_INTELLIGENCE_IMPLEMENTATION.md` — operations intelligence report
 ## Runtime, Communication, Memory, Artifacts, Validation & Scheduler (Phases 3.0 – 3.5)
 
 Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
@@ -224,3 +225,17 @@ Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
    filesystem boundary. 18 offline suites — 119 PASS — plus `demo/demo.mjs`
    (6 businesses, L4, 3 APPROVE/2 REJECT/1 ESCALATE, local deploys, crash
    recovery, emergency stop). Docs: `README.md`, `Architecture.md`.
+- `intelligence/` — **operations intelligence** (Phase 4.6): the read-mostly
+   observability plane. Event sink (validate → redact-at-write → daily NDJSON +
+   watermark + LRU/replay dedupe) over every bus event; 8 idempotent, windowed
+   jobs (funnel, reliability, durations, providers, budget burn, scheduler
+   stats, incidents, alerts) with job markers, killswitch and caps;
+   deterministic metric series + insights (`eventId`/`insightId`/`alertId` are
+   pure functions); incident model (open → job resolve → operator ack/close)
+   and configurable alert rules (6 rules, minSamples, cooldown, recovery);
+   5 report kinds (health/incident/alert/campaign/operations) as JSON+Markdown
+   artifacts with readable mirrors. Ships the scheduler hardening prerequisite
+   (SCH-01 atomic persist+enqueue + replay, SCH-02 stop semantics). 9 offline
+   suites — 346 PASS — plus `demo.mjs` (simulated campaign → reports); full
+   pipeline byte-reproducible across runs. Docs: `README.md`,
+   `reports/PHASE4_6_OPERATIONS_INTELLIGENCE_IMPLEMENTATION.md`.

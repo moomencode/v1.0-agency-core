@@ -10,6 +10,7 @@ export class JobStore {
     this.baseDir = baseDir;
     this.jobsFile = path.join(baseDir, '_jobs.json');
     this.historyFile = path.join(baseDir, '_history.json');
+    this.dispatchesFile = path.join(baseDir, '_dispatches.json');
     this.jobs = new Map();
     this.history = new Map();
     ensureDir(baseDir);
@@ -73,6 +74,27 @@ export class JobStore {
 
   historyOf(jobId) {
     return this.history.get(jobId) || [];
+  }
+
+  // SCH-01: dispatch-intent journal. A scheduled run is persisted here BEFORE the
+  // in-memory queue enqueue, so a crash between "job persisted" and "queue
+  // enqueued" can never drop a run: on restart the engine replays pending
+  // dispatches from the store. Removal happens only after the entry is enqueued.
+  listDispatches() {
+    const raw = readJson(this.dispatchesFile, []);
+    return Array.isArray(raw) ? raw : [];
+  }
+
+  saveDispatch(entry) {
+    const list = this.listDispatches().filter((d) => d && d.id !== entry.id);
+    list.push(entry);
+    writeJson(this.dispatchesFile, list);
+    return entry;
+  }
+
+  removeDispatch(id) {
+    const list = this.listDispatches().filter((d) => d && d.id !== id);
+    writeJson(this.dispatchesFile, list);
   }
 
   _persist() {

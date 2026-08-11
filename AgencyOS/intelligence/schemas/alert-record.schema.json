@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "alert-record",
+  "description": "A local alert instance, deduplicated per (rule, scope, window)",
+  "type": "object",
+  "required": ["schema", "alertId", "ruleId", "severity", "status", "triggeredAt", "triggeredBy", "scope"],
+  "properties": {
+    "schema": { "type": "string", "const": "https://agency.os/intelligence/alert-record" },
+    "alertId": { "type": "string", "pattern": "^alr-[0-9a-f]{16}$" },
+    "ruleId": { "type": "string", "minLength": 1 },
+    "severity": { "type": "string", "enum": ["info", "warning", "critical"] },
+    "status": { "type": "string", "enum": ["active", "resolved"] },
+    "triggeredAt": { "type": "string", "format": "date-time" },
+    "resolvedAt": { "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }] },
+    "triggeredBy": {
+      "type": "object",
+      "required": ["metric", "value", "threshold", "window"],
+      "properties": {
+        "metric": { "type": "string" },
+        "value": { "type": "number" },
+        "threshold": { "type": "number" },
+        "window": {
+          "type": "object",
+          "required": ["start", "end"],
+          "properties": { "start": { "type": "string", "format": "date-time" }, "end": { "type": "string", "format": "date-time" } }
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "required": ["type", "id"],
+      "properties": { "type": { "type": "string" }, "id": { "type": "string" } }
+    },
+    "incidentId": { "type": "string" },
+    "resolvedBy": { "type": "string" },
+    "resolutionNote": { "type": "string" }
+  },
+  "additionalProperties": true
+}

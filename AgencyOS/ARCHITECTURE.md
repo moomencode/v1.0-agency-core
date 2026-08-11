@@ -1,5 +1,11 @@
 # AgencyOS — Architecture (`ARCHITECTURE.md`)
 
+## Module Inventory — Phase 4.6 (Operations Intelligence)
+
+| module | responsibility | API version | smoke |
+|---|---|---|---|
+| `intelligence/` | read-mostly observability plane: event sink (redact-at-write + watermark + dedupe), 8 windowed jobs (funnel, reliability, durations, providers, budget burn, scheduler stats, incidents, alerts), incidents, 6 alert rules, 5 deterministic report kinds | 1.0 | 346 PASS (models 36, sink 50, jobs 79, incidents 20, alerts 30, security 22, reports 57, determinism 20, integration 32) |
+
 ## Module Inventory — Phase 4.5 (Autonomous Agency Workflow Orchestrator)
 
 | module | responsibility | API version | smoke |
@@ -23,7 +29,9 @@
 
 **Orchestrator total: 119 PASS. Delivery total: 97 PASS. Website Engine
 total: 36 PASS. Pipeline total: 33 PASS. Dossier total: 116 PASS. Brain
-total: 328 PASS. Full regression across phases 3.0–4.5: 1148+ PASS.**
+total: 328 PASS. Intelligence total: 346 PASS. Scheduler regression:
+82 PASS (smoke 49, regression-455 12, regression-460 21). Full regression
+across phases 3.0–4.6: 1576+ PASS.**
 
 ## Dependency Graph
 
@@ -114,6 +122,15 @@ No module duplicates logic: `execution-plans/` delegates all state transitions
 to `state-machine/`; `decision-engine/` computes estimates once and shares them
 via `context.estimates`; `planner/` delegates plan loading to
 `execution-plans/`.
+
+intelligence/ (read-mostly observer; writes only to its own storageRoot)
+  ├── orchestrator-engine/ (campaigns, instances, decisions, traces — read-only)
+  ├── delivery/records     (delivery records — read-only)
+  ├── scheduler/           (history + job config — read-only)
+  ├── bus                  (shared EventBus events — subscribes, never emits)
+  ├── delivery/security/   (redaction helpers, SecretVault — consumed)
+  ├── artifacts/           (ArtifactManager — report artifacts, additive types)
+  └── scheduler/           (JobFramework registers its 8 jobs when a scheduler is present)
 
 ## Integration Points with the Runtime
 

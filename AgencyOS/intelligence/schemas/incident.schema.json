@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "incident",
+  "description": "Lifecycle-managed aggregation of related adverse signals",
+  "type": "object",
+  "required": ["schema", "incidentId", "key", "kind", "severity", "status", "scope", "firstSeen", "lastSeen", "openedAt", "count", "evidence", "detail"],
+  "properties": {
+    "schema": { "type": "string", "const": "https://agency.os/intelligence/incident" },
+    "incidentId": { "type": "string", "pattern": "^inc-[0-9a-f]{16}$" },
+    "key": { "type": "string", "pattern": "^inc-key-[0-9a-f]{16}$" },
+    "kind": { "type": "string", "enum": ["step_failed", "limits_reached", "escalation", "provider_error", "campaign_stuck", "data_quality"] },
+    "severity": { "type": "string", "enum": ["info", "warning", "critical"] },
+    "status": { "type": "string", "enum": ["open", "acknowledged", "resolved", "closed"] },
+    "scope": {
+      "type": "object",
+      "required": ["type", "id"],
+      "properties": {
+        "type": { "type": "string", "enum": ["campaign", "execution", "provider", "agency"] },
+        "id": { "type": "string" }
+      }
+    },
+    "firstSeen": { "type": "string", "format": "date-time" },
+    "lastSeen": { "type": "string", "format": "date-time" },
+    "openedAt": { "type": "string", "format": "date-time" },
+    "acknowledgedAt": { "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }] },
+    "resolvedAt": { "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }] },
+    "count": { "type": "integer", "minimum": 1 },
+    "evidence": { "type": "array", "items": { "type": "string" } },
+    "detail": { "type": "string" },
+    "resolvedBy": { "type": "string" },
+    "resolutionNote": { "type": "string" }
+  },
+  "additionalProperties": true
+}

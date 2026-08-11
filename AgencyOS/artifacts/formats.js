@@ -28,7 +28,13 @@ export const ARTIFACT_TYPES = [
   'report',
   'document',
   'image',
-  'other'
+  'other',
+  'operations-report',
+  'incident-digest',
+  'alert-digest',
+  'agency-health',
+  'experiment-report',
+  'observation-batch'
 ];
 
 export const TYPE_LABELS = {
@@ -51,7 +57,13 @@ export const TYPE_LABELS = {
   report: 'Report',
   document: 'Document',
   image: 'Image',
-  other: 'Other'
+  other: 'Other',
+  'operations-report': 'Operations Report',
+  'incident-digest': 'Incident Digest',
+  'alert-digest': 'Alert Digest',
+  'agency-health': 'Agency Health Report',
+  'experiment-report': 'Experiment Report',
+  'observation-batch': 'Observation Batch'
 };
 
 export function resolveFormat(format) {
