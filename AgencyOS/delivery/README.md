@@ -60,6 +60,11 @@ const reverted = await system.revert({ recordId: record.id, mode: 'explicit', by
   redacted; provider targets are sanitized, and redaction is stable across runs.
 - **Rollback** — promotes the previous immutable deployment via the provider
   alias (`current.json` on local); previous records are never mutated.
+- **PRV-01 (4.7.0)** — vercel `verify()` maps `readyState` through an explicit
+  taxonomy: `READY` → success; `INITIALIZING`/`QUEUED`/`BUILDING` → in-progress
+  (keep polling); `ERROR`/`CANCELED`/`ERRORED` → terminal failure with
+  `errorCode` surfaced; a **missing or unknown** `readyState` throws a retryable
+  `PROVIDER_ERROR` instead of polling until the verification window burns.
 
 ## Storage layout
 
@@ -80,6 +85,7 @@ node delivery/tests/security.mjs    #  10 PASS — vault, redaction, audit hygie
 node delivery/tests/providers.mjs   #  13 PASS — mock/local/vercel contracts, fixtures, registry
 node delivery/tests/rollback.mjs    #   9 PASS — promotion, approval, dry-run, revert
 node delivery/tests/smoke.mjs       #  12 PASS — full chain, determinism, retry, auth, artifacts, memory
+node delivery/tests/vercel-verify.mjs # 17 PASS — 4.7.0 readyState taxonomy (PRV-01)
 ```
 
 All suites run offline: mock/local providers and recorded Vercel fixtures only.

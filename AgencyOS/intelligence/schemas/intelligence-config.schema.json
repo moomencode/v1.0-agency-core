@@ -30,6 +30,7 @@
     "alerts": { "type": "object" },
     "reports": { "type": "object" },
     "retention": { "type": "object" },
+    "observations": { "type": "object" },
     "limits": { "type": "object" }
   },
   "additionalProperties": true

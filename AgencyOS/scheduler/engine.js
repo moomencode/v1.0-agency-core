@@ -28,6 +28,12 @@ function validateSchedule(schedule) {
     const cron = new CronSchedule(schedule.cron);
     return { type: 'cron', cron, expr: schedule.cron };
   }
+  // JobFramework registers intelligence jobs as {type:'cron', expr:'...'} —
+  // accepted here so those jobs actually auto-fire (4.7.0 scheduler fix).
+  if (schedule.type === 'cron' && typeof schedule.expr === 'string') {
+    const cron = new CronSchedule(schedule.expr);
+    return { type: 'cron', cron, expr: schedule.expr };
+  }
   if (schedule.at !== undefined) {
     const at = new Date(schedule.at);
     if (Number.isNaN(at.getTime())) throw schError(SCH_CODES.SCHEDULE_INVALID, `schedule.at is not a valid date: ${schedule.at}`, { schedule });

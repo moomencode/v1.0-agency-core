@@ -70,7 +70,9 @@
       "scheduler.jobsRetried",
       "budget.utilizationPct",
       "budget.burnPerHour",
-      "budget.remainingPct"
+      "budget.remainingPct",
+      "retention.filesRemoved",
+      "retention.bytesFreed"
     ],
     "derived": [
       "agency.successRatePct",
@@ -87,7 +89,8 @@
     "durations": { "version": 1, "schedule": "0 * * * *", "windowMs": 3600000, "maxWindows": 24, "maxExecutions": 500 },
     "providers": { "version": 1, "schedule": "0 3 * * *", "windowMs": 86400000, "maxWindows": 7, "maxRecords": 2000 },
     "budget": { "version": 1, "schedule": "0 * * * *", "windowMs": 3600000, "maxWindows": 24, "maxCampaigns": 200 },
-    "scheduler_stats": { "version": 1, "schedule": "0 4 * * *", "windowMs": 86400000, "maxWindows": 7, "maxHistory": 10000 }
+    "scheduler_stats": { "version": 1, "schedule": "0 4 * * *", "windowMs": 86400000, "maxWindows": 7, "maxHistory": 10000 },
+    "retention": { "version": 1, "schedule": "0 5 * * *", "windowMs": 86400000, "maxWindows": 7 }
   },
   "incidents": {
     "evidenceCap": 50,
@@ -106,10 +109,19 @@
     "workflowId": "intelligence"
   },
   "retention": {
+    "enableSweeps": true,
     "rawEventsDays": 90,
     "rawMetricsDays": 90,
+    "observationsDays": 90,
     "incidentsDays": 730,
-    "alertsDays": 730
+    "alertsDays": 730,
+    "aggregatesDays": 730
+  },
+  "observations": {
+    "lruCap": 10000,
+    "maxRowsPerBatch": 5000,
+    "maxBytesPerBatch": 1048576,
+    "maxRowBytes": 65536
   },
   "limits": {
     "maxEventsPerDay": 200000,

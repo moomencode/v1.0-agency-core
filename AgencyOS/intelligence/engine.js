@@ -11,6 +11,10 @@ import { EventSink } from './sinks/event-sink.js';
 import { RecordsReader } from './jobs/records.js';
 import { JobFramework } from './jobs/framework.js';
 import { buildJobSet } from './jobs/index.js';
+import { runRetentionSweep } from './jobs/retention.js';
+import { runBackfill } from './jobs/backfill.js';
+import { ObservationStore } from './observations/store.js';
+import { importObservations } from './observations/import.js';
 import { reportBuilders, writeReportArtifacts } from './tools/report.mjs';
 import { dirSize } from './utils.js';
 
@@ -40,6 +44,10 @@ export class IntelligenceEngine {
     this.incidents = new IncidentStore({ root: this.storageRoot, evidenceCap: this.config.incidents?.evidenceCap || 50, clock });
     this.alerts = new AlertStore({ root: this.storageRoot, clock });
     this.insights = new InsightStore({ root: this.storageRoot });
+    this.observations = new ObservationStore({ root: this.storageRoot, clock, lruCap: this.config.observations?.lruCap || 10000 });
+
+    this.observationSchema = this.validator.loadFile(path.join(root, 'schemas', 'observation.schema.json'));
+    this.observationBatchSchema = this.validator.loadFile(path.join(root, 'schemas', 'observation-batch.schema.json'));
 
     this.reader = new RecordsReader({
       orchestratorRoot: orchestratorRoot || path.join(root, 'storage', 'orchestrator-engine'),
@@ -68,6 +76,7 @@ export class IntelligenceEngine {
       insights: this.insights,
       incidents: this.incidents,
       alerts: this.alerts,
+      observations: this.observations,
       config: this.config,
       rules: this.rules,
       root: this.storageRoot,
@@ -147,12 +156,54 @@ export class IntelligenceEngine {
       sink: this.sink.statsSnapshot(),
       metrics: this.metrics.snapshot(),
       events: { count: this.events.count(), days: this.events.days().length },
+      observations: this.observations.statsSnapshot(),
       incidents: { open: this.incidents.openCount(), total: this.incidents.list().length },
       alerts: { active: this.alerts.activeCount(), total: this.alerts.list().length },
       insights: { kinds: this.insights.list().length > 0 ? [...new Set(this.insights.list().map((i) => i.kind))].sort() : [], total: this.insights.list().length },
       jobs: { runs: this.framework.stats.runs, windows: this.framework.stats.windows, aborted: this.framework.stats.aborted },
       storageBytes: dirSize(this.storageRoot)
     };
+  }
+
+  // 4.7.0 observation ingestion: validates the whole batch (schema, sizes,
+  // secrets), then applies accepted rows deterministically. Receipts are
+  // byte-stable for identical input under a fixed clock.
+  importObservations({ items, source, batchId = null, caps = {} } = {}) {
+    return importObservations({
+      items,
+      source,
+      batchId,
+      validator: this.validator,
+      schema: this.observationSchema,
+      batchSchema: this.observationBatchSchema,
+      store: this.observations,
+      reader: this.reader,
+      clock: { now: this.now },
+      caps: { maxRowsPerBatch: this.config.observations?.maxRowsPerBatch, maxBytesPerBatch: this.config.observations?.maxBytesPerBatch, maxRowBytes: this.config.observations?.maxRowBytes, ...caps }
+    });
+  }
+
+  // 4.7.0 retention: sweeping storage-only, dry-run capable, report-only on
+  // scheduler-owned history. Never touches live incidents/alerts.
+  runRetentionSweep({ dryRun = false, now = null } = {}) {
+    const nowIso = now || this.now().toISOString();
+    return runRetentionSweep({ ctx: this.ctx, nowIso, dryRun });
+  }
+
+  // 4.7.0 explicit, resumable recompute of insight windows. Idempotent —
+  // completed windows are marked and skipped on retry; never looks at future
+  // windows. Defaults to the registered job set.
+  backfill({ from, to, jobs = null, maxWindows = 90, now = null } = {}) {
+    return runBackfill({
+      jobSet: [...this.framework.jobs.values()],
+      framework: this.framework,
+      ctx: this.ctx,
+      from,
+      to,
+      jobs,
+      maxWindows,
+      now
+    });
   }
 
   buildReport(kind, { now = null, campaignId = null } = {}) {
@@ -211,7 +262,7 @@ export class IntelligenceEngine {
       module: 'intelligence',
       healthy: sink.rejected === 0 && snapshot.incidents.open <= 25,
       sink: { written: sink.written, rejected: sink.rejected, dropped: sink.dropped, watermarkAgeMs },
-      stores: { eventsBytes: dirSize(path.join(this.storageRoot, 'events')), metricsBytes: dirSize(path.join(this.storageRoot, 'metrics')), storageBytes: snapshot.storageBytes },
+      stores: { eventsBytes: dirSize(path.join(this.storageRoot, 'events')), metricsBytes: dirSize(path.join(this.storageRoot, 'metrics')), observationsBytes: dirSize(path.join(this.storageRoot, 'observations')), storageBytes: snapshot.storageBytes },
       markers: markerAges,
       openIncidents: snapshot.incidents.open,
       activeAlerts: snapshot.alerts.active,

@@ -31,3 +31,8 @@ discovery-demo/
 .env
 .env.*
 !.env.example
+
+# Local test fixtures
+var/
+**/var/
+

@@ -105,7 +105,16 @@ export class CronSchedule {
 
   nextRunAt(from = new Date()) {
     const start = new Date(from);
-    start.setSeconds(start.getSeconds() + 1, 0);
+    // Minute-granular expressions start searching at the next minute boundary
+    // (a 5-field cron matches any second within its minute — starting at
+    // now+1s would make the "next" run land in the current minute and repeat
+    // every second instead of once per minute).
+    if (this.hasSeconds) {
+      start.setSeconds(start.getSeconds() + 1, 0);
+    } else {
+      start.setSeconds(0, 0);
+      start.setTime(start.getTime() + 60000);
+    }
     const stepMs = this.hasSeconds ? 1000 : 60000;
     const maxSteps = this.hasSeconds ? 31_536_000 : 2_000_000;
     for (let i = 0; i < maxSteps; i++) {

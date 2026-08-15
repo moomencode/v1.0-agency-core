@@ -1,6 +1,5 @@
 import path from 'node:path';
 import fs from 'node:fs';
-import { randomUUID } from 'node:crypto';
 import { createHash } from 'node:crypto';
 import { ensureDir, readJson, writeJson, atomicWrite, sanitizeName } from '../runtime/utils.js';
 import { artError, ART_CODES } from './errors.js';
@@ -121,7 +120,10 @@ export class ArtifactManager {
 
     const record = {
       schema: 'https://agency.os/artifacts/artifact',
-      id: `art-${randomUUID()}`,
+      // ID-1 (4.7.0): deterministic, content-addressed id derived from the
+      // identity key + version (no randomness). Legacy random-UUID records stay
+      // readable via the index / sidecar meta files.
+      id: `art-${createHash('sha256').update(`${key}|v${version}`).digest('hex').slice(0, 16)}`,
       name: name ?? slug,
       slug,
       type,

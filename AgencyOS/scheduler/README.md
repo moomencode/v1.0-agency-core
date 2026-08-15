@@ -66,7 +66,11 @@ sys.start();
 - **cron** — 5 or 6 fields (optional seconds first). Names (`MON`–`SUN`,
   `jan`–`dec`), lists, ranges, steps (`*/15`), `?` wildcard, DOM/DOW OR semantics,
   `7` alias for Sunday. `sys.schedule('30 6 * * 1-5')` returns `{ valid, summary,
-  nextRunAt, hasSeconds }`.
+  nextRunAt, hasSeconds }`. **4.7.0**: the `{ type: 'cron', expr: '…' }` shape is
+  accepted and normalized alongside the legacy `{ cron: '…' }` shape; 5-field
+  (minute-granular) expressions fire at the next minute boundary — once per
+  minute — instead of re-firing on every tick; 6-field (seconds) expressions
+  keep second precision.
 - **interval** — `{ intervalMs: 60000 }`; runs every N ms (not drift-corrected).
 - **at** — `{ at: '<ISO>' }`; one-shot run at a timestamp.
 
@@ -112,5 +116,6 @@ All scheduler errors use `E_SCH_*` codes from `AgencyOS/scheduler/errors.js`:
 
 ```bash
 node AgencyOS/scheduler/smoke.mjs   # 49 PASS, 0 FAIL
+node AgencyOS/scheduler/tests/cron-shape.mjs   # 16 PASS — cron shapes + E2E auto-fire of intelligence jobs
 node AgencyOS/scheduler/demo.mjs    # end-to-end demo on real storage
 ```

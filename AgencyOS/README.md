@@ -68,6 +68,7 @@ AgencyOS/
  11. `reports/PHASE4_3_WEBSITE_ENGINE_IMPLEMENTATION.md` — universal website engine report
  12. `reports/PHASE4_5_ORCHESTRATOR_IMPLEMENTATION.md` — autonomous agency workflow orchestrator report
  13. `reports/PHASE4_6_OPERATIONS_INTELLIGENCE_IMPLEMENTATION.md` — operations intelligence report
+ 14. `reports/PHASE4_7_FOUNDATION_TRUST_IMPLEMENTATION.md` — foundation & trust report (4.7.0)
 ## Runtime, Communication, Memory, Artifacts, Validation & Scheduler (Phases 3.0 – 3.5)
 
 Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
@@ -97,6 +98,10 @@ Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
   `attachRuntime`, deliverable builders (research reports, website configs, SEO
   reports, brand documents, UX audits, sales proposals, contracts, PDFs/Markdown/JSON/
   HTML/images), search, and policy cleanup (maxVersions / retention days / TTL expiry).
+  4.7.0 (ID-1): artifact ids are deterministic content addresses
+  (`art-<sha256(key|version)[0..16]>`) instead of random uuids — same content,
+  same id, across any storage; legacy random-id records remain readable via the
+  index (dual-read).
   `artifacts/smoke.mjs` (ALL PASS).
 - `validation/` — **global validation layer** (Phase 3.4): validates JSON, schemas,
   configs, workflow/agent/prompt outputs, assets, business configs and theme configs.
@@ -108,8 +113,12 @@ Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
 - `scheduler/` — **autonomous scheduler** (Phase 3.5): runs jobs on cron, interval or
   one-shot schedules with manual triggers, retries with backoff, priority queuing,
   concurrency limits, persistent jobs + run history, scheduler events, and real
-  workflow execution through the runtime (or inline named handlers).
-  `scheduler/smoke.mjs` (ALL PASS).
+  workflow execution through the runtime (or inline named handlers). 4.7.0:
+  `{type:'cron', expr}` schedule shape accepted and normalized alongside the
+  legacy `{cron}` shape; minute-granular (5-field) cron expressions fire at the
+  minute boundary — once per minute — instead of re-firing every tick.
+  `scheduler/smoke.mjs` (ALL PASS) + `scheduler/tests/cron-shape.mjs` (16 PASS,
+  incl. E2E proof that intelligence jobs auto-fire through the scheduler tick).
 - `discovery/` — **business discovery engine** (Phase 4.0): finds and scores business
   opportunities. Pluggable source adapters (simulated market, website probing with
   HTML analysis, Google Maps / Facebook / Instagram / directories behind provider
@@ -206,9 +215,14 @@ Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
   log, `deployment-report`/`qa-report` artifacts, business-scoped memory
   facts, scheduler + brain integration. Offline providers: `local` (disk +
   alias), `mock` (failure injection), `vercel` (recorded fixtures). 7 test
-   suites — 97 PASS, 0 FAIL, all offline. `demo.mjs` runs the full lifecycle
-   (dry-run, approval, rejection, QA block, retry, auth, rollback/revert).
-   Docs: `README.md`, `Architecture.md`.
+suites — 97 PASS, 0 FAIL, all offline. 4.7.0 (PRV-01): vercel
+    `verify()` maps readyState through an explicit taxonomy — READY success;
+    INITIALIZING/QUEUED/BUILDING in-progress; ERROR/CANCELED/ERRORED terminal;
+    missing or unknown readyState throws a retryable PROVIDER_ERROR instead of
+    polling until the window burns (errorCode surfaced on terminal failures).
+    `demo.mjs` runs the full lifecycle
+    (dry-run, approval, rejection, QA block, retry, auth, rollback/revert).
+    Docs: `README.md`, `Architecture.md`.
 - `orchestrator/` — **autonomous agency workflow orchestrator** (Phase 4.5):
    coordinates the full agency loop as campaigns of executions with a
    persistent 20-state execution + 8-state campaign state machine, six
@@ -225,17 +239,27 @@ Phase 2.0 defines the contracts; Phases 3.0–3.3 make them executable.
    filesystem boundary. 18 offline suites — 119 PASS — plus `demo/demo.mjs`
    (6 businesses, L4, 3 APPROVE/2 REJECT/1 ESCALATE, local deploys, crash
    recovery, emergency stop). Docs: `README.md`, `Architecture.md`.
-- `intelligence/` — **operations intelligence** (Phase 4.6): the read-mostly
-   observability plane. Event sink (validate → redact-at-write → daily NDJSON +
-   watermark + LRU/replay dedupe) over every bus event; 8 idempotent, windowed
-   jobs (funnel, reliability, durations, providers, budget burn, scheduler
-   stats, incidents, alerts) with job markers, killswitch and caps;
-   deterministic metric series + insights (`eventId`/`insightId`/`alertId` are
+- `intelligence/` — **operations intelligence** (Phase 4.6 + 4.7.0 Foundation &
+   Trust): the read-mostly observability plane. Event sink (validate →
+   redact-at-write → daily NDJSON + watermark + LRU/replay dedupe) over every
+   bus event; 9 idempotent, windowed jobs (funnel, reliability, durations,
+   providers, budget burn, scheduler stats, incidents, alerts, retention)
+   with job markers, killswitch and caps; deterministic metric series +
+   insights (`eventId`/`insightId`/`alertId`/`observationId`/`batchId` are
    pure functions); incident model (open → job resolve → operator ack/close)
    and configurable alert rules (6 rules, minSamples, cooldown, recovery);
-   5 report kinds (health/incident/alert/campaign/operations) as JSON+Markdown
-   artifacts with readable mirrors. Ships the scheduler hardening prerequisite
-   (SCH-01 atomic persist+enqueue + replay, SCH-02 stop semantics). 9 offline
-   suites — 346 PASS — plus `demo.mjs` (simulated campaign → reports); full
-   pipeline byte-reproducible across runs. Docs: `README.md`,
-   `reports/PHASE4_6_OPERATIONS_INTELLIGENCE_IMPLEMENTATION.md`.
+   observation ingestion (schema-validated batches, capped sizes, secret
+   scan → whole-batch reject, orphan flags, byte-stable receipts); retention
+   sweeps (expired day files + resolved incidents/alerts + artifact expiry —
+   live records never deleted, dry-run support); resumable explicit backfill
+   with persisted markers; 5 report kinds (health/incident/alert/campaign/
+   operations) as JSON+Markdown artifacts with readable mirrors. Ships the
+   scheduler hardening prerequisite (SCH-01 atomic persist+enqueue + replay,
+   SCH-02 stop semantics) and the scheduler cron shape acceptance +
+   minute-boundary fix (5-field crons fire once per minute, not every
+   second). 27 offline suites — 900 PASS — plus `demo.mjs` (simulated
+   campaign → reports) and `demo-470.mjs` (observations / retention /
+   backfill / scheduler auto-fire / PRV-01 / ID-1 evidence); full pipeline
+   byte-reproducible across runs. Docs: `README.md`,
+   `reports/PHASE4_6_OPERATIONS_INTELLIGENCE_IMPLEMENTATION.md`,
+   `reports/PHASE4_7_FOUNDATION_TRUST_IMPLEMENTATION.md`.

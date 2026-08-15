@@ -6,10 +6,11 @@ import { budgetJob } from './budget.js';
 import { schedulerStatsJob } from './scheduler-stats.js';
 import { incidentsJob } from './incidents.js';
 import { alertsJob } from './alerts.js';
+import { retentionJob } from './retention.js';
 
 // Full job set. Order matters: analysis jobs first (they produce the metrics
 // and insights the incident and alert jobs consume), incidents second, alert
-// evaluation last.
+// evaluation last, retention sweep last (it only touches expired windows).
 export function buildJobSet(ctx) {
   return [
     funnelJob(ctx),
@@ -19,8 +20,9 @@ export function buildJobSet(ctx) {
     budgetJob(ctx),
     schedulerStatsJob(ctx),
     incidentsJob(ctx),
-    alertsJob(ctx)
+    alertsJob(ctx),
+    retentionJob(ctx)
   ];
 }
 
-export { funnelJob, reliabilityJob, durationsJob, providersJob, budgetJob, schedulerStatsJob, incidentsJob, alertsJob };
+export { funnelJob, reliabilityJob, durationsJob, providersJob, budgetJob, schedulerStatsJob, incidentsJob, alertsJob, retentionJob };

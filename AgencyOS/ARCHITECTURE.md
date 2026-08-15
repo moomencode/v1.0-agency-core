@@ -1,10 +1,15 @@
 # AgencyOS — Architecture (`ARCHITECTURE.md`)
 
-## Module Inventory — Phase 4.6 (Operations Intelligence)
+## Module Inventory — Phase 4.7.0 (Foundation & Trust)
 
 | module | responsibility | API version | smoke |
 |---|---|---|---|
-| `intelligence/` | read-mostly observability plane: event sink (redact-at-write + watermark + dedupe), 8 windowed jobs (funnel, reliability, durations, providers, budget burn, scheduler stats, incidents, alerts), incidents, 6 alert rules, 5 deterministic report kinds | 1.0 | 346 PASS (models 36, sink 50, jobs 79, incidents 20, alerts 30, security 22, reports 57, determinism 20, integration 32) |
+| `intelligence/` | read-mostly observability plane: event sink (redact-at-write + watermark + dedupe), 9 windowed jobs (funnel, reliability, durations, providers, budget burn, scheduler stats, incidents, alerts, retention), incidents, 6 alert rules, observation ingestion (schema-validated capped batches, secret-reject at batch level, orphan flags, byte-stable receipts), retention sweeps (expired storage only; live records never deleted; dry-run), resumable explicit backfill with persisted markers, 5 deterministic report kinds | 1.0 | 27 suites — 900 PASS (models 36, sink 50, jobs 79, incidents 20, alerts 30, security 22, reports 57, determinism 20, integration 32, observations 41, retention 30, backfill 11, security-470 14, demo smoke suites) |
+| `scheduler/` | cron/interval/one-shot jobs, cron shape `{type:'cron', expr}` accepted (legacy `{cron}` normalized), minute-granular crons fire at the minute boundary; persistent jobs/history/dispatches; framework E2E auto-fire | 1.0 | cron-shape 16 PASS |
+| `delivery/` | vercel `verify()` readyState taxonomy (READY / in-progress / terminal / missing+unknown → retryable PROVIDER_ERROR) | 1.0 | vercel-verify 17 PASS |
+| `artifacts/` | deterministic content-addressed ids `art-<sha256[0..16]>` (legacy ids dual-read via index) | 1.0 | deterministic-ids 6 PASS |
+
+## Module Inventory — Phase 4.6 (Operations Intelligence)
 
 ## Module Inventory — Phase 4.5 (Autonomous Agency Workflow Orchestrator)
 
@@ -29,9 +34,10 @@
 
 **Orchestrator total: 119 PASS. Delivery total: 97 PASS. Website Engine
 total: 36 PASS. Pipeline total: 33 PASS. Dossier total: 116 PASS. Brain
-total: 328 PASS. Intelligence total: 346 PASS. Scheduler regression:
+total: 328 PASS. Intelligence total: 900 PASS (27 suites, 4.7.0 inclusive).
+Scheduler regression:
 82 PASS (smoke 49, regression-455 12, regression-460 21). Full regression
-across phases 3.0–4.6: 1576+ PASS.**
+across phases 3.0–4.7.0: 1661 PASS, 0 FAIL (74 suites).**
 
 ## Dependency Graph
 
@@ -130,7 +136,7 @@ intelligence/ (read-mostly observer; writes only to its own storageRoot)
   ├── bus                  (shared EventBus events — subscribes, never emits)
   ├── delivery/security/   (redaction helpers, SecretVault — consumed)
   ├── artifacts/           (ArtifactManager — report artifacts, additive types)
-  └── scheduler/           (JobFramework registers its 8 jobs when a scheduler is present)
+  └── scheduler/           (JobFramework registers its 9 jobs when a scheduler is present)
 
 ## Integration Points with the Runtime
 
@@ -207,7 +213,7 @@ intelligence/ (read-mostly observer; writes only to its own storageRoot)
 | observability | bus events, per-step results, metrics snapshot, reasoning traces |
 | resilience | retry policy per state, timeout actions, escalation records, gate failures are handled results |
 | configurability | policies, strategies, plan catalog, gates, executors all injectable; sections/layouts additive; autonomy levels + provider registry in orchestrator |
-| test coverage | 51 suites (33 module + 18 orchestrator), 1148+ assertions, all green |
+| test coverage | 74 suites, 1661 assertions, all green (see `node AgencyOS/scripts/regress.mjs`) |
 | persistence | metrics + state summaries to `storage/` (gitignored) |
 | runtime footprint | zero runtime deps, Node 24 ESM only |
 

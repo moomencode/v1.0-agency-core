@@ -11,6 +11,13 @@ export const VERCEL_READY_STATE = 'READY';
 export const VERCEL_IN_PROGRESS_STATES = ['INITIALIZING', 'QUEUED', 'BUILDING'];
 export const VERCEL_TERMINAL_STATES = ['ERROR', 'CANCELED', 'ERRORED'];
 
+// PRV-01 (4.7.0): verify() must never silently treat an unrecognized (or
+// missing) readyState as an in-progress state — that burned the whole verify
+// window and surfaced a misleading PROVIDER_ERROR. Missing or unknown states
+// are classified as explicit transient errors (retryable) so the deployment
+// manager's retry policy handles them honestly.
+const VERCEL_KNOWN_STATES = new Set([VERCEL_READY_STATE, ...VERCEL_IN_PROGRESS_STATES, ...VERCEL_TERMINAL_STATES]);
+
 export class VercelProvider {
   constructor(config = {}, ctx = {}) {
     this.id = 'vercel';
@@ -67,11 +74,17 @@ export class VercelProvider {
 
   async verify(deploymentId) {
     const data = await this._client().getDeployment(deploymentId);
-    const status = data?.readyState || 'BUILDING';
+    const readyState = data?.readyState ?? null;
+    if (readyState === null) {
+      throw deliveryError(DEL_CODES.PROVIDER_ERROR, 'vercel deployment response missing readyState', { status: 200, retryable: true });
+    }
+    if (!VERCEL_KNOWN_STATES.has(readyState)) {
+      throw deliveryError(DEL_CODES.PROVIDER_ERROR, `vercel deployment returned unrecognized readyState "${readyState}"`, { status: 200, readyState, retryable: true });
+    }
     return {
-      status,
-      ready: status === VERCEL_READY_STATE,
-      terminal: VERCEL_TERMINAL_STATES.includes(status),
+      status: readyState,
+      ready: readyState === VERCEL_READY_STATE,
+      terminal: VERCEL_TERMINAL_STATES.includes(readyState),
       errorCode: data?.errorCode || null,
       url: data?.url || null
     };

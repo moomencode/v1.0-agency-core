@@ -27,6 +27,13 @@ Every artifact is a file plus a metadata sidecar (`{file}.meta.json`) — both c
 | Field | Meaning |
 | --- | --- |
 | `id` / `name` / `slug` | identity; slug is the filesystem-safe key |
+
+**4.7.0 (ID-1) — deterministic ids.** `id` is no longer a random uuid: it is the
+content address `art-<sha256(`${key}|v${version}`)[0..16]>` — the same
+`(project, workflow, type, name, version)` always yields the same id on any
+storage, making ids stable across rebuilds, restores and multi-machine runs.
+Legacy random-id records stay readable: the index maps both new and old ids
+(dual-read), so existing artifact stores remain fully queryable.
 | `type` | taxonomy: `research-report`, `seo-report`, `brand-document`, `ux-audit`, `sales-proposal`, `contract`, `website-config`, `website`, `review`, `report`, `document`, `image`, `other` |
 | `format` | `markdown` `.md`, `json` `.json`, `html` `.html`, `text` `.txt`, `svg` `.svg`, `pdf` `.pdf`, `image` `.png` |
 | `version` | immutable version number within `(project, workflow, type, name)` |
@@ -111,8 +118,15 @@ applies retention policies (all filters combine; `dryRun` reports without deleti
 - `olderThanDays` — remove artifacts not accessed within N days.
 - `expire` — remove artifacts whose `expiresAt` passed (TTL set per create via
   `expiresInMs`); a background sweeper (60 s, unref'd) enforces it automatically.
+  The intelligence retention job (4.7.0) also delegates `expire` cleanup through
+  `ArtifactManager.cleanup({ expire: true, dryRun })` + `sweepExpired()` so
+  expired artifacts are reclaimed by the platform's daily sweep.
 
 ## Verification
+
+`deterministic-ids` suite (`artifacts/tests/deterministic-ids.mjs`, 6 PASS) proves
+ids are pure functions of content across independent storages and that legacy
+random ids remain readable via the index.
 
 ```
 node AgencyOS/artifacts/smoke.mjs       # 33 assertions — expect ALL PASS

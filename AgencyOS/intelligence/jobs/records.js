@@ -38,6 +38,14 @@ export class RecordsReader {
     return readJson(file, null);
   }
 
+  // Whether an execution's decision record exists (4.7.0 observations
+  // import). Contained: the id is sanitized before any path use.
+  hasExecution(executionId) {
+    const id = String(executionId || '').replace(/[^a-zA-Z0-9._-]/g, '');
+    if (!id) return false;
+    return fs.existsSync(path.join(this.orchestratorRoot, 'instances', id, 'decision.json'));
+  }
+
   readExecutionReport(executionId) {
     const file = path.join(this.orchestratorRoot, 'instances', executionId, 'execution-report.json');
     if (!fs.existsSync(file)) return null;
