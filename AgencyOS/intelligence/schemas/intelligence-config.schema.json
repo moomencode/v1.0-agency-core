@@ -30,7 +30,45 @@
     "alerts": { "type": "object" },
     "reports": { "type": "object" },
     "retention": { "type": "object" },
-    "observations": { "type": "object" },
+    "observations": {
+      "type": "object",
+      "properties": {
+        "lruCap": { "type": "integer" },
+        "maxRowsPerBatch": { "type": "integer" },
+        "maxBytesPerBatch": { "type": "integer" },
+        "maxRowBytes": { "type": "integer" }
+      }
+    },
+    "experiments": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "maxDecisions": { "type": "integer", "minimum": 1 },
+        "wallClockMs": { "type": "integer", "minimum": 1 },
+        "policySets": { "type": "array", "items": { "type": "string" } },
+        "jobs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "basePolicyVersion", "altPolicyVersion", "scope"],
+            "properties": {
+              "name": { "type": "string" },
+              "basePolicyVersion": { "type": "string" },
+              "altPolicyVersion": { "type": "string" },
+              "maxDecisions": { "type": "integer", "minimum": 1 },
+              "scope": {
+                "type": "object",
+                "required": ["type", "campaignId"],
+                "properties": {
+                  "type": { "type": "string" },
+                  "campaignId": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "limits": { "type": "object" }
   },
   "additionalProperties": true

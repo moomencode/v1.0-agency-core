@@ -1,7 +1,7 @@
 import { brnError, BRN_CODES } from './errors.js';
 import { ContextEngine } from '../context/index.js';
 import { PolicyEngine } from '../policies/index.js';
-import { DecisionEngine } from '../decision-engine/index.js';
+import { DecisionEngine, materializeVersion } from '../decision-engine/index.js';
 import { ReasoningEngine } from '../reasoning/index.js';
 import { StrategyEngine } from '../strategy/index.js';
 import { PlannerEngine } from '../planner/index.js';
@@ -74,6 +74,26 @@ export class Brain {
     return true;
   }
 
+  policySet() {
+    return { version: this.policyEngine.config.version || DEFAULT_POLICIES.version || 1, policies: this.policyEngine.config.policies };
+  }
+
+  strategySet() {
+    return { version: DEFAULT_STRATEGIES.version || 1, strategies: this.strategyEngine.strategies };
+  }
+
+  policyVersionOf(policySet) {
+    return materializeVersion(policySet || this.policySet());
+  }
+
+  strategyVersionOf(strategySet) {
+    return materializeVersion(strategySet || this.strategySet());
+  }
+
+  versionStamp() {
+    return { policyVersion: this.policyVersionOf(), strategyVersion: this.strategyVersionOf() };
+  }
+
   _emit(event, businessId, detail) {
     if (this.bus && typeof this.bus.emitEvent === 'function') {
       this.bus.emitEvent(event, { module: 'brain', businessId }, detail);
@@ -90,6 +110,9 @@ export class Brain {
     const policyResult = this.policyEngine.evaluate(context);
     const policySummary = { ...this.policyEngine.summarize(policyResult), mandatoryFailed: policyResult.mandatoryFailed };
     const decision = this.decisionEngine.evaluate(context, { policies: { summary: policySummary } });
+    const versionStamp = this.versionStamp();
+    decision.policyVersion = versionStamp.policyVersion;
+    decision.strategyVersion = versionStamp.strategyVersion;
     const trace = this.reasoningEngine.trace(decision, context);
     if (emit) this._emit(BRAIN_EVENTS.DECISION_MADE, record.id, { verdict: decision.verdict, confidence: decision.confidence, risk: decision.risk.level });
 

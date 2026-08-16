@@ -1,16 +1,39 @@
 import { RuleRegistry } from '../rules/index.js';
-import { shortHash } from '../runtime/utils.js';
+import { hashString, stableStringify, shortHash } from '../runtime/utils.js';
 import { decError, DEC_CODES } from './errors.js';
 import { computeEstimates, computeConfidence, computeRisk, computePriorities } from './estimates.js';
 import { ALL_DECISION_RULES } from './rules/index.js';
 
 export const VERDICTS = ['APPROVE', 'REJECT', 'ESCALATE', 'PARK'];
 
+// 4.7.1: content-addressed version identity for a policy/strategy document
+// set. The version is the sha256 of the canonical (stable-stringified)
+// { version, policies|strategies } subset — extra document fields never
+// influence it, so every caller of the same applied set derives the same id
+// and decisions stamped with it are byte-stable experiment inputs. Pure
+// function; no state, no storage.
+export function materializeVersion(set) {
+  if (!set || typeof set !== 'object') {
+    throw decError(DEC_CODES.INVALID_CONTEXT, 'materializeVersion requires { version, policies|strategies }', {});
+  }
+  const hasStrategies = Array.isArray(set.strategies) && !Array.isArray(set.policies);
+  const canonical = hasStrategies
+    ? { version: Number(set.version) || 1, strategies: set.strategies }
+    : { version: Number(set.version) || 1, policies: Array.isArray(set.policies) ? set.policies : [] };
+  const sha256 = hashString(stableStringify(canonical));
+  const count = hasStrategies ? canonical.strategies.length : canonical.policies.length;
+  return { id: `ver-${sha256.slice(0, 16)}`, sha256, count };
+}
+
 export class DecisionEngine {
   constructor({ rules = null, validator = null, schema = null } = {}) {
     this.registry = new RuleRegistry({ rules: rules || ALL_DECISION_RULES });
     this.validator = validator || null;
     this.schema = schema || null;
+  }
+
+  materializeVersion(set) {
+    return materializeVersion(set);
   }
 
   estimate(ctx) {

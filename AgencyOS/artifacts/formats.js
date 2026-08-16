@@ -34,6 +34,7 @@ export const ARTIFACT_TYPES = [
   'alert-digest',
   'agency-health',
   'experiment-report',
+  'evaluation-report',
   'observation-batch'
 ];
 
@@ -63,6 +64,7 @@ export const TYPE_LABELS = {
   'alert-digest': 'Alert Digest',
   'agency-health': 'Agency Health Report',
   'experiment-report': 'Experiment Report',
+  'evaluation-report': 'Evaluation Report',
   'observation-batch': 'Observation Batch'
 };
 

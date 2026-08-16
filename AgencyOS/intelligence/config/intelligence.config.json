@@ -72,7 +72,11 @@
       "budget.burnPerHour",
       "budget.remainingPct",
       "retention.filesRemoved",
-      "retention.bytesFreed"
+      "retention.bytesFreed",
+      "evaluation.decisionsReviewed",
+      "evaluation.delivered",
+      "experiment.evaluated",
+      "experiment.flips"
     ],
     "derived": [
       "agency.successRatePct",
@@ -90,6 +94,8 @@
     "providers": { "version": 1, "schedule": "0 3 * * *", "windowMs": 86400000, "maxWindows": 7, "maxRecords": 2000 },
     "budget": { "version": 1, "schedule": "0 * * * *", "windowMs": 3600000, "maxWindows": 24, "maxCampaigns": 200 },
     "scheduler_stats": { "version": 1, "schedule": "0 4 * * *", "windowMs": 86400000, "maxWindows": 7, "maxHistory": 10000 },
+    "campaign_evaluation": { "version": 1, "schedule": "15 1 * * *", "windowMs": 86400000, "maxWindows": 7 },
+    "compare_experiment": { "version": 1, "schedule": "30 1 * * *", "windowMs": 86400000, "maxWindows": 7 },
     "retention": { "version": 1, "schedule": "0 5 * * *", "windowMs": 86400000, "maxWindows": 7 }
   },
   "incidents": {
@@ -122,6 +128,15 @@
     "maxRowsPerBatch": 5000,
     "maxBytesPerBatch": 1048576,
     "maxRowBytes": 65536
+  },
+  "experiments": {
+    "enabled": true,
+    "maxDecisions": 5000,
+    "wallClockMs": 60000,
+    "policySets": [
+      "config/experiments/policy-sets/strict.json"
+    ],
+    "jobs": []
   },
   "limits": {
     "maxEventsPerDay": 200000,

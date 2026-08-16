@@ -17,6 +17,12 @@ import { ObservationStore } from './observations/store.js';
 import { importObservations } from './observations/import.js';
 import { reportBuilders, writeReportArtifacts } from './tools/report.mjs';
 import { dirSize } from './utils.js';
+import { materializeVersion, DecisionEngine } from '../decision-engine/index.js';
+import { ContextEngine } from '../context/index.js';
+import { PolicyEngine } from '../policies/index.js';
+import { runCompareExperiment } from './experiments/experiment.js';
+import { buildCampaignEvaluation, writeCampaignEvaluation } from './tools/evaluation.mjs';
+import { buildExperimentReport, writeExperimentReport } from './tools/experiment.mjs';
 
 const INCIDENT_KINDS = ['step_failed', 'limits_reached', 'escalation', 'provider_error', 'campaign_stuck', 'data_quality'];
 
@@ -49,6 +55,8 @@ export class IntelligenceEngine {
     this.observationSchema = this.validator.loadFile(path.join(root, 'schemas', 'observation.schema.json'));
     this.observationBatchSchema = this.validator.loadFile(path.join(root, 'schemas', 'observation-batch.schema.json'));
 
+    this.experiments = this._loadExperiments();
+
     this.reader = new RecordsReader({
       orchestratorRoot: orchestratorRoot || path.join(root, 'storage', 'orchestrator-engine'),
       deliveryRoot: deliveryRoot || root,
@@ -80,9 +88,24 @@ export class IntelligenceEngine {
       config: this.config,
       rules: this.rules,
       root: this.storageRoot,
+      storageRoot: this.storageRoot,
+      artifacts: this.artifacts,
       getSinkStats: () => this.sink.statsSnapshot()
     };
     this.ctx = ctx;
+
+    this.experimentsCtx = {
+      reader: this.reader,
+      contextEngine: new ContextEngine(),
+      decisionEngine: new DecisionEngine(),
+      PolicyEngine,
+      policyRegistry: this.experiments.registry,
+      budget: {
+        maxDecisions: this.config.experiments?.maxDecisions || 5000,
+        wallClockMs: this.config.experiments?.wallClockMs || 60000
+      }
+    };
+    ctx.experimentsCtx = this.experimentsCtx;
 
     this.framework = new JobFramework({
       root: this.storageRoot,
@@ -125,6 +148,36 @@ export class IntelligenceEngine {
     return rules;
   }
 
+  // 4.7.1: registers the brain's default policy document set plus every
+  // configured alternative set under its materialized version id, so
+  // compare-experiments reference immutable versioned baselines by id alone.
+  _loadExperiments() {
+    const sets = [];
+    const defaultsFile = path.join(this.root, '..', 'policies', 'defaults.json');
+    if (fs.existsSync(defaultsFile)) {
+      const parsed = JSON.parse(fs.readFileSync(defaultsFile, 'utf8'));
+      sets.push({ source: 'policies/defaults.json', version: parsed.version || 1, policies: parsed.policies });
+    }
+    for (const rel of this.config.experiments?.policySets || []) {
+      const file = path.join(this.root, rel);
+      if (!fs.existsSync(file)) throw intError(INT_CODES.INVALID_CONFIG, `experiment policy set not found: ${rel}`, { file });
+      const parsed = JSON.parse(fs.readFileSync(file, 'utf8'));
+      if (!Array.isArray(parsed.policies)) throw intError(INT_CODES.INVALID_CONFIG, `experiment policy set must be { policies: [...] }: ${rel}`, { file });
+      sets.push({ source: rel, version: parsed.version || 1, policies: parsed.policies });
+    }
+    const registry = {};
+    for (const set of sets) {
+      const version = materializeVersion({ version: set.version, policies: set.policies });
+      registry[version.id] = { version: set.version, policies: set.policies, source: set.source, stampedAt: this.now().toISOString() };
+    }
+    return {
+      enabled: this.config.experiments?.enabled !== false,
+      sets: sets.map((s) => s.source),
+      registry,
+      defaults: Object.keys(registry)[0] || null
+    };
+  }
+
   start() {
     this.sink.start();
     return this;
@@ -139,14 +192,14 @@ export class IntelligenceEngine {
     const nowIso = now || this.now().toISOString();
     const results = [];
     for (const name of this.framework.jobs.keys()) {
-      results.push(await this.framework.execute(name, { now: nowIso }));
+      results.push(await this.framework.execute(name, { now: nowIso, ctx: this.ctx }));
     }
     return results;
   }
 
   async runJob(name, { now = null, window = null } = {}) {
     const nowIso = now || this.now().toISOString();
-    return this.framework.execute(name, { now: nowIso, window });
+    return this.framework.execute(name, { now: nowIso, window, ctx: this.ctx });
   }
 
   snapshot() {
@@ -157,6 +210,7 @@ export class IntelligenceEngine {
       metrics: this.metrics.snapshot(),
       events: { count: this.events.count(), days: this.events.days().length },
       observations: this.observations.statsSnapshot(),
+      experiments: { enabled: this.experiments.enabled, sets: this.experiments.sets.length, defaults: this.experiments.defaults || null },
       incidents: { open: this.incidents.openCount(), total: this.incidents.list().length },
       alerts: { active: this.alerts.activeCount(), total: this.alerts.list().length },
       insights: { kinds: this.insights.list().length > 0 ? [...new Set(this.insights.list().map((i) => i.kind))].sort() : [], total: this.insights.list().length },
@@ -244,6 +298,42 @@ export class IntelligenceEngine {
       runId,
       storageRoot: this.storageRoot
     });
+  }
+
+  // 4.7.1 campaign evaluation: read-only per-campaign aggregation into a
+  // deterministic evaluation-report. `write` persists artifacts + mirrors.
+  evaluateCampaign({ campaignId, start = null, end = null, now = null, write = false, runId = null } = {}) {
+    const at = now || this.now().toISOString();
+    const startIso = start || null;
+    const endIso = end || at;
+    const report = buildCampaignEvaluation({ reader: this.reader, observations: this.observations, now: at, campaignId, start: startIso, end: endIso });
+    if (!write) return { report, written: null };
+    if (!this.artifacts) {
+      throw intError(INT_CODES.STORE_ERROR, 'evaluateCampaign(write) requires an artifacts manager', { campaignId });
+    }
+    const written = writeCampaignEvaluation({ deps: this, now: at, campaignId, start: startIso, end: endIso, runId });
+    return { report, written: written.written };
+  }
+
+  // 4.7.1 compare-experiment: offline pure rerun of a campaign's stored
+  // records under an alternative policy version. Advisory only — never applies
+  // anything; `write` additionally persists the experiment-report artifact and
+  // its mirror (requires the artifacts manager).
+  compareExperiment(spec, { now = null, write = true } = {}) {
+    if (this.config.experiments?.enabled === false) {
+      throw intError(INT_CODES.STORE_ERROR, 'experiments are disabled in configuration', {});
+    }
+    const at = now || this.now().toISOString();
+    const result = runCompareExperiment(spec, this.experimentsCtx);
+    if (!write) {
+      const report = buildExperimentReport({ engine: this, now: at, result });
+      return { result, report, written: null };
+    }
+    if (!this.artifacts) {
+      throw intError(INT_CODES.STORE_ERROR, 'compareExperiment(write) requires an artifacts manager', { experimentId: result.experimentId });
+    }
+    const { report, written } = writeExperimentReport({ deps: this, now: at, result });
+    return { result, report, written };
   }
 
   // Health surface (Section 23): sink stats, watermark age, job marker ages,

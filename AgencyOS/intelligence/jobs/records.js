@@ -38,6 +38,14 @@ export class RecordsReader {
     return readJson(file, null);
   }
 
+  // 4.7.1: discovery record persisted alongside the execution instance. Read
+  // only — intelligence never writes through these paths.
+  readRecord(executionId) {
+    const file = path.join(this.orchestratorRoot, 'instances', executionId, 'record.json');
+    if (!fs.existsSync(file)) return null;
+    return readJson(file, null);
+  }
+
   // Whether an execution's decision record exists (4.7.0 observations
   // import). Contained: the id is sanitized before any path use.
   hasExecution(executionId) {

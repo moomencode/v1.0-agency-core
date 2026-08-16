@@ -170,6 +170,15 @@ export class CampaignManager {
     return (campaign.executions || []).find((e) => e.executionId === executionId);
   }
 
+  // 4.7.1: additive — captures the brain's policy/strategy version baseline at
+  // campaign start. It is only a reference; the orchestrator never applies or
+  // mutates policy itself.
+  _policyVersionRef() {
+    const brain = this.adapters && this.adapters.brain;
+    if (!brain || typeof brain.versionStamp !== 'function') return null;
+    return brain.versionStamp();
+  }
+
   _updateExecutionMeta(campaign, execution) {
     let meta = this._executionMeta(campaign, execution.executionId);
     if (!meta) {
@@ -220,6 +229,7 @@ export class CampaignManager {
       deployment: spec.deployment || { provider: 'local', target: {}, allowedProviders: ['local'] },
       approvals: spec.approvals || {},
       workflowVersion: WORKFLOW_VERSION,
+      policyVersionRef: this._policyVersionRef(),
       state: 'DRAFT',
       resolution: this.policy.resolve((spec.autonomyLevel || 'L4').toUpperCase()),
       budget: {

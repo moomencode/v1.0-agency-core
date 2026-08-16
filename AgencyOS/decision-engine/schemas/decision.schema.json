@@ -44,6 +44,22 @@
     "qualificationScore": { "type": "number" },
     "ruleResults": { "type": "array" },
     "policySummary": { "type": ["object", "null"] },
+    "policyVersion": {
+      "type": ["object", "string", "null"],
+      "properties": {
+        "id": { "type": "string" },
+        "sha256": { "type": "string" },
+        "count": { "type": "integer" }
+      }
+    },
+    "strategyVersion": {
+      "type": ["object", "string", "null"],
+      "properties": {
+        "id": { "type": "string" },
+        "sha256": { "type": "string" },
+        "count": { "type": "integer" }
+      }
+    },
     "createdAt": { "type": "string" }
   }
 }

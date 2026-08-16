@@ -140,6 +140,8 @@ export const STEPS = {
       execution.outputs.verdict = decision.verdict;
       execution.outputs.confidence = decision.confidence;
       execution.outputs.riskLevel = decision.risk ? decision.risk.level : null;
+      execution.outputs.policyVersion = decision.policyVersion ? decision.policyVersion.id : null;
+      execution.outputs.strategyVersion = decision.strategyVersion ? decision.strategyVersion.id : null;
 
       const artifact = deps.adapters.artifacts.createWithDedupe({
         name: `execution-${execution.executionId}-decision-record`,

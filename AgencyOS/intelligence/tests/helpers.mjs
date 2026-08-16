@@ -1,8 +1,41 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { materializeVersion } from '../../decision-engine/index.js';
 
 export const INT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+const DEFAULTS_FILE = JSON.parse(fs.readFileSync(path.join(INT_ROOT, '..', 'policies', 'defaults.json'), 'utf8'));
+const DEFAULT_STRATEGIES_FILE = JSON.parse(fs.readFileSync(path.join(INT_ROOT, '..', 'strategy', 'strategies', 'default.json'), 'utf8'));
+const STRICT_FILE = JSON.parse(fs.readFileSync(path.join(INT_ROOT, 'config', 'experiments', 'policy-sets', 'strict.json'), 'utf8'));
+
+// 4.7.1 version identities: pure functions of the applied document sets, so
+// brain stamps, fixture records and experiment registries agree.
+export const DEFAULT_POLICY_SET = { version: DEFAULTS_FILE.version || 1, policies: DEFAULTS_FILE.policies };
+export const DEFAULT_STRATEGY_SET = { version: DEFAULT_STRATEGIES_FILE.version || 1, strategies: DEFAULT_STRATEGIES_FILE.strategies };
+export const STRICT_POLICY_SET = { version: STRICT_FILE.version || 1, policies: STRICT_FILE.policies };
+export const DEFAULT_POLICY_VERSION = materializeVersion(DEFAULT_POLICY_SET);
+export const DEFAULT_STRATEGY_VERSION = materializeVersion(DEFAULT_STRATEGY_SET);
+export const STRICT_POLICY_VERSION = materializeVersion(STRICT_POLICY_SET);
+
+// Discovery record shape the context engine builds from (opportunity 70: fits
+// the default baseline but fails the strict fixture set's minOpportunity 95).
+export function recordFor({ businessId = 'biz-1', name = 'Fixture Business', category = 'restaurant', opportunity = 70, reviews = 25 } = {}) {
+  return {
+    id: businessId,
+    name,
+    category,
+    website: { exists: false },
+    scores: { opportunity: { value: opportunity }, business: { value: 62 } },
+    reviews,
+    rating: 4.2,
+    phone: '0512000001',
+    email: `${businessId}@example.test`,
+    closed: false,
+    duplicate: false,
+    premiumWebsite: false
+  };
+}
 
 // Mini test runner (mirrors the style used across AgencyOS suites).
 export function makeT(name) {
@@ -107,6 +140,7 @@ export function campaignRecord({ createdAt = '2026-08-10T08:00:00.000Z', state =
     autonomyLevel: 'L4',
     state,
     workflowVersion: 2,
+    policyVersionRef: { policyVersion: DEFAULT_POLICY_VERSION, strategyVersion: DEFAULT_STRATEGY_VERSION },
     budget: {
       limits: { maxBusinesses: 6, maxDeployments: 6, maxAiCalls: 20, maxProviderCalls: 20, maxRetries: 2 },
       counters: { businesses: 6, deployments: 5, aiCalls: 14, providerCalls: 12, retries: 2, steps: 24 },
@@ -219,6 +253,7 @@ export function writeFixtureStorage(base, { timeOffsetMs = 0 } = {}) {
     fs.mkdirSync(dir, { recursive: true });
     const businessId = delivered[executionId] || (executionId === 'ex-5' ? 'biz-5' : 'biz-6');
     const isDeployed = Boolean(delivered[executionId]);
+    fs.writeFileSync(path.join(dir, 'record.json'), JSON.stringify(recordFor({ businessId, name: `${businessId} fixture business` }), null, 2));
     fs.writeFileSync(path.join(dir, 'decision.json'), JSON.stringify({
       schema: 'https://agency.os/orchestrator/decision',
       executionId,
@@ -228,7 +263,9 @@ export function writeFixtureStorage(base, { timeOffsetMs = 0 } = {}) {
       reason: isDeployed ? 'fits-fit' : executionId === 'ex-5' ? 'low-fit-score' : 'approval-stale',
       confidence: isDeployed ? 0.9 : 0.4,
       strategyId: 'fixture-strategy',
-      policyVersion: 2,
+      policySummary: { verdict: 'pass' },
+      policyVersion: DEFAULT_POLICY_VERSION,
+      strategyVersion: DEFAULT_STRATEGY_VERSION,
       createdAt: new Date(Date.parse('2026-08-10T08:00:00.000Z') + timeOffsetMs).toISOString()
     }, null, 2));
     fs.writeFileSync(path.join(dir, 'trace.ndjson'), traceFor(executionId, businessId, { stepFail: stepFail[executionId], timeOffsetMs }).map((l) => JSON.stringify(l)).join('\n'));

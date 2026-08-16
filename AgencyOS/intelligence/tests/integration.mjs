@@ -166,7 +166,7 @@ t.section('engine without bus works over records only');
 {
   const { engine } = await makeEngine({ base: path.join(BASE, 'nobus'), clock: fixedClock() });
   const results = await engine.runJobs({ now: FIXED_NOW });
-  t.assert(results.length === 9, 'all jobs registered');
+  t.assert(results.length === 11, 'all jobs registered');
   const funnel = engine.insights.get('funnel', 'agency', 'agency', { start: '2026-08-10T00:00:00.000Z', end: '2026-08-11T00:00:00.000Z' });
   t.assert(Boolean(funnel) && funnel.data.delivered === 4, 'record-based jobs produce insights without events');
   const rel = engine.insights.get('reliability', 'agency', 'agency', { start: '2026-08-10T10:00:00.000Z', end: '2026-08-10T11:00:00.000Z' });
@@ -185,7 +185,7 @@ t.section('health surface');
   t.assert(health.module === 'intelligence', 'module name');
   t.assert(health.healthy === true, 'healthy with clean sink', JSON.stringify(health.sink));
   t.assert(health.sink.written >= 20, 'sink written', `written=${health.sink.written}`);
-  t.assert(Object.keys(health.markers).length === 9, 'marker ages for all jobs');
+  t.assert(Object.keys(health.markers).length === 11, 'marker ages for all jobs');
   t.assert(Object.values(health.markers).every((m) => m && m.status === 'completed' && m.ageMs === 0), 'markers fresh (fixed clock)');
   t.assert(typeof health.stores.storageBytes === 'number' && health.stores.storageBytes > 0, 'store sizes reported');
   engine.stop();

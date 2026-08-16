@@ -59,6 +59,16 @@ export function batchIdFor(items) {
   return `batch-${hex16(sha256(stableStringify(normalized)))}`;
 }
 
+// Evaluation & experimentation (4.7.1): ids are pure functions of their scope,
+// so identical windows / experiment configurations always yield identical ids.
+export function evaluationIdFor(campaignId, start, end) {
+  return `eval-${hex16(sha256(`${campaignId}|${start}|${end}`))}`;
+}
+
+export function experimentIdFor(name, basePolicyVersion, altPolicyVersion, scopeKey) {
+  return `exp-${hex16(sha256(`${name}|${basePolicyVersion}|${altPolicyVersion}|${scopeKey}`))}`;
+}
+
 export function sanitizeScopeId(id) {
   return sanitizeRunId(id, 'scope');
 }

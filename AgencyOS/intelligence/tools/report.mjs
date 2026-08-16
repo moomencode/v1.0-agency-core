@@ -36,6 +36,8 @@ function mdSection(title, body) {
   return [`## ${title}`, '', body, ''].join('\n');
 }
 
+export { reportIdFor, baseReport, mdTable, mdSection };
+
 // ---------------------------------------------------------------------------
 export function buildHealthReport({ engine, now }) {
   const snap = engine.snapshot();
@@ -252,7 +254,9 @@ const KIND_ARTIFACT_TYPE = {
   incident: 'incident-digest',
   alert: 'alert-digest',
   campaign: 'campaign-report',
-  operations: 'operations-report'
+  operations: 'operations-report',
+  evaluation: 'evaluation-report',
+  experiment: 'experiment-report'
 };
 
 // Write a built report as json + markdown artifacts (kind-specific artifact

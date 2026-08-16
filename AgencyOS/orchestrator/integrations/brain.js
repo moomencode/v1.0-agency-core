@@ -20,4 +20,14 @@ export class BrainAdapter {
   summarize(result) {
     return this.brain.summarize(result);
   }
+
+  // 4.7.1: additive — surfaces the policy/strategy version identity the brain
+  // stamps every decision with, letting the campaign record its baseline at
+  // start time without re-scoring anything.
+  versionStamp() {
+    return {
+      policyVersion: this.brain.policyVersionOf ? this.brain.policyVersionOf() : null,
+      strategyVersion: this.brain.strategyVersionOf ? this.brain.strategyVersionOf() : null
+    };
+  }
 }
