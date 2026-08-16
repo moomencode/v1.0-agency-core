@@ -5,7 +5,8 @@ export const DOS_CODES = {
   INVALID_DOSSIER: 'DOS004',
   UNKNOWN_DOCUMENT: 'DOS005',
   SCHEMA_MISSING: 'DOS006',
-  STORE_ERROR: 'DOS007'
+  STORE_ERROR: 'DOS007',
+  SECRET_SCAN_FAILED: 'DOS008'
 };
 
 export function dosError(code, message) {

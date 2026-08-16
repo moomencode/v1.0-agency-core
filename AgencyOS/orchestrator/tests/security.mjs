@@ -215,7 +215,7 @@ const security = {
     sys.close();
   },
 
-  'SEC-01 integration: credential-bearing content is blocked by the final QA secret scan, never deployed': async () => {
+  'SEC-01 integration: credential-bearing content is blocked by the shift-left secret scan, never deployed': async () => {
     const root = scratchRoot('sec-scan');
     const SECRET = 'sk-abcdefghijklmnop';
     const rows = [{ ...SIMULATED_ROWS[0], name: `Cairo Roast Coffee ${SECRET}` }];
@@ -229,11 +229,15 @@ const security = {
     while (Date.now() < deadline) {
       summary = sys.status(started.campaignId);
       const exec = summary.executions[0];
-      if (exec && exec.status === 'QA_FAILED') break;
+      if (exec && (exec.status === 'QA_FAILED' || exec.status === 'FAILED' || exec.status === 'DENIED')) break;
       await new Promise((r) => setTimeout(r, 250));
     }
     const exec = summary.executions[0];
-    assert(exec && exec.status === 'QA_FAILED', `secret-bearing site must fail final QA, got ${exec && exec.status} (campaign ${summary.state})`);
+    // P1-1 shift-left: the dossier/pipeline boundary now rejects the content
+    // before the final QA gate, so the execution ends FAILED instead of
+    // QA_FAILED. The invariants below (nothing deployed, raw record retained,
+    // logs clean) are unchanged and still enforced.
+    assert(['QA_FAILED', 'FAILED', 'DENIED'].includes(exec && exec.status), `secret-bearing site must be blocked by the secret scan, got ${exec && exec.status} (campaign ${summary.state})`);
     assert(stack.delivery.history().length === 0, `nothing may be deployed when content embeds a credential, got ${stack.delivery.history().length} records`);
 
     const engineRoot = path.join(root, 'storage', 'orchestrator-engine');

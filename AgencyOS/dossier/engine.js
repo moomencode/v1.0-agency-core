@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { dosError, DOS_CODES } from './errors.js';
-import { ensureDir, writeJson, readJson, atomicWrite, nowIso, shortHash } from '../runtime/utils.js';
+import { ensureDir, writeJson, readJson, atomicWrite, nowIso, shortHash, stableStringify } from '../runtime/utils.js';
 import { runExtractors } from './extractors/index.js';
 import { runEnrichers } from './enrichers/run.js';
 import { categoryInfo, priceLevelInfo } from './categories.js';
@@ -10,13 +10,15 @@ import { buildReports } from './reports/index.js';
 import { ContextEngine } from '../context/index.js';
 import { DecisionEngine } from '../decision-engine/index.js';
 import { createValidator } from '../runtime/validator.js';
+import { scanFiles } from '../delivery/security/scan.js';
 
 export const DOSSIER_EVENTS = {
   DOSSIER_STARTED: 'dossier.started',
   DOSSIER_VALIDATED: 'dossier.validated',
   DOSSIER_CREATED: 'dossier.created',
   DOSSIER_UPDATED: 'dossier.updated',
-  DOSSIER_REPORTS_READY: 'dossier.reports_ready'
+  DOSSIER_REPORTS_READY: 'dossier.reports_ready',
+  SECRET_SCAN_FAILED: 'dossier.secret_scan_failed'
 };
 
 export class DossierEngine {
@@ -118,6 +120,14 @@ export class DossierEngine {
       summary: buildSummary(ctx)
     };
     const readme = buildReadme(ctx);
+
+    // Early secret scan: shift left from Final QA only (P1-1). Documents are
+    // structured objects, so scan their deterministic serialization.
+    const secretScan = scanFiles(Object.fromEntries(Object.entries(documents).map(([id, doc]) => [id, typeof doc === 'string' ? doc : stableStringify(doc)])));
+    if (secretScan.length > 0) {
+      this._emit(DOSSIER_EVENTS.SECRET_SCAN_FAILED, businessId, { matches: secretScan });
+      throw dosError(DOS_CODES.SECRET_SCAN_FAILED, `dossier secret scan failed: ${secretScan.length} file(s) contain potential secrets`);
+    }
 
     const validation = validateDocuments(documents, this.validator);
     if (!validation.valid) {

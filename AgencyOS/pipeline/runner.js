@@ -15,6 +15,7 @@ import { CONFIG_IDS, getConfigSchema } from './schemas/index.js';
 import { pipError, PIP_CODES } from './errors.js';
 import { hashShort, stableJson } from './utils.js';
 import { sanitizeRunId } from '../runtime/utils.js';
+import { scanFiles } from '../delivery/security/scan.js';
 
 export const PIPELINE_EVENTS = {
   PIPELINE_STARTED: 'pipeline.started',
@@ -306,6 +307,12 @@ export class PipelineRunner {
         ctx.configCount = Object.keys(configs).length;
         for (const [fileId, cfg] of Object.entries(configs)) {
           ctx.checksums[fileId] = createHash('sha256').update(stableJson(cfg)).digest('hex');
+        }
+        // Early secret scan at pipeline boundary (P1-1 shift-left). Configs are
+        // structured objects, so scan their deterministic serialization.
+        const secretScan = scanFiles(Object.fromEntries(Object.entries(configs).map(([fileId, cfg]) => [fileId, stableJson(cfg)])));
+        if (secretScan.length > 0) {
+          throw pipError(PIP_CODES.VALIDATION_FAILED, `pipeline secret scan failed: ${secretScan.length} config file(s) contain potential secrets`);
         }
         return { configs, configCount: ctx.configCount, checksums: ctx.checksums, validation: ctx.validation };
       }
