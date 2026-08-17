@@ -25,7 +25,8 @@ export function parseHtml(html) {
 }
 
 export function check(label, ok, errors = []) {
-  return { id: label, ok: Boolean(ok), errors: Array.isArray(errors) ? errors : [errors] };
+  const pass = Boolean(ok);
+  return { id: label, ok: pass, errors: pass ? [] : (Array.isArray(errors) ? errors : [errors]) };
 }
 
 export function groupPassed(checks) {

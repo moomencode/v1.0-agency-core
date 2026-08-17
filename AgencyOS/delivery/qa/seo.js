@@ -1,6 +1,6 @@
 import { parseHtml, check, groupPassed } from './html.js';
 
-export function runSeoGroup(files) {
+export function runSeoGroup(files, { expectedCanonical = true } = {}) {
   const checks = [];
   const htmlPages = Object.keys(files)
     .filter((p) => p.endsWith('.html'))
@@ -14,7 +14,7 @@ export function runSeoGroup(files) {
       checks.push(check(`seo:title:${page}`, Boolean(doc.title && doc.title.trim().length > 0), ['missing <title>']));
       checks.push(check(`seo:description:${page}`, Boolean(doc.metaDescription && doc.metaDescription.trim().length > 0), ['missing meta description']));
       checks.push(check(`seo:h1:${page}`, doc.h1Count === 1, [`expected exactly 1 <h1>, got ${doc.h1Count}`]));
-      checks.push(check(`seo:canonical:${page}`, Boolean(doc.canonical), ['missing canonical link']));
+      checks.push(check(`seo:canonical:${page}`, !expectedCanonical || Boolean(doc.canonical), ['missing canonical link']));
       for (const [i, ld] of doc.ldJson.entries()) {
         let ok = true;
         const errs = [];

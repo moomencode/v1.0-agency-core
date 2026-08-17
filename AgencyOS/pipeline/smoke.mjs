@@ -49,7 +49,7 @@ assert.strictEqual(ctx.stages.length, 13, '13 stages');
 assert.ok(ctx.stages.every((s) => s.ok), 'all stages ok');
 assert.strictEqual(ctx.configCount, 19, '19 config files');
 assert.strictEqual(ctx.qaPassed, true, 'qa passed');
-assert.strictEqual(ctx.qaChecks, 6, 'six qa checks');
+assert.strictEqual(ctx.qaChecks, 7, 'seven qa checks (incl. contact-hours warning)');
 assert.strictEqual(events.length, 1, 'completed event');
 assertOk('full pipeline run ready', `(${ctx.stages.filter((s) => s.resumed).length} resumed)`);
 
@@ -129,7 +129,7 @@ assertOk('100% deterministic across runs');
   class CorruptingRunner extends PipelineRunner {
     async _runStage(stageId, ctx, dossier) {
       if (stageId === 'generate-build-package') {
-        ctx.configs['contact.json'] = { ...ctx.configs['contact.json'], hours: [] };
+        ctx.configs['seo.json'] = { ...ctx.configs['seo.json'], title: '' };
       }
       return super._runStage(stageId, ctx, dossier);
     }

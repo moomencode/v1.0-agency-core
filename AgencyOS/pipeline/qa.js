@@ -35,7 +35,9 @@ export function runQA({ configs, themeTokens, sections, manifest, structuredData
     if (!bizSections.some((s) => item.href.includes(s)) && !['#home', '#footer', '#contact'].includes(item.href)) webChecks.push(`nav item "${item.label}" has no matching section`);
   }
   if (!configs['hero.json']?.image?.dark) webChecks.push('hero image missing');
-  if (!configs['contact.json']?.hours?.length) webChecks.push('contact hours missing');
+  if (!configs['contact.json']?.hours?.length) {
+    push('contact-hours', false, 'contact hours missing (business hours not published) — content gap, no fabrication', 'warning');
+  }
   if (configs['booking.json']?.enabled === true && !bizSections.includes('reservation')) webChecks.push('booking enabled but reservation section missing');
   if (configs['booking.json']?.enabled === false && bizSections.includes('reservation')) webChecks.push('reservation section present but booking disabled');
   push('website-validation', webChecks.length === 0, webChecks.join(' | ') || 'sections ↔ navigation ↔ booking consistent');
@@ -47,8 +49,8 @@ export function runQA({ configs, themeTokens, sections, manifest, structuredData
   if (!seo.description) seoChecks.push('description missing');
   else if (seo.description.length > 165) seoChecks.push(`description too long (${seo.description.length}/165)`);
   if (!Array.isArray(seo.keywords) || seo.keywords.length === 0) seoChecks.push('keywords missing');
-  if (!seo.canonical || !/^https?:\/\//.test(seo.canonical)) seoChecks.push('canonical invalid');
-  if (!seo.openGraph?.title || !seo.openGraph?.image) seoChecks.push('openGraph incomplete');
+  if (seo.canonical && !/^https?:\/\//.test(seo.canonical)) seoChecks.push('canonical invalid');
+  if (!seo.openGraph?.title) seoChecks.push('openGraph incomplete');
   if (!seo.twitter?.card) seoChecks.push('twitter card missing');
   push('seo-validation', seoChecks.length === 0, seoChecks.join(' | ') || 'title/description/keywords/OG/twitter valid');
 

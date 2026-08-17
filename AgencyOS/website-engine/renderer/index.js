@@ -7,7 +7,7 @@ export { el, text, icon, stars, collectNodes, collectText, nodeIds, anchorIds } 
 export { serializeTreeHtml, serializeBodyHtml } from './serialize-html.js';
 export { serializeBodyJsx } from './serialize-jsx.js';
 
-export function renderDocument({ head = {}, bodyNodes = [], css = '', inlineScript = '', fontsUrl = null }) {
+export function renderDocument({ head = {}, bodyNodes = [], css = '', inlineScript = '', fontsUrl = null, lang = 'en', dir = null }) {
   const meta = [];
   if (head.title) meta.push(`<title>${escapeHtml(head.title)}</title>`);
   for (const [name, content] of Object.entries(head.meta || {})) {
@@ -25,7 +25,7 @@ export function renderDocument({ head = {}, bodyNodes = [], css = '', inlineScri
   const script = inlineScript ? `<script>\n${inlineScript}\n</script>` : '';
   return [
     '<!DOCTYPE html>',
-    '<html lang="en">',
+    `<html lang="${escapeHtml(lang)}"${dir ? ` dir="${escapeHtml(dir)}"` : ''}>`,
     '<head>',
     meta.join('\n'),
     fontLink,

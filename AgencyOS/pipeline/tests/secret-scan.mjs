@@ -58,7 +58,7 @@ section('pipeline shift-left secret scan');
   assert(ctx.qaPassed === true, 'clean run still passes QA');
 
   const poisoned = await de.build(recordOf(), { persist: false });
-  poisoned.documents.social.instagram = 'https://instagram.com/roastery?token=superSecretValue123';
+  poisoned.documents.social.platforms = [{ platform: 'instagram', url: 'https://instagram.com/roastery?token=superSecretValue123', present: true }];
   const badRunner = createPipelineRunner({ root: path.join(WORK, 'bad'), validator: executor.validator, logger: executor.logger });
   let err = null;
   try {

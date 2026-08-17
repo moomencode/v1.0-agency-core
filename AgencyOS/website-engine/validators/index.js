@@ -63,11 +63,9 @@ function checkSeo(page) {
   if (t < 10 || t > 65) errors.push(`title length ${t} (want 10..65)`);
   if (!h.meta?.description) errors.push('missing meta description');
   else if (h.meta.description.length > 165) errors.push(`meta description too long (${h.meta.description.length})`);
-  for (const key of ['og:title', 'og:description', 'og:image', 'og:url']) {
-    if (!h.property?.[key]) errors.push(`missing ${key}`);
-  }
+  if (!h.property?.['og:title'] || !h.property?.['og:description']) errors.push('missing og:title / og:description');
   if (h.property?.['twitter:card'] !== 'summary_large_image' && h.property?.['twitter:card'] !== 'summary') errors.push('twitter:card missing or invalid');
-  if (!/^https?:\/\//.test(h.canonical || '')) errors.push('canonical must be an absolute http(s) URL');
+  if (h.canonical && !/^https?:\/\//.test(h.canonical)) errors.push('canonical must be an absolute http(s) URL');
   if (!h.robots) errors.push('missing robots meta');
   return { ok: errors.length === 0, errors };
 }

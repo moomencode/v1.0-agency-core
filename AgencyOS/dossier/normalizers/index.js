@@ -48,16 +48,51 @@ export function normalizeName(input) {
 }
 
 const DAYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+const DAY_TOKEN = /^(sun|mon|tue|wed|thu|fri|sat)[^a-z]*$/i;
+const DAY_RANGE = /^(sun|mon|tue|wed|thu|fri|sat)[^a-z]*-[^a-z]*(sun|mon|tue|wed|thu|fri|sat)$/i;
+
+const DAY_PRETTY = {
+  sun: 'Sunday', mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday'
+};
+
+function parseDayToken(token) {
+  if (!token) return null;
+  const t = String(token).trim();
+  if (/^daily$/i.test(t) || /every\s*day/i.test(t) || /^all\s*days$/i.test(t)) return 'Daily';
+  const single = t.match(DAY_TOKEN);
+  if (single) return DAY_PRETTY[single[1].toLowerCase()];
+  const range = t.match(DAY_RANGE);
+  if (range) return `${DAY_PRETTY[range[1].toLowerCase()]} - ${DAY_PRETTY[range[2].toLowerCase()]}`;
+  return null;
+}
+
+function parseHoursRange(text) {
+  const trimmed = String(text).trim();
+  if (!trimmed) return null;
+  if (/^24\/?7$/i.test(trimmed.replace(/\s+/g, ''))) {
+    return { open: '00:00', close: '23:59' };
+  }
+  const m = trimmed.match(/^(.+?)\s+(\d{1,2}(?::\d{2})?\s*(?:AM|PM)?)\s*[-–]\s*(\d{1,2}(?::\d{2})?\s*(?:AM|PM)?)$/i);
+  if (!m) return null;
+  const days = parseDayToken(m[1]);
+  if (!days) return null;
+  return { days, open: m[2].trim(), close: m[3].trim() };
+}
 
 export function normalizeHours(hours) {
   if (!hours) return null;
   if (Array.isArray(hours)) {
     const out = [];
     for (const h of hours) {
-      const day = String(h.day || '').toLowerCase();
-      if (h.open && h.close && (day || h.days)) {
-        out.push({ day: day || null, days: h.days || null, open: h.open, close: h.close });
+      if (h && typeof h === 'object') {
+        const day = String(h.day || '').toLowerCase();
+        if (h.open && h.close && (day || h.days)) {
+          out.push({ day: day || null, days: h.days || null, open: h.open, close: h.close });
+        }
+        continue;
       }
+      const parsed = parseHoursRange(h);
+      if (parsed) out.push({ day: null, days: parsed.days, open: parsed.open, close: parsed.close });
     }
     return out.length ? out : null;
   }

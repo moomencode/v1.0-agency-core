@@ -33,15 +33,31 @@ export function planSections(n) {
     }
     if (sid === 'testimonials') {
       enabled = n.hasReviews;
-      if (!enabled) reasons.push('no reviews');
+      if (!enabled) reasons.push('no review texts');
+    }
+    if (sid === 'services') {
+      enabled = n.hasServices;
+      if (!enabled) reasons.push('no services data');
+    }
+    if (sid === 'stats') {
+      enabled = n.hasVerifiedStats;
+      if (!enabled) reasons.push('no verified stats');
+    }
+    if (sid === 'offers') {
+      enabled = n.hasOffers;
+      if (!enabled) reasons.push('no offer data');
+    }
+    if (sid === 'features') {
+      enabled = n.hasFeatures;
+      if (!enabled) reasons.push('no strengths data');
     }
     if (sid === 'reservation') {
       enabled = n.hasBooking;
       if (!enabled) reasons.push('no booking signal');
     }
     if (sid === 'faq') {
-      enabled = Boolean(n.profile.faq.length);
-      if (!enabled) reasons.push('no faq profile');
+      enabled = false;
+      reasons.push('no verified faq data');
     }
     plan.push({ id: sid, label: def.label, anchor: def.anchor, enabled, disabledReason: enabled ? null : reasons.join('; ') });
   }

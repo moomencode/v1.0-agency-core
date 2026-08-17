@@ -7,6 +7,7 @@ import { runA11yGroup } from './a11y.js';
 import { runLinksGroup } from './links.js';
 import { runAssetsGroup } from './assets.js';
 import { runSecretScanGroup } from './secret-scan.js';
+import { runFidelityGroup } from './fidelity.js';
 
 export class FinalQA {
   constructor({ root, logger = null } = {}) {
@@ -31,11 +32,12 @@ export class FinalQA {
   run({ buildId, site, validation, buildRecord, files }) {
     const groups = [
       runEngineGroup(site, validation),
-      runSeoGroup(files),
+      runSeoGroup(files, { expectedCanonical: Boolean(site && site.configs && site.configs['seo.json'] && site.configs['seo.json'].canonical) }),
       runA11yGroup(files, site),
       runLinksGroup(files),
       runAssetsGroup(files, buildRecord),
-      runSecretScanGroup(files)
+      runSecretScanGroup(files),
+      runFidelityGroup(files)
     ];
     const totals = groups.reduce(
       (acc, g) => {

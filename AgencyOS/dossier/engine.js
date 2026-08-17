@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { dosError, DOS_CODES } from './errors.js';
-import { ensureDir, writeJson, readJson, atomicWrite, nowIso, shortHash, stableStringify } from '../runtime/utils.js';
+import { ensureDir, writeJson, readJson, atomicWrite, nowIso, shortHash, stableStringify, resolveBusinessId } from '../runtime/utils.js';
 import { runExtractors } from './extractors/index.js';
 import { runEnrichers } from './enrichers/run.js';
 import { categoryInfo, priceLevelInfo } from './categories.js';
@@ -40,8 +40,12 @@ export class DossierEngine {
     }
   }
 
+  _resolveId(businessId) {
+    return resolveBusinessId(businessId, { prefix: 'dis' });
+  }
+
   _dossierRoot(businessId) {
-    return this.root ? path.join(this.root, 'storage', 'dossiers', businessId) : null;
+    return this.root ? path.join(this.root, 'storage', 'dossiers', this._resolveId(businessId)) : null;
   }
 
   _indexFile() {
@@ -68,8 +72,9 @@ export class DossierEngine {
 
   async build(input, { version = 1, update = false, policies = null, persist = true, requireApproved = false } = {}) {
     const run = await this.prepareInput(input, { policies });
-    const businessId = run.businessId || (run.record && run.record.id);
-    if (!businessId) throw dosError(DOS_CODES.INVALID_INPUT, 'business id required');
+    const rawId = run.businessId || (run.record && run.record.id);
+    if (!rawId) throw dosError(DOS_CODES.INVALID_INPUT, 'business id required');
+    const businessId = this._resolveId(rawId);
     const record = run.record || {};
     const context = run.context;
     const decision = run.decision;
@@ -93,7 +98,7 @@ export class DossierEngine {
     const now = nowIso();
     const meta = { dossierId: `dos-${shortHash(businessId, 10)}`, businessId, version, createdAt: now };
     const ctx = {
-      meta, profile, digital, commerce, context, decision, enr, grades, raw,
+      meta, profile, digital, commerce, context, decision, enr, grades, raw, record,
       categoryInfo: categoryInfo(profile.category), priceLevelInfo: priceLevelInfo(profile.category)
     };
 

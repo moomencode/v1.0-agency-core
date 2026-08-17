@@ -14,21 +14,9 @@ export const PROFILES = {
       { id: 'craft', icon: 'coffee', title: 'Master Roasting', text: 'Single-origin beans roasted and brewed to order by passionate baristas.' },
       { id: 'ambiance', icon: 'heart', title: 'Cozy Ambiance', text: 'A warm corner designed for reading, working and long conversations.' }
     ],
-    faq: [
-      { q: 'Do you offer delivery?', a: 'Yes — fast delivery across the area through our website.' },
-      { q: 'Can I reserve a table online?', a: 'Absolutely. Use the reservation form and we will confirm via WhatsApp.' },
-      { q: 'Do you handle events and gatherings?', a: 'Yes, contact us and our team will plan the perfect event for you.' }
-    ],
-    stats: [
-      { id: 'origins', value: 14, suffix: '+', label: 'Coffee Origins' },
-      { id: 'cups', value: 40000, suffix: '+', label: 'Cups Served' },
-      { id: 'years', value: 6, suffix: '', label: 'Years of Craft' }
-    ],
-    offers: [
-      { title: 'Morning Boost Combo', description: 'Any specialty coffee + fresh bakery of your choice', time: 'Daily from 8:00 AM - 12:00 PM', badge: 'SAVE 20%' },
-      { title: 'Golden Hour Deal', description: '30% off all pour-over brews after 5:00 PM', time: 'Daily from 5:00 PM', badge: 'SAVE 30%' },
-      { title: 'Gathering Dessert Treat', description: 'Order 2 drinks & get a signature dessert on the house', time: 'Thu - Sat from 7:00 PM', badge: 'FREE DESSERT' }
-    ],
+    faq: [],
+    stats: [],
+    offers: [],
     menu: [
       { id: 'espresso', label: 'Espresso' },
       { id: 'brew', label: 'Brewed Coffee' },
@@ -37,9 +25,9 @@ export const PROFILES = {
     ],
     heroInfo: [
       { icon: 'map-pin', title: '{address}', subtitle: '{area}' },
-      { icon: 'clock', title: 'Open Daily', subtitle: '7:00 AM - 12:00 AM' },
+      { icon: 'clock', title: 'Open Hours', subtitle: '{hours}' },
       { icon: 'star', title: '{rating} Rating', subtitle: '({reviews} Reviews)' },
-      { icon: 'wifi', title: 'Free Wi-Fi', subtitle: 'Remote-work friendly' }
+
     ],
     sections: ['navbar', 'hero', 'menu', 'stats', 'offers', 'reservation', 'testimonials', 'gallery', 'location', 'footer'],
     cta: { label: 'Order Now', href: '#menu', icon: 'shopping-bag' },
@@ -61,21 +49,9 @@ export const PROFILES = {
       { id: 'chefs', icon: 'chef-hat', title: 'Expert Chefs', text: 'A passionate kitchen team crafting authentic recipes with love.' },
       { id: 'delivery', icon: 'rocket', title: 'Fast Delivery', text: 'Hot, fresh and on time — right to your door.' }
     ],
-    faq: [
-      { q: 'Do you offer delivery?', a: 'Yes — fast delivery in most areas through our website.' },
-      { q: 'Can I reserve a table online?', a: 'Absolutely. Use the reservation form and we will confirm via WhatsApp.' },
-      { q: 'Do you handle events and gatherings?', a: 'Yes, contact us and our team will plan the perfect event for you.' }
-    ],
-    stats: [
-      { id: 'dishes', value: 60, suffix: '+', label: 'Signature Dishes' },
-      { id: 'guests', value: 25000, suffix: '+', label: 'Guests Served' },
-      { id: 'years', value: 10, suffix: '', label: 'Years of Excellence' }
-    ],
-    offers: [
-      { title: 'Executive Combo', description: 'Main dish + side + soft drink', time: 'Sun - Thu from 1:00 PM - 6:00 PM', badge: 'BEST SELLER' },
-      { title: 'Family Feast', description: 'Family platter for 4 + free dessert', time: 'Weekends from 7:00 PM', badge: 'SAVE 25%' },
-      { title: 'Gathering Dessert Treat', description: 'Order 2 main courses & get a signature dessert on the house', time: 'Thu - Sat from 7:00 PM', badge: 'FREE DESSERT' }
-    ],
+    faq: [],
+    stats: [],
+    offers: [],
     menu: [
       { id: 'starters', label: 'Starters' },
       { id: 'mains', label: 'Main Courses' },
@@ -84,9 +60,9 @@ export const PROFILES = {
     ],
     heroInfo: [
       { icon: 'map-pin', title: '{address}', subtitle: '{area}' },
-      { icon: 'clock', title: 'Open Daily', subtitle: '12:00 PM - 12:00 AM' },
+      { icon: 'clock', title: 'Open Hours', subtitle: '{hours}' },
       { icon: 'star', title: '{rating} Rating', subtitle: '({reviews} Reviews)' },
-      { icon: 'chef-hat', title: 'Chef Crafted', subtitle: 'Authentic recipes' }
+
     ],
     sections: ['navbar', 'hero', 'menu', 'stats', 'offers', 'reservation', 'testimonials', 'gallery', 'location', 'footer'],
     cta: { label: 'Order Now', href: '#menu', icon: 'shopping-bag' },
@@ -108,29 +84,17 @@ export const PROFILES = {
       { id: 'coaches', icon: 'medal', title: 'Certified Coaches', text: 'Expert trainers who track your progress with you.' },
       { id: 'hours', icon: 'clock', title: 'Extended Hours', text: 'Open early and late so training fits your schedule.' }
     ],
-    faq: [
-      { q: 'Do I need a personal trainer?', a: 'No — but our coaches offer free onboarding sessions for all new members.' },
-      { q: 'What are the opening hours?', a: 'We open daily from 7:00 AM to 11:00 PM, including weekends.' },
-      { q: 'Can I freeze my membership?', a: 'Yes, members can freeze their plan for up to one month per year.' }
-    ],
-    stats: [
-      { id: 'members', value: 1200, suffix: '+', label: 'Active Members' },
-      { id: 'classes', value: 40, suffix: '+', label: 'Classes Weekly' },
-      { id: 'years', value: 8, suffix: '', label: 'Years of Training' }
-    ],
-    offers: [
-      { title: 'New Member Special', description: 'First month at 50% off with annual commitment', time: 'Limited time', badge: 'SAVE 50%' },
-      { title: 'Friend Referral', description: 'Bring a friend and both get one free month', time: 'Ongoing', badge: 'FREE MONTH' },
-      { title: 'Personal Training Pack', description: '10 PT sessions + body composition analysis', time: 'Ongoing', badge: 'BUNDLE' }
-    ],
+    faq: [],
+    stats: [],
+    offers: [],
     menu: [],
     heroInfo: [
       { icon: 'map-pin', title: '{address}', subtitle: '{area}' },
-      { icon: 'clock', title: 'Open Daily', subtitle: '7:00 AM - 11:00 PM' },
+      { icon: 'clock', title: 'Open Hours', subtitle: '{hours}' },
       { icon: 'star', title: '{rating} Rating', subtitle: '({reviews} Reviews)' },
-      { icon: 'users', title: 'Group Classes', subtitle: 'HIIT · Spinning · Strength' }
+
     ],
-    sections: ['navbar', 'hero', 'stats', 'features', 'offers', 'testimonials', 'gallery', 'contact', 'location', 'footer'],
+    sections: ['navbar', 'hero', 'stats', 'features', 'offers', 'reservation', 'testimonials', 'gallery', 'contact', 'location', 'footer'],
     cta: { label: 'Join Now', href: '#reservation', icon: 'id-card' },
     eyebrow: 'Welcome to'
   },
@@ -150,23 +114,15 @@ export const PROFILES = {
       { id: 'fabric', icon: 'layers', title: 'Premium Fabrics', text: 'Curated fabrics and linings from trusted mills.' },
       { id: 'speed', icon: 'clock', title: 'Fast Turnaround', text: 'Most alterations ready within 48 hours.' }
     ],
-    faq: [
-      { q: 'How long does a custom suit take?', a: 'Typically 2–3 weeks including two fitting sessions.' },
-      { q: 'Do you do ladies tailoring?', a: 'Yes — we tailor for all genders and styles.' },
-      { q: 'Can you replicate a garment from a photo?', a: 'Yes, bring a photo or a sample and we will quote it.' }
-    ],
-    stats: [
-      { id: 'garments', value: 5000, suffix: '+', label: 'Garments Tailored' },
-      { id: 'years', value: 25, suffix: '', label: 'Years of Craft' },
-      { id: 'clients', value: 900, suffix: '+', label: 'Happy Clients' }
-    ],
+    faq: [],
+    stats: [],
     offers: [],
     menu: [],
     heroInfo: [
       { icon: 'map-pin', title: '{address}', subtitle: '{area}' },
-      { icon: 'clock', title: 'Open Daily', subtitle: '10:00 AM - 10:00 PM' },
+      { icon: 'clock', title: 'Open Hours', subtitle: '{hours}' },
       { icon: 'star', title: '{rating} Rating', subtitle: '({reviews} Reviews)' },
-      { icon: 'scissors', title: 'Hand Crafted', subtitle: 'Made to measure' }
+
     ],
     sections: ['navbar', 'hero', 'stats', 'features', 'testimonials', 'gallery', 'contact', 'location', 'footer'],
     cta: { label: 'Get a Quote', href: '#contact', icon: 'scissors' },
@@ -188,20 +144,9 @@ export const PROFILES = {
       { id: 'recipes', icon: 'book-heart', title: 'Family Recipes', text: 'Time-honored recipes passed down with love.' },
       { id: 'custom', icon: 'cake', title: 'Custom Cakes', text: 'Cakes designed around your celebration.' }
     ],
-    faq: [
-      { q: 'Do you take custom cake orders?', a: 'Yes — order 48 hours ahead and choose your design and flavor.' },
-      { q: 'Do you deliver?', a: 'Yes, we deliver fresh bakes across the area every morning.' },
-      { q: 'Are your products baked daily?', a: 'Everything is baked fresh every single day, no leftovers.' }
-    ],
-    stats: [
-      { id: 'loaves', value: 800, suffix: '/day', label: 'Loaves Baked Daily' },
-      { id: 'recipes', value: 50, suffix: '+', label: 'Family Recipes' },
-      { id: 'years', value: 15, suffix: '', label: 'Years of Baking' }
-    ],
-    offers: [
-      { title: 'Morning Box', description: '6 assorted pastries + 2 fresh juices', time: 'Daily from 8:00 AM', badge: 'SAVE 15%' },
-      { title: 'Custom Cake Pre-order', description: '10% off any custom cake ordered 3+ days ahead', time: 'Ongoing', badge: 'SAVE 10%' }
-    ],
+    faq: [],
+    stats: [],
+    offers: [],
     menu: [
       { id: 'breads', label: 'Breads' },
       { id: 'pastries', label: 'Pastries' },
@@ -210,9 +155,9 @@ export const PROFILES = {
     ],
     heroInfo: [
       { icon: 'map-pin', title: '{address}', subtitle: '{area}' },
-      { icon: 'clock', title: 'Open Daily', subtitle: '7:00 AM - 10:00 PM' },
+      { icon: 'clock', title: 'Open Hours', subtitle: '{hours}' },
       { icon: 'star', title: '{rating} Rating', subtitle: '({reviews} Reviews)' },
-      { icon: 'croissant', title: 'Fresh Daily', subtitle: 'Baked every morning' }
+
     ],
     sections: ['navbar', 'hero', 'menu', 'stats', 'offers', 'testimonials', 'gallery', 'contact', 'location', 'footer'],
     cta: { label: 'Order Now', href: '#menu', icon: 'shopping-bag' },
@@ -234,26 +179,15 @@ export const PROFILES = {
       { id: 'speed', icon: 'clock', title: 'Walk-ins Welcome', text: 'Most cuts take 30 minutes, no appointment needed.' },
       { id: 'care', icon: 'droplet', title: 'Premium Care', text: 'Only quality products touch your hair and skin.' }
     ],
-    faq: [
-      { q: 'Do I need an appointment?', a: 'Walk-ins are welcome, but booking guarantees your slot.' },
-      { q: 'Do you cut kids\u2019 hair?', a: 'Yes — kids cuts are available all week.' },
-      { q: 'What products do you use?', a: 'Premium, skin-safe brands applied by our barbers.' }
-    ],
-    stats: [
-      { id: 'cuts', value: 15000, suffix: '+', label: 'Cuts Delivered' },
-      { id: 'years', value: 12, suffix: '', label: 'Years in Business' },
-      { id: 'barbers', value: 6, suffix: '', label: 'Master Barbers' }
-    ],
-    offers: [
-      { title: 'First Cut Special', description: '20% off your first visit', time: 'New clients', badge: 'SAVE 20%' },
-      { title: 'Full Grooming Pack', description: 'Cut + beard + hot towel at a bundle price', time: 'Ongoing', badge: 'BUNDLE' }
-    ],
+    faq: [],
+    stats: [],
+    offers: [],
     menu: [],
     heroInfo: [
       { icon: 'map-pin', title: '{address}', subtitle: '{area}' },
-      { icon: 'clock', title: 'Open Daily', subtitle: '10:00 AM - 12:00 AM' },
+      { icon: 'clock', title: 'Open Hours', subtitle: '{hours}' },
       { icon: 'star', title: '{rating} Rating', subtitle: '({reviews} Reviews)' },
-      { icon: 'scissors', title: 'Master Barbers', subtitle: 'Walk-ins welcome' }
+
     ],
     sections: ['navbar', 'hero', 'services', 'stats', 'offers', 'testimonials', 'gallery', 'reservation', 'location', 'footer'],
     cta: { label: 'Book Now', href: '#reservation', icon: 'calendar-check' },
@@ -275,26 +209,15 @@ export const PROFILES = {
       { id: 'products', icon: 'flower', title: 'Premium Products', text: 'Trusted brands for hair, skin and nails.' },
       { id: 'booking', icon: 'calendar-check', title: 'Easy Booking', text: 'Book online and get confirmed via WhatsApp.' }
     ],
-    faq: [
-      { q: 'Can I book a bridal package?', a: 'Yes — bridal packages include trial sessions before the big day.' },
-      { q: 'What if I need to reschedule?', a: 'Just contact us on WhatsApp and we will move your slot.' },
-      { q: 'Do you offer men\u2019s services?', a: 'Yes — grooming services are available for all clients.' }
-    ],
-    stats: [
-      { id: 'clients', value: 8000, suffix: '+', label: 'Happy Clients' },
-      { id: 'years', value: 9, suffix: '', label: 'Years of Beauty' },
-      { id: 'services', value: 30, suffix: '+', label: 'Services Offered' }
-    ],
-    offers: [
-      { title: 'First Visit Glow', description: 'Free consultation + 15% off first treatment', time: 'New clients', badge: 'SAVE 15%' },
-      { title: 'Bridal Bundle', description: 'Hair, makeup, nails and trial session', time: 'Ongoing', badge: 'BUNDLE' }
-    ],
+    faq: [],
+    stats: [],
+    offers: [],
     menu: [],
     heroInfo: [
       { icon: 'map-pin', title: '{address}', subtitle: '{area}' },
-      { icon: 'clock', title: 'Open Daily', subtitle: '10:00 AM - 10:00 PM' },
+      { icon: 'clock', title: 'Open Hours', subtitle: '{hours}' },
       { icon: 'star', title: '{rating} Rating', subtitle: '({reviews} Reviews)' },
-      { icon: 'sparkles', title: 'Senior Stylists', subtitle: 'Book online' }
+
     ],
     sections: ['navbar', 'hero', 'services', 'stats', 'offers', 'testimonials', 'gallery', 'reservation', 'location', 'footer'],
     cta: { label: 'Book Now', href: '#reservation', icon: 'calendar-check' },
@@ -316,23 +239,15 @@ export const PROFILES = {
       { id: 'hygiene', icon: 'shield-check', title: 'Clean & Safe', text: 'Clinic-grade hygiene standards in every room.' },
       { id: 'booking', icon: 'calendar-check', title: 'Easy Booking', text: 'Online booking with WhatsApp confirmation.' }
     ],
-    faq: [
-      { q: 'Do I need an appointment?', a: 'Appointments are recommended and can be booked online.' },
-      { q: 'What insurance do you accept?', a: 'Contact us to confirm coverage with your provider.' },
-      { q: 'Can I get my results online?', a: 'Yes, most results are shared electronically.' }
-    ],
-    stats: [
-      { id: 'patients', value: 20000, suffix: '+', label: 'Patients Treated' },
-      { id: 'years', value: 14, suffix: '', label: 'Years of Care' },
-      { id: 'doctors', value: 12, suffix: '', label: 'Specialists' }
-    ],
+    faq: [],
+    stats: [],
     offers: [],
     menu: [],
     heroInfo: [
       { icon: 'map-pin', title: '{address}', subtitle: '{area}' },
-      { icon: 'clock', title: 'Open Daily', subtitle: '9:00 AM - 9:00 PM' },
+      { icon: 'clock', title: 'Open Hours', subtitle: '{hours}' },
       { icon: 'star', title: '{rating} Rating', subtitle: '({reviews} Reviews)' },
-      { icon: 'shield-check', title: 'Clean & Safe', subtitle: 'Specialist team' }
+
     ],
     sections: ['navbar', 'hero', 'services', 'stats', 'testimonials', 'gallery', 'reservation', 'location', 'footer'],
     cta: { label: 'Book a Visit', href: '#reservation', icon: 'calendar-check' },
@@ -354,26 +269,15 @@ export const PROFILES = {
       { id: 'quality', icon: 'badge-check', title: 'Quality Assured', text: 'Every product checked before it reaches you.' },
       { id: 'service', icon: 'headset', title: 'Real Support', text: 'Fast answers on WhatsApp and in store.' }
     ],
-    faq: [
-      { q: 'Do you offer delivery?', a: 'Yes — fast delivery across the area through our website.' },
-      { q: 'Can I return an item?', a: 'Yes, within 7 days with the original receipt.' },
-      { q: 'Do you take orders on WhatsApp?', a: 'Yes, message us and we will process your order.' }
-    ],
-    stats: [
-      { id: 'products', value: 1500, suffix: '+', label: 'Products in Stock' },
-      { id: 'years', value: 11, suffix: '', label: 'Years in Business' },
-      { id: 'clients', value: 10000, suffix: '+', label: 'Happy Clients' }
-    ],
-    offers: [
-      { title: 'Weekly Deal', description: 'New deals every Friday on selected items', time: 'Every Friday', badge: 'SALE' },
-      { title: 'Bundle & Save', description: 'Buy 2 get the 3rd at 50% off on selected ranges', time: 'Ongoing', badge: 'SAVE 50%' }
-    ],
+    faq: [],
+    stats: [],
+    offers: [],
     menu: [],
     heroInfo: [
       { icon: 'map-pin', title: '{address}', subtitle: '{area}' },
-      { icon: 'clock', title: 'Open Daily', subtitle: '10:00 AM - 11:00 PM' },
+      { icon: 'clock', title: 'Open Hours', subtitle: '{hours}' },
       { icon: 'star', title: '{rating} Rating', subtitle: '({reviews} Reviews)' },
-      { icon: 'truck', title: 'Fast Delivery', subtitle: 'Across the area' }
+
     ],
     sections: ['navbar', 'hero', 'features', 'stats', 'offers', 'testimonials', 'gallery', 'menu', 'contact', 'location', 'footer'],
     cta: { label: 'Shop Now', href: '#menu', icon: 'shopping-bag' },
@@ -395,23 +299,15 @@ export const PROFILES = {
       { id: 'speed', icon: 'truck', title: 'Fast Delivery', text: 'Delivered to your door, 7 days a week.' },
       { id: 'advice', icon: 'stethoscope', title: 'Expert Advice', text: 'Licensed pharmacists on hand at all times.' }
     ],
-    faq: [
-      { q: 'Do you deliver 24/7?', a: 'Delivery is available daily during opening hours.' },
-      { q: 'Can I order by WhatsApp?', a: 'Yes — send your prescription on WhatsApp and we will prepare it.' },
-      { q: 'Do you stock baby care?', a: 'Yes, we carry a full range of baby and mother care products.' }
-    ],
-    stats: [
-      { id: 'orders', value: 30000, suffix: '+', label: 'Orders Delivered' },
-      { id: 'years', value: 7, suffix: '', label: 'Years Serving the Area' },
-      { id: 'items', value: 4000, suffix: '+', label: 'Products in Stock' }
-    ],
+    faq: [],
+    stats: [],
     offers: [],
     menu: [],
     heroInfo: [
       { icon: 'map-pin', title: '{address}', subtitle: '{area}' },
-      { icon: 'clock', title: 'Open Daily', subtitle: '8:00 AM - 12:00 AM' },
+      { icon: 'clock', title: 'Open Hours', subtitle: '{hours}' },
       { icon: 'star', title: '{rating} Rating', subtitle: '({reviews} Reviews)' },
-      { icon: 'truck', title: 'Fast Delivery', subtitle: '7 days a week' }
+
     ],
     sections: ['navbar', 'hero', 'features', 'stats', 'testimonials', 'gallery', 'contact', 'location', 'footer'],
     cta: { label: 'Order Now', href: '#contact', icon: 'truck' },
@@ -433,23 +329,15 @@ export const PROFILES = {
       { id: 'support', icon: 'headset', title: 'Real Support', text: 'Fast answers on WhatsApp and in person.' },
       { id: 'local', icon: 'map-pin', title: 'Proudly Local', text: 'Serving {area} with care and craft.' }
     ],
-    faq: [
-      { q: 'How do I book?', a: 'Use the booking form and we will confirm via WhatsApp.' },
-      { q: 'Do you work on weekends?', a: 'Yes, we are open daily including weekends.' },
-      { q: 'How can I contact you?', a: 'Call or message us on WhatsApp — we reply quickly.' }
-    ],
-    stats: [
-      { id: 'clients', value: 1500, suffix: '+', label: 'Happy Clients' },
-      { id: 'years', value: 5, suffix: '', label: 'Years in Business' },
-      { id: 'rating', value: 4.8, suffix: '/5', label: 'Average Rating' }
-    ],
+    faq: [],
+    stats: [],
     offers: [],
     menu: [],
     heroInfo: [
       { icon: 'map-pin', title: '{address}', subtitle: '{area}' },
-      { icon: 'clock', title: 'Open Daily', subtitle: '10:00 AM - 10:00 PM' },
+      { icon: 'clock', title: 'Open Hours', subtitle: '{hours}' },
       { icon: 'star', title: '{rating} Rating', subtitle: '({reviews} Reviews)' },
-      { icon: 'headset', title: 'Real Support', subtitle: 'WhatsApp friendly' }
+
     ],
     sections: ['navbar', 'hero', 'features', 'stats', 'testimonials', 'gallery', 'reservation', 'contact', 'location', 'footer'],
     cta: { label: 'Book Now', href: '#reservation', icon: 'calendar-check' },

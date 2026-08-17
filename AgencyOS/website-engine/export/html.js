@@ -16,16 +16,25 @@ export function staticFiles(site) {
   const script = siteScript(site.theme);
   const map = placeholderMap(site);
   const canonical = site.configs['seo.json']?.canonical || null;
+  const business = site.configs['business.json'] || {};
+  const locale = typeof business.locale === 'string' && business.locale ? business.locale : 'en';
+  const dir = locale.toLowerCase().startsWith('ar') ? 'rtl' : null;
+  const ogLocale = ogLocaleFor(locale);
 
   const files = {};
   for (const page of site.pages) {
     const resolved = { ...page, sections: page.sections.map((s) => resolvePlaceholders(s, map)) };
+    const head = ogLocale && page.head.property && page.head.property['og:locale'] === 'en_US'
+      ? { ...page.head, property: { ...page.head.property, 'og:locale': ogLocale } }
+      : page.head;
     files[page.path] = renderDocument({
-      head: page.head,
+      head,
       bodyNodes: resolved.sections,
       css,
       inlineScript: `${bootstrap}\n${script}`,
-      fontsUrl: site.theme.typography.fontsUrl || null
+      fontsUrl: site.theme.typography.fontsUrl || null,
+      lang: locale,
+      dir
     });
   }
 
@@ -66,6 +75,14 @@ export function staticFiles(site) {
   Object.assign(files, placeholderFiles(site, map));
   files['asset-report.md'] = assetReport(site);
   return files;
+}
+
+const rtlLocales = { ar: 'ar_EG' };
+const ltrLocales = { en: 'en_US', fr: 'fr_FR', es: 'es_ES', de: 'de_DE', it: 'it_IT', pt: 'pt_BR', tr: 'tr_TR', ru: 'ru_RU', nl: 'nl_NL' };
+
+function ogLocaleFor(locale) {
+  const code = String(locale).toLowerCase();
+  return rtlLocales[code] || ltrLocales[code] || null;
 }
 
 export function staticChecksumOrder(site) {

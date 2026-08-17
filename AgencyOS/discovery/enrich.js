@@ -48,6 +48,15 @@ export function normalizeCandidate(candidate) {
   out.website = normalizeUrl(candidate.website);
   out.instagram = normalizeSocial(candidate.instagram);
   out.facebook = normalizeSocial(candidate.facebook);
+  out.tiktok = normalizeSocial(candidate.tiktok);
+  out.linkedin = normalizeSocial(candidate.linkedin);
+  out.youtube = normalizeSocial(candidate.youtube);
+  out.twitter = normalizeSocial(candidate.twitter);
+  out.socials = Array.isArray(candidate.socials)
+    ? candidate.socials
+        .map((s) => (s && typeof s === 'object' ? { platform: s.platform, url: normalizeSocial(s.url || s.handle) } : s))
+        .filter((s) => s && s.url && !/^(https?:)?\/\/(https?:)?\/?$/.test(s.url))
+    : [];
   out.email = normalizeEmail(candidate.email);
   out.rating = Number.isFinite(Number(candidate.rating)) ? Math.max(0, Math.min(5, Number(candidate.rating))) : null;
   out.reviews = Number.isFinite(Number(candidate.reviews)) ? Math.max(0, Number(candidate.reviews)) : null;
@@ -80,7 +89,7 @@ export function mergeCandidates(candidates) {
     base.sources = [];
     for (const c of group) {
       base.sources.push(...(c.sources || []));
-      for (const field of ['name', 'category', 'area', 'country', 'address', 'phone', 'whatsapp', 'website', 'instagram', 'facebook', 'email', 'booking', 'rating', 'reviews', 'openingHours', 'photos', 'menus', 'probe']) {
+      for (const field of ['name', 'category', 'area', 'country', 'address', 'phone', 'whatsapp', 'website', 'instagram', 'facebook', 'tiktok', 'linkedin', 'youtube', 'twitter', 'socials', 'email', 'booking', 'rating', 'reviews', 'openingHours', 'photos', 'menus', 'probe', 'products', 'services', 'priceLevel', 'prices', 'pricing', 'currency', 'dishes', 'doctors', 'insurance', 'specialties', 'facilities', 'emergencyContact', 'onlineOrdering', 'tags', 'lat', 'lng', 'subCategory', 'branchCount', 'description', 'businessType', 'phone2', 'phones', 'emails']) {
         if (isEmpty(base[field]) && !isEmpty(c[field])) base[field] = c[field];
       }
       if (!base.simulatedProbe && c.simulatedProbe) base.simulatedProbe = c.simulatedProbe;
@@ -100,26 +109,11 @@ function isEmpty(value) {
 export function buildRecord(candidate, { probe = null } = {}) {
   const c = normalizeCandidate(candidate);
   const id = `dis-${shortHash(`${c.name}|${c.phone || ''}|${c.area}|${c.category}`, 10)}`;
+  const { simulatedProbe, sources, _sourceSignals, ...preserved } = c;
   return {
+    ...preserved,
     id,
-    name: c.name,
-    category: c.category,
-    area: c.area,
-    country: c.country,
-    address: c.address || null,
-    phone: c.phone,
-    whatsapp: c.whatsapp,
-    rating: c.rating,
-    reviews: c.reviews,
-    website: c.website,
-    instagram: c.instagram,
-    facebook: c.facebook,
-    email: c.email,
-    openingHours: c.openingHours,
-    photos: c.photos,
-    menus: c.menus,
-    booking: c.booking,
-    sources: c.sources,
+    sources,
     probe,
     weaknesses: [],
     scores: null,

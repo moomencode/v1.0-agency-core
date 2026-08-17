@@ -92,6 +92,20 @@ export function sanitizeName(s) {
   return String(s).replace(/[^a-zA-Z0-9._-]+/g, '_');
 }
 
+// SEC-01: caller-supplied business ids are untrusted and must never become
+// path segments that can traverse or escape their storage root. Legit ids
+// (slug-based, `dis-*`, UUIDs, hashed `orc-`/`dis-<hash>`) pass through
+// unchanged; hostile ids (`..\..\x`, absolute paths, bare `.`/`..`, ids with
+// separators or control chars) are deterministically REPLACED with a derived
+// `prefix-<shortHash>` id, so the raw value never reaches disk and lookups
+// remain consistent across build/load/persist.
+export function resolveBusinessId(id, { prefix = 'biz' } = {}) {
+  const s = String(id ?? '').trim();
+  const risky = !s || s === '.' || s === '..' || /[\\/:*?"<>|\x00-\x1f]/.test(s) || /^[._-]/.test(s) || /\.\.(\\|\/)/.test(s) || /^(\.\.+)$/.test(s);
+  if (risky) return `${prefix}-${shortHash(s, 10)}`;
+  return s.replace(/[^a-zA-Z0-9._-]/g, '_').replace(/__+/g, '_') || 'unknown';
+}
+
 // SEC-01: caller-supplied run ids must never become path segments that can
 // escape their storage root. Transform any runId into a single safe segment:
 // strip path separators / control chars, collapse `..` runs, drop leading dots

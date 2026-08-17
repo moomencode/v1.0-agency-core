@@ -72,7 +72,7 @@ export function fakeEngine(filesFor = () => null) {
   return {
     export(site, { format = 'static' } = {}) {
       if (format !== 'static') throw new Error('test engine only supports static export');
-      return filesFor() || site.__files || {};
+      return filesFor(site) || site.__files || {};
     }
   };
 }

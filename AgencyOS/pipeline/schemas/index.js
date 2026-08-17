@@ -139,14 +139,14 @@ const SCHEMA_DEFS = {
   },
   'seo.json': {
     title: 'SEO',
-    required: ['title', 'description', 'keywords', 'robots', 'canonical', 'openGraph', 'twitter', 'schemaType'],
+    required: ['title', 'description', 'keywords', 'robots', 'openGraph', 'twitter', 'schemaType'],
     properties: {
       title: { type: 'string' },
       description: { type: 'string' },
       keywords: { type: 'array', items: { type: 'string' } },
       author: { type: 'string' },
       robots: { type: 'string' },
-      canonical: { type: 'string' },
+      canonical: { type: ['string', 'null'] },
       openGraph: { type: 'object' },
       twitter: { type: 'object' },
       schemaType: { type: 'string' }

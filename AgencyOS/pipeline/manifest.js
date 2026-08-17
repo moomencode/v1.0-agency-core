@@ -6,7 +6,7 @@ function placeholderRef(businessId, kind, index) {
 
 export function generateAssetsManifest(n) {
   const id = n.id;
-  const galleryCount = Math.max(n.photosCount > 0 ? Math.min(n.photosCount, 8) : 4, 4);
+  const galleryCount = n.photosCount > 0 ? Math.min(n.photosCount, 8) : 0;
 
   const entries = {
     logos: [

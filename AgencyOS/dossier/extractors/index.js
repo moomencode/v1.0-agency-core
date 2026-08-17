@@ -37,7 +37,7 @@ export const PROFILE_EXTRACTOR = {
       address: record.address || null,
       city: record.city || record.area || null,
       coordinates: normalizeCoordinates(record.coordinates || (record.lat != null && record.lng != null ? { lat: record.lat, lng: record.lng } : null)),
-      hours: normalizeHours(record.hours || null),
+      hours: normalizeHours(record.openingHours || record.hours || null),
       reservationMethods: Array.isArray(record.reservationMethods) && record.reservationMethods.length ? record.reservationMethods : (record.booking ? ['website-booking'] : []),
       orderingMethods: Array.isArray(record.orderingMethods) ? record.orderingMethods : (record.menus && record.menus.length ? ['online-menu'] : [])
     };

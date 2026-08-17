@@ -63,6 +63,7 @@ export function normalizeDossier(dossier, { businessId = null } = {}) {
   const risks = contentOf(dossier, 'risks') || {};
   const recommendations = contentOf(dossier, 'recommendations') || {};
   const summary = contentOf(dossier, 'summary') || {};
+  const attrs = business.attributes && business.attributes.source === 'preserved' ? business.attributes : {};
 
   const id = businessId || business.id || (dossier.businessId) || (dossier.businessId?.valueOf?.()) || 'unknown';
   const name = business.name || brand.name || 'Business';
@@ -75,7 +76,7 @@ export function normalizeDossier(dossier, { businessId = null } = {}) {
 
   const phone = contact.phone || (Array.isArray(contact.phones) && contact.phones[0]) || null;
   const email = contact.email || (Array.isArray(contact.emails) && contact.emails[0]) || null;
-  const whatsapp = contact.whatsapp || contact.phone || (Array.isArray(contact.phones) && contact.phones[0]) || null;
+  const whatsapp = contact.whatsapp || null;
   const address = contact.address || location.address || null;
   const rating = typeof reviews.rating === 'number' ? reviews.rating : null;
   const reviewCount = typeof reviews.count === 'number' ? reviews.count : null;
@@ -84,24 +85,39 @@ export function normalizeDossier(dossier, { businessId = null } = {}) {
   const missingBooking = oppIds.includes('booking-flow') || recIds.includes('w-booking');
   const presenceBooking = dossier.context?.presence?.hasBooking === true || dossier.presence?.hasBooking === true;
   const explicitBooking = business.booking != null && business.booking !== '' && business.booking !== false;
-  const hasBooking = explicitBooking || (presenceBooking && !missingBooking);
+  const verifiedBookingUrl = website.booking && /^https?:\/\//i.test(String(website.booking));
+  const verifiedReservation = Array.isArray(business.reservationMethods) && business.reservationMethods.length > 0;
+  const hasBooking = explicitBooking || (presenceBooking && !missingBooking) || verifiedBookingUrl || verifiedReservation;
 
   const weaknessIds = ensureArray(weaknesses.weaknesses).map((w) => w.id || w);
-  const hasMenus = Boolean(Array.isArray(products?.products) && products.products.length > 0) || weaknessIds.includes('no-online-menu') === false;
+  const hasMenus = Boolean(Array.isArray(products?.products) && products.products.length > 0);
   const hasGallery = Number(photos.count ?? photos.length ?? 0) > 0;
-  const hasReviews = reviewCount !== null && reviewCount > 0;
+  const reviewTexts = ensureArray(reviews.reviews).filter((r) => r && typeof r === 'object' && typeof r.text === 'string' && r.text.trim());
+  const hasReviews = reviewTexts.length > 0;
   const hasServices = Boolean(Array.isArray(services.services) && services.services.length > 0);
-  const hasSocial = Boolean(social.instagram || social.facebook);
+  const hasVerifiedStats = rating !== null || reviewCount !== null
+    || (Array.isArray(attrs.doctors) && attrs.doctors.length > 0)
+    || (Array.isArray(attrs.specialties) && attrs.specialties.length > 0)
+    || (Array.isArray(attrs.facilities) && attrs.facilities.length > 0);
+  const hasOffers = ensureArray(opportunities.opportunities).length > 0;
+  const hasFeatures = ensureArray(strengths.strengths).length > 0;
+  const platformEntries = Array.isArray(social?.platforms) && social.platforms.length
+    ? social.platforms
+    : (['instagram', 'facebook'].map((p) => (social && social[p] ? { platform: p, url: social[p] } : null)).filter(Boolean));
+  const hasSocial = Boolean(platformEntries.length);
 
-  const socialLinks = [
-    { platform: 'instagram', url: social.instagram || null },
-    { platform: 'facebook', url: social.facebook || null },
-    { platform: 'whatsapp', url: whatsapp ? `https://wa.me/${whatsapp.replace(/\D/g, '')}` : null },
-    { platform: 'twitter', url: null },
-    { platform: 'youtube', url: null },
-    { platform: 'tiktok', url: null },
-    { platform: 'linkedin', url: null }
-  ].filter((s) => s.url);
+  const knownPlatforms = new Set();
+  const socialLinks = [];
+  for (const s of platformEntries) {
+    const platform = String(s.platform || '').toLowerCase();
+    if (!platform || !s.url || knownPlatforms.has(platform)) continue;
+    knownPlatforms.add(platform);
+    socialLinks.push({ platform, url: s.url, present: s.present === undefined ? true : !!s.present });
+  }
+  if (whatsapp && !knownPlatforms.has('whatsapp')) {
+    socialLinks.push({ platform: 'whatsapp', url: `https://wa.me/${whatsapp.replace(/\D/g, '')}`, present: true });
+    knownPlatforms.add('whatsapp');
+  }
 
   const hasWebsite = website.status === 'ok' || website.status === 'slow';
   const websiteUrl = website.url || (hasWebsite ? business.website : null) || null;
@@ -132,6 +148,7 @@ export function normalizeDossier(dossier, { businessId = null } = {}) {
       coordinates: location.coordinates || null,
       rating,
       reviewCount,
+      reviewTexts,
       hours: ensureArray(hours.hours),
       hoursShort: hours.hoursShort || null,
       ratingRounded: rating !== null ? clamp(Math.round(rating * 10) / 10, 1, 5) : 4.8,
@@ -140,6 +157,9 @@ export function normalizeDossier(dossier, { businessId = null } = {}) {
       hasGallery,
       hasReviews,
       hasServices,
+      hasVerifiedStats,
+      hasOffers,
+      hasFeatures,
       hasSocial,
       hasWebsite,
       websiteUrl,
@@ -155,6 +175,15 @@ export function normalizeDossier(dossier, { businessId = null } = {}) {
       services: ensureArray(services.services),
       products: ensureArray(products.products),
       pricingLevel: pricing.level || null,
+      doctors: Array.isArray(attrs.doctors) ? attrs.doctors : [],
+      insurance: Array.isArray(attrs.insurance) ? attrs.insurance : [],
+      specialties: Array.isArray(attrs.specialties) ? attrs.specialties : [],
+      facilities: Array.isArray(attrs.facilities) ? attrs.facilities : [],
+      emergencyContact: attrs.emergencyContact || null,
+      tags: Array.isArray(attrs.tags) ? attrs.tags : [],
+      prices: Array.isArray(attrs.prices) ? attrs.prices : [],
+      dishes: Array.isArray(attrs.dishes) ? attrs.dishes : [],
+      onlineOrdering: !!attrs.onlineOrdering,
       strengths: ensureArray(strengths.strengths),
       weaknesses: weaknessIds,
       opportunities: ensureArray(opportunities.opportunities),

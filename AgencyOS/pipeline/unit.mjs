@@ -32,7 +32,7 @@ function makeDossier(overrides = {}) {
     social: flatDoc({ instagram: 'https://instagram.com/roastery', facebook: 'https://facebook.com/roastery' }),
     website: flatDoc({ status: 'ok', url: 'https://roastery.example' }),
     seo: flatDoc({ present: true }),
-    reviews: flatDoc({ rating: 4.2, count: 230 }),
+    reviews: flatDoc({ rating: 4.2, count: 230, reviews: [{ author: 'Verified Guest', text: 'Amazing coffee', rating: 5 }] }),
     photos: flatDoc({ count: 3 }),
     services: flatDoc({ services: [{ id: 'dine-in', name: 'Dine In', description: 'Warm atmosphere' }] }),
     products: flatDoc({ products: [{ id: 1, name: 'Flat White', category: 'espresso', description: 'Silky', price: 95 }, { id: 2, name: 'Pour Over', category: 'brew', price: 110 }] }),
@@ -94,9 +94,17 @@ const secs = planSections(nRes.normalized);
 assert.ok(secs.enabledIds.includes('hero'), 'hero enabled');
 assert.ok(!secs.enabledIds.includes('reservation'), 'reservation disabled without booking');
 assert.ok(secs.enabledIds.includes('menu'), 'menu enabled');
-assert.ok(secs.enabledIds.includes('testimonials'), 'testimonials enabled with reviews');
+assert.ok(secs.enabledIds.includes('testimonials'), 'testimonials enabled with review texts');
 const noReviews = planSections({ ...nRes.normalized, hasReviews: false });
 assert.ok(!noReviews.enabledIds.includes('testimonials'), 'testimonials disabled without reviews');
+assert.ok(!secs.enabledIds.includes('faq'), 'faq disabled without verified faq data');
+const bare = normalizeDossier(makeDossier({ documents: { opportunities: flatDoc({ opportunities: [] }), strengths: flatDoc({ strengths: [] }), products: flatDoc({ products: [] }), services: flatDoc({ services: [] }) } }));
+const bareSecs = planSections(bare.normalized);
+assert.ok(!bareSecs.enabledIds.includes('offers'), 'offers gated on real opportunities');
+assert.ok(!bareSecs.enabledIds.includes('features'), 'features gated on real strengths');
+assert.ok(!bareSecs.enabledIds.includes('menu'), 'menu gated on real products');
+assert.ok(!bareSecs.enabledIds.includes('services'), 'services gated on real services');
+assert.ok(bareSecs.enabledIds.includes('stats'), 'stats enabled on verified rating/reviews');
 ok('sections plan reflects dossier');
 
 // ---- theme ----
@@ -160,6 +168,19 @@ assert.strictEqual(configs['i18n.json'].labels.locale === undefined ? 'en' : con
 assert.strictEqual(configs['hero.json'].ctaSecondary.href, '#contact', 'hero cta without booking');
 const c2 = buildConfigs(nRes.normalized, { themeTokens: tokens, defaultMode, sections: secs, manifest });
 assert.strictEqual(JSON.stringify(configs['reviews.json']), JSON.stringify(c2['reviews.json']), 'reviews deterministic');
+assert.strictEqual(configs['reviews.json'].items.length, 1, 'one real review text only');
+assert.strictEqual(configs['reviews.json'].items[0].text, 'Amazing coffee', 'review text verbatim from data');
+assert.strictEqual(configs['reviews.json'].items[0].name, 'Verified Guest', 'review author kept');
+assert.strictEqual(configs['faq.json'].items.length, 0, 'no fabricated faq items');
+assert.deepStrictEqual(configs['offers.json'].items.map((o) => o.title), ['Expand menu'], 'offers only from real opportunities');
+assert.deepStrictEqual(configs['features.json'].items.map((f) => f.title), ['Great Coffee'], 'features only from real strengths');
+const statIds = configs['stats.json'].items.map((s) => s.id);
+assert.deepStrictEqual(statIds.filter((id) => !['rating', 'reviews', 'doctors', 'specialties', 'facilities'].includes(id)), [], 'stats only verified metric ids');
+const heroClock = configs['hero.json'].info.find((i) => i.icon === 'clock');
+assert.strictEqual(heroClock.title, 'Open Hours', 'neutral clock label');
+assert.ok(heroClock.subtitle.includes('7:00 AM'), 'clock subtitle from verified hours');
+assert.strictEqual(configs['menu.json'].categories[0].count, 1, 'menu category count real (no fabricated 4)');
+assert.strictEqual(configs['menu.json'].dishes['espresso'][0].price, 95, 'menu prices real');
 ok('all configs generated + deterministic');
 
 // ---- qa ----
@@ -172,11 +193,11 @@ const qa = runQA({
   validation: { perConfig: CONFIG_IDS.map((f) => ({ fileId: f, valid: true, errors: [] })), allValid: true }
 });
 assert.strictEqual(qa.passed, true, 'qa passes on good bundle');
-assert.strictEqual(qa.checkCount, 6, 'six qa checks');
+assert.strictEqual(qa.checkCount, 6, 'six qa checks (hours present, no warning)');
 assert.strictEqual(qa.checks.map((c) => c.name).join(','), 'config-validation,theme-validation,website-validation,seo-validation,schema-validation,missing-assets', 'qa names');
 ok('qa six checks pass');
 
-const brokenConfigs = { ...configs, 'contact.json': { ...configs['contact.json'], hours: [] } };
+const brokenConfigs = { ...configs, 'seo.json': { ...configs['seo.json'], title: '' } };
 const qa2 = runQA({
   configs: brokenConfigs,
   themeTokens: tokens,
@@ -186,7 +207,7 @@ const qa2 = runQA({
   validation: { perConfig: [], allValid: true }
 });
 assert.strictEqual(qa2.passed, false, 'qa fails on broken config');
-assert.ok(qa2.failedChecks.some((c) => c.name === 'website-validation'), 'website check flags hours');
+assert.ok(qa2.failedChecks.some((c) => c.name === 'seo-validation'), 'seo check flags broken title');
 ok('qa flags broken config');
 
 const qa3 = runQA({

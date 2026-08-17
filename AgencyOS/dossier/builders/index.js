@@ -13,7 +13,7 @@ function doc({ dossierId, businessId, version, documentId, schemaId, body, creat
   };
 }
 
-export function buildBusiness({ meta, profile, digital, context, decision, grades }) {
+export function buildBusiness({ meta, profile, digital, context, decision, grades, record, commerce }) {
   return doc({
     ...meta,
     documentId: 'business',
@@ -25,6 +25,7 @@ export function buildBusiness({ meta, profile, digital, context, decision, grade
       description: profile.description,
       businessType: profile.businessType,
       branchCount: profile.branchCount,
+      attributes: buildAttributes(record, commerce),
       location: { area: profile.area, city: profile.city, address: profile.address, coordinates: profile.coordinates },
       workingHours: profile.hours,
       phones: [], emails: [], whatsapp: null,
@@ -43,6 +44,24 @@ export function buildBusiness({ meta, profile, digital, context, decision, grade
       priority: decision && decision.priority ? { opportunity: decision.priority.opportunity.tier, execution: decision.priority.execution.tier } : null
     }
   });
+}
+
+const PRESERVED_ATTRIBUTE_KEYS = ['doctors', 'insurance', 'specialties', 'facilities', 'emergencyContact', 'tags', 'prices', 'dishes', 'onlineOrdering'];
+
+function buildAttributes(record, commerce) {
+  const attrs = {};
+  for (const key of PRESERVED_ATTRIBUTE_KEYS) {
+    const value = record && record[key];
+    if (value == null) continue;
+    if (Array.isArray(value) && value.length === 0) continue;
+    if (typeof value === 'string' && !String(value).trim()) continue;
+    attrs[key] = value;
+  }
+  const menuRef = (commerce && commerce.menuRef) || [];
+  if (menuRef.length) attrs.menuRef = menuRef;
+  if (!Object.keys(attrs).length) return null;
+  attrs.source = 'preserved';
+  return attrs;
 }
 
 export function buildBrand({ meta, enr }) {

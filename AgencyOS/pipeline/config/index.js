@@ -1,17 +1,6 @@
 import { generateThemeTokens, themeJsonFromTokens } from '../theme.js';
 import { generateLocalization } from '../localization.js';
-import { clamp, ensureArray, seededRng, slugify } from '../utils.js';
-
-const REVIEW_NAMES = ['Ahmed Hassan', 'Mona Adel', 'Youssef Nabil', 'Laila Kamel', 'Omar Farouk', 'Sara Mostafa', 'Karim El Sayed', 'Nourhan Ali', 'Tarek Mahmoud', 'Hana Youssef', 'Mostafa Ibrahim', 'Dina Samir', 'Sherif Adel', 'Mariam Fathy', 'Hassan Amr'];
-const REVIEW_ROLES = ['Regular Guest', 'First Time Visitor', 'Long-time Client', 'Neighborhood Regular', 'Frequent Visitor'];
-const REVIEW_TEXTS = [
-  'Best experience in the area — highly recommended.',
-  'Great quality and even better service. Will come back.',
-  'A hidden gem. The team really cares about their craft.',
-  'Top notch from start to finish. Booking was effortless.',
-  'Consistently excellent. This is my favorite spot now.',
-  'Friendly staff, fair prices and a wonderful atmosphere.'
-];
+import { ensureArray, slugify } from '../utils.js';
 
 function fmtPhone(phone) {
   if (!phone) return null;
@@ -25,10 +14,9 @@ function fmtPhone(phone) {
 
 export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }) {
   const out = {};
-  const rand = seededRng(`config:${n.id}`);
   const phone = fmtPhone(n.phone || null);
   const contactPhone = phone?.pretty || null;
-  const waPhone = fmtPhone(n.whatsapp || n.phone || null);
+  const waPhone = fmtPhone(n.whatsapp || null);
   const waDigits = waPhone ? waPhone.raw : null;
   const whatsappUrl = waDigits ? `https://wa.me/${waDigits}` : null;
   const area = n.area || '';
@@ -36,6 +24,12 @@ export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }
   const tagline = n.brand.tagline || n.displayName;
   const slogan = n.brand.slogan || `${n.displayName} in ${area}`.trim();
   const enabled = sections.enabledIds;
+
+  const hoursList = n.hours.length
+    ? n.hours.map((h) => ({ days: h.days || 'Daily', time: h.open && h.close ? `${h.open} - ${h.close}` : h.from && h.to ? `${h.from} - ${h.to}` : null }))
+    : [];
+  const derivedShort = hoursList.length && hoursList[0].time ? `${hoursList[0].days}: ${hoursList[0].time}` : null;
+  const hoursShort = n.hoursShort || derivedShort;
 
   out['brand.json'] = {
     name: n.name,
@@ -66,14 +60,18 @@ export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }
     sections: sectionsList
   };
 
-  const heroInfo = n.profile.heroInfo.map((info) => {
-    const title = info.title.replace('{address}', n.address || area || 'Our Location').replace('{area}', area || n.name);
-    const subtitle = info.subtitle
-      .replace('{area}', area || n.name)
-      .replace('{rating}', String(n.ratingRounded))
-      .replace('{reviews}', n.reviewCount !== null ? `${n.reviewCount}+` : '50+');
-    return { icon: info.icon, title, subtitle };
-  });
+  const heroInfo = n.profile.heroInfo
+    .map((info) => {
+      const fill = (text) =>
+        (text || '')
+          .replace(/\{address\}/g, n.address || area || 'Our Location')
+          .replace(/\{area\}/g, area || n.name)
+          .replace(/\{rating\}/g, n.rating !== null ? String(n.ratingRounded) : '{rating}')
+          .replace(/\{reviews\}/g, n.reviewCount !== null ? `${n.reviewCount}+` : '{reviews}')
+          .replace(/\{hours\}/g, hoursShort || '{hours}');
+      return { icon: info.icon, title: fill(info.title), subtitle: fill(info.subtitle) };
+    })
+    .filter((info) => !/\{[a-z]+\}/.test(`${info.title} ${info.subtitle}`));
 
   const ctaTarget = enabled.includes('menu') ? '#menu' : enabled.includes('services') ? '#services' : enabled.includes('features') ? '#features' : '#contact';
   out['hero.json'] = {
@@ -101,7 +99,7 @@ export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }
 
   out['navigation.json'] = { items: navItems.slice(0, 7), cta: { ...n.profile.cta, href: n.hasBooking ? '#reservation' : '#contact' } };
 
-  const serviceItems = n.services.length ? n.services.map((s, i) => ({ id: s.id || `svc-${i + 1}`, icon: s.icon || 'sparkles', title: s.name || `Service ${i + 1}`, text: s.description || '', link: '#contact' })) : n.profile.services;
+  const serviceItems = n.services.map((s, i) => ({ id: s.id || `svc-${i + 1}`, icon: s.icon || 'sparkles', title: s.name || `Service ${i + 1}`, text: s.description || '', link: '#contact' }));
   out['services.json'] = { heading: { eyebrow: 'Our Services', title: 'What we offer' }, items: serviceItems.slice(0, 6) };
 
   const galleryCount = manifest.groups.gallery.length;
@@ -112,34 +110,34 @@ export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }
     count: galleryCount
   };
 
-  const reviewCount = n.reviewCount !== null ? Math.min(3, Math.max(1, Math.round(n.reviewCount / 20))) : 3;
-  const reviewNames = rand.shuffle(REVIEW_NAMES);
-  const reviewsItems = Array.from({ length: reviewCount }, (_, i) => ({
+  const reviewsItems = n.reviewTexts.slice(0, 3).map((r, i) => ({
     id: i + 1,
-    name: reviewNames[i % reviewNames.length],
-    role: REVIEW_ROLES[rand.int(REVIEW_ROLES.length)],
-    rating: n.rating !== null ? Math.round(clamp(n.rating, 4, 5)) : 5,
-    text: REVIEW_TEXTS[rand.int(REVIEW_TEXTS.length)]
+    name: r.author || 'Verified Guest',
+    role: r.role || null,
+    rating: typeof r.rating === 'number' ? Math.round(r.rating) : null,
+    text: r.text
   }));
   out['reviews.json'] = { heading: { eyebrow: 'Testimonials', title: 'What our clients say' }, items: reviewsItems };
 
   const statsItems = [];
   if (n.rating !== null) statsItems.push({ id: 'rating', value: n.ratingRounded, suffix: '/5', label: 'Average Rating', decimals: 1 });
   if (n.reviewCount !== null) statsItems.push({ id: 'reviews', value: n.reviewCount, suffix: '+', label: 'Reviews' });
-  for (const s of n.profile.stats) statsItems.push(s);
+  if (n.doctors.length) statsItems.push({ id: 'doctors', value: n.doctors.length, suffix: '', label: 'Specialists' });
+  if (n.specialties.length) statsItems.push({ id: 'specialties', value: n.specialties.length, suffix: '', label: 'Specialties' });
+  if (n.facilities.length) statsItems.push({ id: 'facilities', value: n.facilities.length, suffix: '', label: 'Facilities' });
   out['stats.json'] = { heading: { eyebrow: 'By The Numbers', title: 'Our stats' }, items: statsItems.slice(0, 4) };
 
-  const offers = n.opportunities.length ? n.opportunities.slice(0, 3).map((o, i) => ({ id: i + 1, title: o.title, description: o.title, time: 'Ongoing', badge: i === 0 ? 'FEATURED' : i === 1 ? 'BEST VALUE' : 'NEW' })) : n.profile.offers;
+  const offers = n.opportunities.slice(0, 3).map((o, i) => ({ id: i + 1, title: o.title, description: o.description || o.title, time: o.time || null, badge: i === 0 ? 'FEATURED' : i === 1 ? 'BEST VALUE' : 'NEW' }));
   out['offers.json'] = {
     heading: { eyebrow: 'Special Offers', title: "Don't miss our offers" },
     items: offers.map((o, i) => ({ id: i + 1, title: o.title, description: o.description, time: o.time || 'Ongoing', badge: o.badge || 'OFFER', image: `/placeholders/food-${(i % 3) + 1}.jpg` })),
     more: { label: 'View All Offers', href: '#offers' }
   };
 
-  const features = n.strengths.length ? n.strengths.slice(0, 3).map((s, i) => ({ id: s.id || `ft-${i + 1}`, icon: 'sparkles', title: s.title || s.id, text: s.evidence || '' })) : n.profile.features;
+  const features = n.strengths.slice(0, 3).map((s, i) => ({ id: s.id || `ft-${i + 1}`, icon: 'sparkles', title: s.title || s.id, text: s.evidence || '' }));
   out['features.json'] = { heading: { eyebrow: 'Why Choose Us', title: `The ${n.name} experience` }, items: features.slice(0, 3) };
 
-  const faqItems = n.profile.faq.map((f, i) => ({ id: i + 1, question: f.q, answer: f.a }));
+  const faqItems = [];
   out['faq.json'] = { heading: { eyebrow: 'FAQ', title: 'Frequently asked questions' }, items: faqItems.slice(0, 6) };
 
   out['footer.json'] = {
@@ -150,28 +148,27 @@ export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }
     rights: 'All rights reserved.'
   };
 
-  const hoursList = n.hours.length
-    ? n.hours.map((h) => ({ days: h.days || 'Daily', time: `${h.from || '10:00 AM'} - ${h.to || '10:00 PM'}` }))
-    : [{ days: 'Monday - Sunday', time: '10:00 AM - 10:00 PM' }];
+  const addressFull = n.address ? (area && !n.address.toLowerCase().includes(area.toLowerCase()) ? `${n.address}, ${area}` : n.address) : null;
+  const addressShort = addressFull && area && !addressFull.toLowerCase().includes(area.toLowerCase()) ? `${addressFull}, ${area}` : addressFull;
 
   out['contact.json'] = {
     phone: contactPhone || null,
     phoneRaw: phone?.raw ? `+${phone.raw}` : null,
-    whatsapp: contactPhone || null,
+    whatsapp: waPhone?.pretty || null,
     email: n.email || null,
-    address: n.address ? `${n.address}${area ? `, ${area}` : ''}` : null,
-    addressShort: n.address ? `${n.address}, ${area}` : null,
+    address: addressFull,
+    addressShort,
     area: area || null,
     mapsUrl: n.mapsUrl || (area ? `https://maps.google.com/?q=${encodeURIComponent(area)}` : null),
     mapsEmbed: null,
     mapImage: '/backgrounds/map-dark.png',
     hours: hoursList,
-    hoursShort: n.hoursShort || `${hoursList[0].days}: ${hoursList[0].time}`
+    hoursShort
   };
 
   const seoDesc = `${n.name} — ${tagline}${area ? ` in ${area}` : ''}. ${n.hasBooking ? 'Book online.' : ''}`;
   const seoKeywords = [n.category, n.name, ...ensureArray(n.brand.keywords), area].filter(Boolean);
-  const canonical = n.websiteUrl || `https://${slugify(n.name)}.example.com`;
+  const canonical = n.websiteUrl || null;
   out['seo.json'] = {
     title: `${n.name} | ${tagline}${area ? ` in ${area}` : ''}`.slice(0, 60),
     description: seoDesc.slice(0, 160),
@@ -179,43 +176,40 @@ export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }
     author: n.name,
     robots: 'index, follow',
     canonical,
-    openGraph: { type: 'website', locale: 'en_US', siteName: n.name, title: `${n.name} | ${tagline}`, description: seoDesc, image: '/gallery/' + (manifest.groups.gallery[0]?.path.split('/').pop() || 'gallery-1.jpg') },
+    openGraph: { type: 'website', locale: 'en_US', siteName: n.name, title: `${n.name} | ${tagline}`, description: seoDesc, image: manifest.groups.gallery.length ? `/gallery/${manifest.groups.gallery[0].path.split('/').pop()}` : null },
     twitter: { card: 'summary_large_image', title: `${n.name} | ${tagline}`, description: seoDesc, image: '/hero/dark-hero.jpg' },
     schemaType: n.schemaType
   };
 
-  out['social.json'] = {
-    facebook: n.socialLinks.find((s) => s.platform === 'facebook')?.url || '',
-    instagram: n.socialLinks.find((s) => s.platform === 'instagram')?.url || '',
-    whatsapp: whatsappUrl || '',
-    twitter: '',
-    youtube: '',
-    tiktok: '',
-    linkedin: ''
-  };
+  const socialJson = { facebook: '', instagram: '', whatsapp: '', twitter: '', youtube: '', tiktok: '', linkedin: '' };
+  for (const s of n.socialLinks) {
+    if (socialJson[s.platform] !== undefined && s.url) socialJson[s.platform] = s.url;
+  }
+  out['social.json'] = socialJson;
 
+  const isFoodCategory = ['cafe', 'restaurant', 'bakery'].includes(n.category);
   out['booking.json'] = {
     enabled: n.hasBooking,
     heading: { eyebrow: 'Book Your Spot', title: 'Book your slot now' },
-    fields: { guestsPlaceholder: 'Number of Guests', phonePlaceholder: 'Phone Number (11 digits)' },
-    phoneError: 'Please enter a valid 11-digit phone number',
+    fields: isFoodCategory ? { guestsPlaceholder: 'Number of Guests' } : {},
+    phoneError: 'Please enter a valid phone number',
     success: 'Thanks! Your request has been received. We will confirm via WhatsApp.',
-    submit: { label: n.hasBooking ? 'Find a Table' : 'Send Request', icon: 'search' },
+    submit: { label: 'Book Now', icon: 'calendar-check' },
     note: 'You will receive a confirmation via WhatsApp.',
     method: 'whatsapp',
-    maxGuests: 20
+    ...(isFoodCategory ? { maxGuests: 20 } : {})
   };
 
   out['menu.json'] = (() => {
-    const cats = n.products.length ? uniqueCategories(n.products, n.profile.menu) : n.profile.menu;
+    const cats = n.products.length ? uniqueCategories(n.products) : [];
     const dishes = {};
     for (const c of cats) {
-      const items = n.products.filter((p) => !c || (p.category || '').toLowerCase().includes(c.id.toLowerCase()) || !p.category);
+      const items = n.products.filter((p) => p.category && c && p.category.toLowerCase().includes(c.id.toLowerCase()));
       dishes[c.id] = items.slice(0, 4).map((p, i) => ({
         id: i + 1,
-        name: p.name || `${c.label} ${i + 1}`,
+        name: p.name,
         description: p.description || '',
-        price: p.price || 60 + (i * 15),
+        price: typeof p.price === 'number' ? p.price : null,
         image: `/placeholders/food-${(i % 3) + 1}.jpg`,
         badges: [],
         available: true
@@ -223,7 +217,7 @@ export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }
     }
     return {
       heading: { eyebrow: 'Our Menu', title: 'What are you craving?' },
-      categories: cats.map((c, i) => ({ id: c.id, label: c.label, count: (dishes[c.id] || []).length || 4, image: `/placeholders/food-${(i % 3) + 1}.jpg` })),
+      categories: cats.map((c, i) => ({ id: c.id, label: c.label, count: (dishes[c.id] || []).length, image: `/placeholders/food-${(i % 3) + 1}.jpg` })),
       dishes,
       itemsSuffix: 'Items',
       addAria: 'View item details',
@@ -236,7 +230,7 @@ export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }
   return out;
 }
 
-function uniqueCategories(products, profileMenu) {
+function uniqueCategories(products) {
   const seen = new Set();
   const cats = [];
   for (const p of products) {
@@ -244,12 +238,6 @@ function uniqueCategories(products, profileMenu) {
     if (c && !seen.has(c)) {
       seen.add(c);
       cats.push({ id: c, label: p.category });
-    }
-  }
-  for (const m of profileMenu) {
-    if (!seen.has(m.id)) {
-      seen.add(m.id);
-      cats.push(m);
     }
   }
   return cats.slice(0, 6);
