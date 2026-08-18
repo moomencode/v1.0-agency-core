@@ -13,6 +13,12 @@ function timestampPrefix(date = new Date()) {
   return date.toISOString().slice(0, 10);
 }
 
+function serializeContent(content) {
+  if (typeof content === 'string') return content;
+  if (Buffer.isBuffer(content)) return content.toString('utf8');
+  return JSON.stringify(content, null, 2);
+}
+
 const SAFE_ID_CHARS = /[^a-z0-9._-]/gi;
 
 function safeIdPart(value, fallback) {
@@ -99,7 +105,7 @@ export class ArtifactManager {
     this._guardOpen();
     const fmt = this._validateInput({ type, format });
     if (content === undefined || content === null) throw new TypeError('artifact content is required');
-    const bytes = fmt.binary ? Buffer.from(content) : Buffer.from(String(content), 'utf8');
+    const bytes = fmt.binary ? Buffer.from(content) : Buffer.from(serializeContent(content), 'utf8');
     projectId = safeIdPart(projectId, 'unassigned');
     workflowId = safeIdPart(workflowId, 'manual');
     runId = runId ? safeIdPart(runId, 'run') : null;
@@ -152,7 +158,7 @@ export class ArtifactManager {
     };
 
     if (fmt.binary) fs.writeFileSync(path.join(dir, filename), bytes);
-    else atomicWrite(path.join(dir, filename), String(content));
+    else atomicWrite(path.join(dir, filename), serializeContent(content));
 
     const filePath = path.join(dir, filename);
     if (!fs.existsSync(filePath)) throw artError(ART_CODES.STORE_CLOSED, 'artifact write failed', { filename });

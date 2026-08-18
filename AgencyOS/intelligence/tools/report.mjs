@@ -26,9 +26,20 @@ function baseReport(kind, now, title, summary) {
   return { schema: 'https://agency.os/intelligence/report', reportId: reportIdFor(kind, now), kind, title, summary, generatedAt: now };
 }
 
+function mdCell(value) {
+  if (value === null || value === undefined) return '';
+  const text = typeof value === 'object' ? JSON.stringify(value) : String(value);
+  return text.replace(/\|/g, '/');
+}
+
+function mdInline(value) {
+  if (value === null || value === undefined) return '';
+  return typeof value === 'object' ? JSON.stringify(value) : String(value);
+}
+
 function mdTable(headers, rows) {
   const lines = [`| ${headers.join(' | ')} |`, `| ${headers.map(() => '---').join(' | ')} |`];
-  for (const row of rows) lines.push(`| ${row.map((c) => String(c ?? '').replace(/\|/g, '/')).join(' | ')} |`);
+  for (const row of rows) lines.push(`| ${row.map(mdCell).join(' | ')} |`);
   return lines.join('\n');
 }
 
@@ -102,7 +113,7 @@ export function buildIncidentReport({ engine, now }) {
   const markdown = [
     `# ${data.title}`,
     '',
-    `> ${data.summary}`,
+    `> ${mdInline(data.summary)}`,
     '',
     `- Generated at: \`${now}\``,
     `- Report id: \`${data.reportId}\``,
