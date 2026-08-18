@@ -109,6 +109,7 @@ sections) · `summary.json` (sha256 checksums per config).
 - `qa.js` — the six QA checks.
 - `reports.js` — the 4 markdown reports.
 - `profiles/index.js` — 11 category profiles (cafe…pharmacy, other) driving
-  sections, palettes, fonts, services, features, FAQ, stats, offers, menu.
+  sections, palettes, fonts, heroInfo, cta, eyebrow; services, features, menu,
+  offers, stats and FAQ come from the dossier data.
 
 See `Architecture.md` for details.

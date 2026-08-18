@@ -28,7 +28,7 @@
 | `schemas/index.js` | 19 JSON schemas (`agencyos:pipeline/config/<file>`); structural + validator-wired validation |
 | `qa.js` | 6 checks: config-validation, theme-validation (contrast), website-validation (sections↔nav↔booking), seo-validation, schema-validation (JSON-LD), missing-assets |
 | `reports.js` | pipeline-report · generation-report · validation-report · qa-report (markdown) |
-| `profiles/index.js` | 11 category profiles: sections, palette, fonts, services, features, faq, stats, offers, menu, heroInfo, cta |
+| `profiles/index.js` | 11 category profiles: sections, palette, fonts, heroInfo, cta, eyebrow; services, features, faq, stats, offers, menu come from the dossier |
 | `errors.js` | `PIP_CODES` taxonomy |
 | `utils.js` | hashCode, seeded RNG (mulberry32), slugify, stableJson |
 
