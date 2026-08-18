@@ -23,6 +23,29 @@ npm run new:business -- cafe-luna       # scaffold businesses/cafe-luna
 npm run build:business -- cafe-luna     # QA + build businesses/cafe-luna
 ```
 
+## AgencyOS regression & verification
+
+The AgencyOS subsystems carry their own suites (any `tests/*.mjs` under
+`AgencyOS/`). The aggregate harness discovers and runs them all in isolated
+processes:
+
+```bash
+npm run test:regress            # full aggregate regression (stdout only)
+npm run test:regress:capture    # full regression + persists evidence
+npm run verify:pilots           # 5-synthetic-business fidelity pilots (offline)
+```
+
+- Evidence from `test:regress:capture` is kept at
+  `AgencyOS/storage/regression-log/regress.log` (deterministic location,
+  gitignored). Delete-on-re-run is intentional: the file always reflects the
+  latest completed run.
+- Direct harness use remains available:
+  `node AgencyOS/scripts/regress.mjs --only <substring>` filters suites;
+  `node AgencyOS/scripts/verify-pilots.mjs` writes `findings.json` evidence
+  under `AgencyOS/storage/verification-pilots/<run-id>/`.
+- The `qa` script above covers the vite-era active business only; the
+  AgencyOS commands above are the system-wide gates.
+
 ## Structure
 
 ```

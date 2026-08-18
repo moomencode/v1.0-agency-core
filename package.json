@@ -11,7 +11,10 @@
     "sitemap": "node scripts/generate-sitemap.mjs",
     "new:business": "node scripts/new-business.mjs",
     "build:business": "node scripts/build-business.mjs",
-    "build:all": "npm run qa && npm run build && npm run sitemap"
+    "build:all": "npm run qa && npm run build && npm run sitemap",
+    "test:regress": "node AgencyOS/scripts/regress.mjs",
+    "test:regress:capture": "node AgencyOS/scripts/regress-capture.mjs",
+    "verify:pilots": "node AgencyOS/scripts/verify-pilots.mjs"
   },
   "dependencies": {
     "framer-motion": "^6.5.1",
