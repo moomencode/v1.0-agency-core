@@ -1,0 +1,18 @@
+{
+  "phone": "+1 000 000 0000",
+  "phoneRaw": "+10000000000",
+  "whatsapp": "+1 000 000 0000",
+  "email": "hello@example.com",
+  "address": "123 Main Street, Your City",
+  "addressShort": "123 Main Street, Your City",
+  "area": "Your City",
+  "mapsUrl": "https://maps.google.com/?q=Example",
+  "mapsEmbed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3020!2d-100.0!3d40.0!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDAwJzAwLjAiTiAxMDDCsDAwJzAwLjAiVw!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus",
+  "hours": [
+    {
+      "days": "Monday - Sunday",
+      "time": "9:00 AM - 9:00 PM"
+    }
+  ],
+  "hoursShort": "Daily: 09:00 AM - 09:00 PM"
+}

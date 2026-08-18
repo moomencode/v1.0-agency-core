@@ -1,0 +1,44 @@
+{
+  "eyebrow": "Welcome to",
+  "title": "YOUR BRAND",
+  "subtitle": "Your business tagline",
+  "slogan": "Quality Service, Every Day",
+  "description": "Edit this hero description: what you offer and why visitors should choose you.",
+  "image": {
+    "dark": "/hero/dark-hero.jpg",
+    "light": "/hero/light-hero.jpg",
+    "alt": "Your Business Ambiance"
+  },
+  "ctaPrimary": {
+    "label": "View Menu",
+    "href": "#menu",
+    "icon": "sparkles"
+  },
+  "ctaSecondary": {
+    "label": "Book a Table",
+    "href": "#reservation",
+    "icon": "calendar-check"
+  },
+  "info": [
+    {
+      "icon": "map-pin",
+      "title": "123 Main Street",
+      "subtitle": "Your City"
+    },
+    {
+      "icon": "clock",
+      "title": "Open Daily",
+      "subtitle": "9:00 AM - 9:00 PM"
+    },
+    {
+      "icon": "star",
+      "title": "4.8 Rating",
+      "subtitle": "(100+ Reviews)"
+    },
+    {
+      "icon": "phone",
+      "title": "+1 000 000 0000",
+      "subtitle": "Call us anytime"
+    }
+  ]
+}

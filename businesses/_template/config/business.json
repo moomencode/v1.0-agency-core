@@ -1,0 +1,23 @@
+{
+  "name": "Your Business Name",
+  "type": "business",
+  "locale": "en",
+  "languages": ["en"],
+  "currency": {
+    "code": "USD",
+    "symbol": "$",
+    "position": "before",
+    "decimals": 2
+  },
+  "phoneDigits": 11,
+  "sections": [
+    "navbar",
+    "hero",
+    "menu",
+    "offers",
+    "reservation",
+    "gallery",
+    "location",
+    "footer"
+  ]
+}

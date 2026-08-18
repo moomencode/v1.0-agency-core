@@ -1,0 +1,13 @@
+{
+  "nav": {
+    "ariaOpen": "Open menu",
+    "ariaClose": "Close menu"
+  },
+  "theme": {
+    "aria": "Toggle dark/light mode"
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No"
+  }
+}

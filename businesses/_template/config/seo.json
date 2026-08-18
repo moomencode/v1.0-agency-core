@@ -1,0 +1,23 @@
+{
+  "title": "Your Business Name | Official Website",
+  "description": "Edit this description: a short, compelling summary of your business for search engines.",
+  "keywords": ["your business", "local business"],
+  "author": "Your Business Name",
+  "robots": "index, follow",
+  "canonical": "https://example.com",
+  "openGraph": {
+    "type": "website",
+    "locale": "en_US",
+    "siteName": "Your Business Name",
+    "title": "Your Business Name",
+    "description": "Edit this description for social sharing.",
+    "image": "/gallery/restaurant-1.jpg"
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "title": "Your Business Name",
+    "description": "Edit this description for social sharing.",
+    "image": "/gallery/restaurant-1.jpg"
+  },
+  "schemaType": "LocalBusiness"
+}

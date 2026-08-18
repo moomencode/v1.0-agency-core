@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { seoHeadPlugin } from './scripts/seo-head-plugin.mjs'
 
 /**
  * The /assets directory is the site's public media root:
@@ -25,6 +26,6 @@ function serveRoot() {
 }
 
 export default defineConfig({
-  plugins: [react(), serveRoot()],
+  plugins: [react(), serveRoot(), seoHeadPlugin()],
   publicDir: 'assets',
 })

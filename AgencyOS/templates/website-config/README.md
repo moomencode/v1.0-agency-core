@@ -26,7 +26,6 @@
 | faq | `faq.json` | ContentWriter |
 | footer | `footer.json` | ContentWriter |
 | i18n | `i18n.json` | ContentWriter (locale maps) |
-| order | `order.json` | WebsiteBuilder (type defaults) |
 
 ## Baseline Shape (to be filled, never invented)
 

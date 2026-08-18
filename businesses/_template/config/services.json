@@ -1,0 +1,29 @@
+{
+  "heading": {
+    "eyebrow": "Our Services",
+    "title": "What we offer"
+  },
+  "items": [
+    {
+      "id": "dine-in",
+      "icon": "utensils-crossed",
+      "title": "Dine In",
+      "text": "A warm atmosphere for family and friends.",
+      "link": "#reservation"
+    },
+    {
+      "id": "takeaway",
+      "icon": "shopping-bag",
+      "title": "Takeaway",
+      "text": "Order ahead and pick up fresh.",
+      "link": "#menu"
+    },
+    {
+      "id": "events",
+      "icon": "party-popper",
+      "title": "Events & Catering",
+      "text": "Birthdays, gatherings and corporate catering.",
+      "link": "#contact"
+    }
+  ]
+}

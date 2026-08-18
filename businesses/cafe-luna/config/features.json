@@ -1,26 +1,26 @@
 {
   "heading": {
     "eyebrow": "Why Choose Us",
-    "title": "The Garcia experience"
+    "title": "The Cafe Luna experience"
   },
   "items": [
     {
-      "id": "fresh",
-      "icon": "sparkles",
-      "title": "Fresh Ingredients",
-      "text": "Every dish starts with carefully selected, market-fresh ingredients."
+      "id": "origin",
+      "icon": "coffee",
+      "title": "Single-Origin Selection",
+      "text": "Small-batch single-origin beans from 14 origins, brewed to order."
     },
     {
-      "id": "chefs",
-      "icon": "chef-hat",
-      "title": "Expert Chefs",
-      "text": "A passionate kitchen team crafting authentic recipes with love."
+      "id": "pastries",
+      "icon": "cookie",
+      "title": "Artisan Pastries",
+      "text": "Flaky, golden and baked fresh every morning."
     },
     {
-      "id": "delivery",
-      "icon": "rocket",
-      "title": "Fast Delivery",
-      "text": "Hot, fresh and on time — right to your door."
+      "id": "space",
+      "icon": "headphones",
+      "title": "A Corner to Call Yours",
+      "text": "Free Wi-Fi, warm light and a table made for reading and remote work."
     }
   ]
 }

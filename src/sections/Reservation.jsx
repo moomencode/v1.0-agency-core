@@ -21,6 +21,7 @@ const maxGuests = booking?.maxGuests || 20
 export default function Reservation() {
   const [form, setForm] = useState({ date: '', time: '', guests: '', phone: '' })
   const [phoneError, setPhoneError] = useState('')
+  const [status, setStatus] = useState(null)
 
   const handleChange = (field) => (e) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }))
@@ -38,22 +39,28 @@ export default function Reservation() {
 
     if (form.phone.length !== phoneDigits) {
       setPhoneError(t(booking?.phoneError) || `Please enter a valid ${phoneDigits}-digit phone number`)
+      setStatus(null)
       return
     }
 
-    // Delivery channel is configurable: "whatsapp" opens a wa.me link,
-    // "console" keeps the original demo behavior.
+    // Delivery channel is configurable: "whatsapp" hands off to a wa.me link.
+    // No reservation backend by design (website-engine contract: WhatsApp form).
+    let handedOff = false
     if (booking?.method === 'whatsapp') {
       const number = (booking.target || contact?.whatsapp || contact?.phoneRaw || '').replace(/\D/g, '')
-      const message = encodeURIComponent(
-        `Reservation request: ${form.date} at ${form.time} for ${form.guests} guests. Phone: ${form.phone}`
-      )
-      if (number) window.open(`https://wa.me/${number}?text=${message}`, '_blank', 'noopener')
+      if (number) {
+        const message = encodeURIComponent(
+          `Reservation request: ${form.date} at ${form.time} for ${form.guests} guests. Phone: ${form.phone}`
+        )
+        handedOff = !!window.open(`https://wa.me/${number}?text=${message}`, '_blank', 'noopener')
+      }
     }
 
-    // TODO: connect to real reservation API/backend.
-    console.log('Reservation request:', form)
-    alert(t(booking?.success) || 'Thanks! Your table request has been received.')
+    setStatus(
+      handedOff
+        ? { ok: true, text: t(booking?.success) || 'Thanks! Your table request has been received.' }
+        : { ok: false, text: 'Could not open WhatsApp. Please try again or call us directly.' }
+    )
   }
 
   return (
@@ -140,6 +147,16 @@ export default function Reservation() {
           {booking?.note && (
             <p className="md:col-span-2 lg:col-span-4 text-center text-ink-muted text-xs mt-1">
               {t(booking.note)}
+            </p>
+          )}
+
+          {status && (
+            <p
+              className={`md:col-span-2 lg:col-span-4 text-center text-xs mt-1 ${
+                status.ok ? 'text-primary' : 'text-red-400'
+              }`}
+            >
+              {status.text}
             </p>
           )}
         </motion.form>

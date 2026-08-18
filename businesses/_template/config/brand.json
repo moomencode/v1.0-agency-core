@@ -1,0 +1,15 @@
+{
+  "name": "Your Business Name",
+  "shortName": "YOUR BUSINESS",
+  "tagline": "Your business tagline",
+  "slogan": "Quality Service, Every Day",
+  "description": "Edit this description to tell visitors what your business is and what makes it special.",
+  "logo": {
+    "dark": "/logo/logo.png",
+    "light": "/logo/logo3.png",
+    "favicon": "/logo/logo.png",
+    "alt": "Your Business Logo",
+    "rounded": true
+  },
+  "heroEyebrow": "Welcome to"
+}

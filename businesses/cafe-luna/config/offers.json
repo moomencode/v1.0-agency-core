@@ -6,27 +6,27 @@
   "items": [
     {
       "id": 1,
-      "title": "Morning Boost Combo",
-      "description": "Any specialty coffee + fresh bakery or croissant of your choice",
+      "title": "Morning Ritual Combo",
+      "description": "Any specialty coffee + a fresh pastry of your choice, baked every morning.",
       "time": "Daily from 8:00 AM - 12:00 PM",
       "badge": "SAVE 20%",
-      "image": "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80"
     },
     {
       "id": 2,
-      "title": "Garcia Executive Combo",
-      "description": "Main dish (Burger or Pasta) + Side item + Soft Drink",
-      "time": "Sun - Thu from 1:00 PM - 6:00 PM",
+      "title": "Pour Over Tasting",
+      "description": "Two single-origin pour overs side by side with tasting notes, hand-brewed to order.",
+      "time": "Fri - Sun from 3:00 PM",
       "badge": "BEST SELLER",
-      "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80"
+      "image": "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&w=600&q=80"
     },
     {
       "id": 3,
-      "title": "Gathering Dessert Treat",
-      "description": "Order 2 main courses & get any signature dessert on the house",
-      "time": "Thu - Sat from 7:00 PM",
-      "badge": "FREE DESSERT",
-      "image": "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80"
+      "title": "Cold Brew Hour",
+      "description": "Cold brew tonic with a half-price pastry, daily after 6 PM.",
+      "time": "Daily from 6:00 PM",
+      "badge": "FREE PASTRY",
+      "image": "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&w=600&q=80"
     }
   ],
   "more": {

@@ -1,0 +1,23 @@
+{
+  "heading": {
+    "eyebrow": "FAQ",
+    "title": "Frequently asked questions"
+  },
+  "items": [
+    {
+      "id": 1,
+      "question": "What are your opening hours?",
+      "answer": "We are open daily. See the hours in the contact section or call us."
+    },
+    {
+      "id": 2,
+      "question": "How do I book a table?",
+      "answer": "Use the reservation form on this page and we will confirm via WhatsApp."
+    },
+    {
+      "id": 3,
+      "question": "Do you handle events and gatherings?",
+      "answer": "Yes, contact us and our team will plan the perfect event for you."
+    }
+  ]
+}

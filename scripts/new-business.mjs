@@ -1,14 +1,16 @@
 // scripts/new-business.mjs
 // ---------------------------------------------------------------------------
-// Scaffolds a brand-new business folder from the current template.
+// Scaffolds a brand-new business folder from the neutral default template.
 //
 //   npm run new:business -- cafe-luna
 //
-// Creates businesses/<name>/ with a copy of the default config (as a
-// starting point for AI agents to fill in) and an empty assets skeleton.
+// Creates businesses/<name>/ with a copy of businesses/_template/config (a
+// brand-neutral starting point for AI agents to fill in) and an empty assets
+// skeleton. The template contains NO business-specific data, so a new
+// business can never inherit another business's identity by scaffolding.
 // ---------------------------------------------------------------------------
 
-import { existsSync, cpSync, mkdirSync, writeFileSync } from 'fs'
+import { existsSync, cpSync, mkdirSync, readdirSync, writeFileSync } from 'fs'
 import { resolve, join } from 'path'
 
 const ROOT = resolve('.')
@@ -31,6 +33,12 @@ if (existsSync(target)) {
   process.exit(1)
 }
 
+const TEMPLATE_DIR = join(ROOT, 'businesses', '_template', 'config')
+if (!existsSync(TEMPLATE_DIR)) {
+  console.error(`Template config folder not found: businesses/_template/config`)
+  process.exit(1)
+}
+
 mkdirSync(join(target, 'config'), { recursive: true })
 mkdirSync(join(target, 'assets', 'logo'), { recursive: true })
 mkdirSync(join(target, 'assets', 'hero'), { recursive: true })
@@ -40,9 +48,9 @@ mkdirSync(join(target, 'assets', 'background'), { recursive: true })
 mkdirSync(join(target, 'assets', 'icons'), { recursive: true })
 mkdirSync(join(target, 'assets', 'videos'), { recursive: true })
 
-// Copy the current (active) config as the scaffold
-for (const file of ['business.json', 'brand.json', 'theme.json', 'seo.json', 'social.json', 'contact.json', 'navigation.json', 'hero.json', 'menu.json', 'offers.json', 'gallery.json', 'booking.json', 'features.json', 'services.json', 'stats.json', 'reviews.json', 'faq.json', 'footer.json', 'i18n.json']) {
-  cpSync(join(ROOT, 'config', file), join(target, 'config', file), { force: true })
+// Copy the brand-neutral template as the scaffold
+for (const file of readdirSync(TEMPLATE_DIR)) {
+  cpSync(join(TEMPLATE_DIR, file), join(target, 'config', file), { force: true })
 }
 
 writeFileSync(

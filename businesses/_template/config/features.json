@@ -1,0 +1,26 @@
+{
+  "heading": {
+    "eyebrow": "Why Choose Us",
+    "title": "What makes us special"
+  },
+  "items": [
+    {
+      "id": "quality",
+      "icon": "award",
+      "title": "Quality First",
+      "text": "We select our ingredients and materials with care, every single day."
+    },
+    {
+      "id": "service",
+      "icon": "heart",
+      "title": "Trusted Service",
+      "text": "Friendly, attentive service that keeps our regulars coming back."
+    },
+    {
+      "id": "speed",
+      "icon": "rocket",
+      "title": "Fast & Friendly",
+      "text": "Quick turnaround without ever cutting corners on quality."
+    }
+  ]
+}

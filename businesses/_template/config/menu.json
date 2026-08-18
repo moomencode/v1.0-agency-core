@@ -1,0 +1,94 @@
+{
+  "heading": {
+    "eyebrow": "Our Menu",
+    "title": "What would you like to order?"
+  },
+  "categories": [
+    {
+      "id": "starters",
+      "label": "Starters",
+      "count": 6,
+      "image": "https://images.unsplash.com/photo-1541014741259-de529411b96a?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "mains",
+      "label": "Main Courses",
+      "count": 10,
+      "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": "desserts",
+      "label": "Desserts",
+      "count": 8,
+      "image": "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80"
+    }
+  ],
+  "dishes": {
+    "starters": [
+      {
+        "id": 1,
+        "name": "House Salad",
+        "description": "Fresh greens, seasonal vegetables and a light house dressing.",
+        "price": 80,
+        "image": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=80",
+        "badges": [],
+        "available": true
+      },
+      {
+        "id": 2,
+        "name": "Soup of the Day",
+        "description": "A warm, hearty soup prepared fresh every day.",
+        "price": 60,
+        "image": "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=400&q=80",
+        "badges": [],
+        "available": true
+      }
+    ],
+    "mains": [
+      {
+        "id": 1,
+        "name": "Grilled Chicken",
+        "description": "Herb-marinated grilled chicken with seasonal sides.",
+        "price": 180,
+        "image": "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?auto=format&fit=crop&w=400&q=80",
+        "badges": [],
+        "available": true
+      },
+      {
+        "id": 2,
+        "name": "House Special Pasta",
+        "description": "The kitchen's signature pasta with a rich homestyle sauce.",
+        "price": 150,
+        "image": "https://images.unsplash.com/photo-1546549032-9571cd6b27df?auto=format&fit=crop&w=400&q=80",
+        "badges": [],
+        "available": true
+      }
+    ],
+    "desserts": [
+      {
+        "id": 1,
+        "name": "Chocolate Cake",
+        "description": "Rich chocolate layers with a silky ganache finish.",
+        "price": 90,
+        "image": "https://images.unsplash.com/photo-1586788680434-30d324b2d46f?auto=format&fit=crop&w=400&q=80",
+        "badges": [],
+        "available": true
+      },
+      {
+        "id": 2,
+        "name": "Seasonal Fruit Bowl",
+        "description": "A fresh selection of in-season fruits.",
+        "price": 70,
+        "image": "https://images.unsplash.com/photo-1610970881699-44a5587cabec?auto=format&fit=crop&w=400&q=80",
+        "badges": [],
+        "available": true
+      }
+    ]
+  },
+  "itemsSuffix": "Items",
+  "addAria": "View item details",
+  "more": {
+    "label": "View Full Menu",
+    "href": "#menu"
+  }
+}

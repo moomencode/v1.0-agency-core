@@ -1,0 +1,52 @@
+{
+  "name": "template",
+  "defaultMode": "dark",
+  "storageKey": "site-theme",
+  "colors": {
+    "dark": {
+      "base": "18 22 28",
+      "base-deep": "13 16 21",
+      "surface": "28 33 41",
+      "surface-2": "40 46 56",
+      "surface-3": "52 59 70",
+      "primary": "96 165 250",
+      "primary-light": "147 197 253",
+      "primary-dark": "59 130 246",
+      "ink": "241 245 249",
+      "ink-muted": "203 213 225"
+    },
+    "light": {
+      "base": "248 250 252",
+      "base-deep": "241 245 249",
+      "surface": "255 255 255",
+      "surface-2": "226 232 240",
+      "surface-3": "203 213 225",
+      "primary": "37 99 235",
+      "primary-light": "59 130 246",
+      "primary-dark": "29 78 216",
+      "ink": "15 23 42",
+      "ink-muted": "71 85 105"
+    }
+  },
+  "typography": {
+    "display": "'Inter', sans-serif",
+    "body": "'Inter', sans-serif",
+    "fontsUrl": ""
+  },
+  "shadows": {
+    "primary": "0 4px 24px -4px rgb(var(--c-primary) / 0.35)",
+    "primary-lg": "0 8px 40px -8px rgb(var(--c-primary) / 0.3)",
+    "elevated": "0 12px 48px -12px rgba(0, 0, 0, 0.5)"
+  },
+  "radius": {
+    "sm": "0.5rem",
+    "md": "0.75rem",
+    "lg": "1rem",
+    "xl": "1.25rem",
+    "full": "9999px"
+  },
+  "animations": {
+    "ease": "cubic-bezier(0.25, 0.1, 0.25, 1)",
+    "spring": "cubic-bezier(0.34, 1.56, 0.64, 1)"
+  }
+}

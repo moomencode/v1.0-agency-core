@@ -1,0 +1,36 @@
+{
+  "heading": {
+    "eyebrow": "Special Offers",
+    "title": "Don't miss our offers"
+  },
+  "items": [
+    {
+      "id": 1,
+      "title": "Seasonal Special",
+      "description": "A rotating selection of the season's finest picks at a great price.",
+      "time": "Daily from 12:00 PM",
+      "badge": "SAVE 20%",
+      "image": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": 2,
+      "title": "Weekday Combo",
+      "description": "A main course with a side and a drink at a bundled price.",
+      "time": "Sun - Thu from 1:00 PM - 6:00 PM",
+      "badge": "BEST SELLER",
+      "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80"
+    },
+    {
+      "id": 3,
+      "title": "Weekend Treat",
+      "description": "Order two mains and enjoy a signature dessert on the house.",
+      "time": "Fri - Sat from 7:00 PM",
+      "badge": "FREE DESSERT",
+      "image": "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80"
+    }
+  ],
+  "more": {
+    "label": "View All Offers",
+    "href": "#offers"
+  }
+}

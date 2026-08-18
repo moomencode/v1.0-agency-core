@@ -1,0 +1,29 @@
+{
+  "heading": {
+    "eyebrow": "Testimonials",
+    "title": "What our guests say"
+  },
+  "items": [
+    {
+      "id": 1,
+      "name": "Happy Customer",
+      "role": "Verified Review",
+      "rating": 5,
+      "text": "Great experience from start to finish. Highly recommended."
+    },
+    {
+      "id": 2,
+      "name": "Happy Customer",
+      "role": "Verified Review",
+      "rating": 5,
+      "text": "Friendly team, lovely atmosphere and excellent quality."
+    },
+    {
+      "id": 3,
+      "name": "Happy Customer",
+      "role": "Verified Review",
+      "rating": 4,
+      "text": "Would definitely come back again."
+    }
+  ]
+}

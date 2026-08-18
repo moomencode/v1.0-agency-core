@@ -8,7 +8,8 @@
 //   2. Copies businesses/<name>/assets/*           -> assets/
 //   3. Runs the config QA (scripts/qa.mjs)
 //   4. Runs vite build
-//   5. Generates sitemap.xml into the build output
+//   5. Generates crawl artifacts (sitemap.xml + robots.txt) into dist/ from
+//      the business canonical (config/seo.json) via scripts/generate-sitemap.mjs
 //
 // The default build (`npm run build`) uses the config/ + assets/ folders
 // already in the project root — the same pipeline, skipping the copy step.
@@ -70,5 +71,9 @@ execSync('node scripts/qa.mjs', { stdio: 'inherit' })
 // 4. Build
 console.log('  [build]   running vite build...')
 execSync('npm run build', { stdio: 'inherit' })
+
+// 5. Crawl artifacts (sitemap.xml + robots.txt) from the business canonical
+console.log('  [seo]     generating sitemap.xml + robots.txt...')
+execSync('node scripts/generate-sitemap.mjs', { stdio: 'inherit' })
 
 console.log(`\n=== ${name} build complete ===`)

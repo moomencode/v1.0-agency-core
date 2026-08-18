@@ -1,0 +1,33 @@
+{
+  "heading": {
+    "eyebrow": "By The Numbers",
+    "title": "Our stats"
+  },
+  "items": [
+    {
+      "id": "years",
+      "value": 10,
+      "suffix": "+",
+      "label": "Years of Experience"
+    },
+    {
+      "id": "guests",
+      "value": 10000,
+      "suffix": "+",
+      "label": "Happy Customers"
+    },
+    {
+      "id": "rating",
+      "value": 4.8,
+      "suffix": "/5",
+      "label": "Average Rating",
+      "decimals": 1
+    },
+    {
+      "id": "satisfaction",
+      "value": 100,
+      "suffix": "%",
+      "label": "Satisfaction"
+    }
+  ]
+}
