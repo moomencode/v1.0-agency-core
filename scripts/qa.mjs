@@ -14,7 +14,14 @@ import { readdirSync, readFileSync, existsSync } from 'fs'
 import { join, resolve } from 'path'
 import { REQUIRED_FILES, REQUIRED_BY_FILE, SUPPORTED_BUSINESS_TYPES, MODULE_SECTIONS } from './schemas.mjs'
 
-const CONFIG_DIR = resolve('config')
+// Target config directory.
+//   default     : the project's active config/  (historical behavior used by
+//                 `npm run qa`, build/SSR flows and the E2E suites)
+//   --config-dir <path>: validate an isolated/generated config tree directly,
+//                 without touching the active root. Backward compatible and
+//                 used by the Phase 2 generator's hermetic QA gate.
+const cfgArg = process.argv.indexOf('--config-dir')
+const CONFIG_DIR = cfgArg !== -1 && process.argv[cfgArg + 1] ? resolve(process.argv[cfgArg + 1]) : resolve('config')
 const errors = []
 const warnings = []
 
