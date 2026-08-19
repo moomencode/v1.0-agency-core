@@ -15,6 +15,8 @@ import Stats from './sections/Stats'
 import Testimonials from './sections/Testimonials'
 import Faq from './sections/Faq'
 import OrderOnline from './sections/OrderOnline'
+import Contact from './sections/Contact'
+import Features from './sections/Features'
 
 /**
  * SECTION_REGISTRY
@@ -33,9 +35,11 @@ const SECTION_REGISTRY = {
   footer: Footer,
   about: About,
   services: Services,
+  features: Features,
   stats: Stats,
   testimonials: Testimonials,
   faq: Faq,
+  contact: Contact,
   orderOnline: OrderOnline,
 }
 

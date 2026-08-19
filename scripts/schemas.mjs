@@ -70,8 +70,10 @@ export const MODULE_SECTIONS = [
   'footer',
   'about',
   'services',
+  'features',
   'stats',
   'testimonials',
   'faq',
+  'contact',
   'orderOnline',
 ]
