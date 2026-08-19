@@ -165,7 +165,7 @@ assert.ok(configs['seo.json'].description.length <= 165, 'seo description length
 assert.strictEqual(configs['social.json'].whatsapp, 'https://wa.me/201000000001', 'whatsapp link');
 assert.strictEqual(configs['theme.json'].name, 'dis-cairo-001', 'theme config');
 assert.strictEqual(configs['i18n.json'].labels.locale === undefined ? 'en' : configs['i18n.json'].locale, 'en', 'i18n config');
-assert.strictEqual(configs['hero.json'].ctaSecondary.href, '#contact', 'hero cta without booking');
+assert.strictEqual(configs['hero.json'].ctaSecondary.href, '#footer', 'hero cta without booking targets an existing section (never a dead #contact)');
 const c2 = buildConfigs(nRes.normalized, { themeTokens: tokens, defaultMode, sections: secs, manifest });
 assert.strictEqual(JSON.stringify(configs['reviews.json']), JSON.stringify(c2['reviews.json']), 'reviews deterministic');
 assert.strictEqual(configs['reviews.json'].items.length, 1, 'one real review text only');
@@ -182,6 +182,68 @@ assert.ok(heroClock.subtitle.includes('7:00 AM'), 'clock subtitle from verified 
 assert.strictEqual(configs['menu.json'].categories[0].count, 1, 'menu category count real (no fabricated 4)');
 assert.strictEqual(configs['menu.json'].dishes['espresso'][0].price, 95, 'menu prices real');
 ok('all configs generated + deterministic');
+
+// ---- multi-word menu categories (GAP 1: slugified matching both sides) ----
+{
+  const docs = makeDossier({
+    documents: {
+      products: flatDoc({
+        products: [
+          { id: 1, name: 'Yirgacheffe', category: 'Single Origin', price: 95 },
+          { id: 2, name: 'Mocha Latte', category: 'Hot Drinks', price: 85 },
+          { id: 3, name: 'Iced Brew', category: 'Cold Brew', price: 90 },
+          { id: 4, name: 'Flat White', category: 'espresso', price: 95 }
+        ]
+      })
+    }
+  });
+  const n2 = normalizeDossier(docs).normalized;
+  const s2 = planSections(n2);
+  const c2 = buildConfigs(n2, { themeTokens: tokens, defaultMode, sections: s2, manifest: generateAssetsManifest(n2) });
+  const cats2 = c2['menu.json'].categories.map((c) => c.id);
+  assert.deepStrictEqual(cats2, ['single-origin', 'hot-drinks', 'cold-brew', 'espresso'], 'multi-word categories slugified exactly once');
+  assert.strictEqual(c2['menu.json'].dishes['single-origin'].length, 1, 'single-origin dishes matched by slugified id');
+  assert.strictEqual(c2['menu.json'].dishes['hot-drinks'].length, 1, 'hot-drinks dishes matched by slugified id');
+  assert.strictEqual(c2['menu.json'].dishes['cold-brew'].length, 1, 'cold-brew dishes matched by slugified id');
+  assert.strictEqual(c2['menu.json'].categories.find((c) => c.id === 'single-origin').count, 1, 'multi-word category counts are real');
+  assert.strictEqual(c2['menu.json'].dishes['espresso'][0].name, 'Flat White', 'single-word category behavior unchanged');
+  ok('multi-word menu categories (GAP 1)');
+}
+
+// ---- contact navigation integrity (GAP 2: no dead #contact anchors) ----
+{
+  const c3 = buildConfigs(nRes.normalized, { themeTokens: tokens, defaultMode, sections: secs, manifest });
+  assert.ok(!secs.enabledIds.includes('contact') && !secs.enabledIds.includes('reservation'), 'cafe fixture has no contact/reservation section');
+  assert.strictEqual(c3['navigation.json'].cta.href, '#footer', 'nav cta falls back to the existing #footer');
+  assert.strictEqual(c3['hero.json'].ctaSecondary.href, '#footer', 'hero cta falls back to the existing #footer');
+  assert.strictEqual(c3['services.json'].items[0].link, '#footer', 'service links fall back to the existing #footer');
+  const navHrefs3 = c3['navigation.json'].items.map((i) => i.href);
+  assert.ok(!navHrefs3.includes('#contact'), 'no dead #contact nav item without a contact section');
+  assert.ok(
+    navHrefs3.every((h) => ['#home', '#footer'].includes(h) || secs.enabledIds.includes(h.slice(1))),
+    'every nav href points to a rendered section'
+  );
+
+  const bookingDocs = makeDossier({ documents: { business: flatDoc({ name: 'Cairo Roastery', category: 'cafe', area: 'Cairo', booking: true }) } });
+  const nB = normalizeDossier(bookingDocs).normalized;
+  const sB = planSections(nB);
+  const cB = buildConfigs(nB, { themeTokens: tokens, defaultMode, sections: sB, manifest: generateAssetsManifest(nB) });
+  assert.strictEqual(cB['navigation.json'].cta.href, '#reservation', 'booking business: cta targets #reservation');
+  assert.ok(!cB['navigation.json'].items.some((i) => i.href === '#contact'), 'booking business: no dead #contact nav item');
+
+  const bakeryDocs = makeDossier({ documents: { business: flatDoc({ name: 'Golden Loaf Bakery', category: 'bakery', area: 'Cairo' }) } });
+  const nK = normalizeDossier(bakeryDocs).normalized;
+  const sK = planSections(nK);
+  assert.ok(sK.enabledIds.includes('contact'), 'bakery plans a contact section');
+  const cK = buildConfigs(nK, { themeTokens: tokens, defaultMode, sections: sK, manifest: generateAssetsManifest(nK) });
+  assert.strictEqual(cK['navigation.json'].cta.href, '#contact', 'contact section exists: keep #contact');
+  assert.ok(
+    cK['navigation.json'].items.every((i) => ['#home', '#footer'].includes(i.href) || sK.enabledIds.includes(i.href.slice(1))),
+    'bakery nav items all resolve to planned sections'
+  );
+  assert.strictEqual(cK['hero.json'].ctaSecondary.href, '#contact', 'hero cta keeps #contact when the section exists');
+  ok('contact navigation integrity (GAP 2)');
+}
 
 // ---- qa ----
 const qa = runQA({

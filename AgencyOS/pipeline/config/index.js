@@ -25,6 +25,13 @@ export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }
   const slogan = n.brand.slogan || `${n.displayName} in ${area}`.trim();
   const enabled = sections.enabledIds;
 
+  // Contact navigation target — generic, config-driven rule: keep #contact
+  // when a contact section actually exists; otherwise point at the booking
+  // mechanism (#reservation) when present, else at the always-rendered
+  // footer (contact details live in every footer). Never emit a dead
+  // #contact anchor.
+  const contactTarget = enabled.includes('contact') ? '#contact' : enabled.includes('reservation') ? '#reservation' : '#footer';
+
   const hoursList = n.hours.length
     ? n.hours.map((h) => ({ days: h.days || 'Daily', time: h.open && h.close ? `${h.open} - ${h.close}` : h.from && h.to ? `${h.from} - ${h.to}` : null }))
     : [];
@@ -73,7 +80,7 @@ export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }
     })
     .filter((info) => !/\{[a-z]+\}/.test(`${info.title} ${info.subtitle}`));
 
-  const ctaTarget = enabled.includes('menu') ? '#menu' : enabled.includes('services') ? '#services' : enabled.includes('features') ? '#features' : '#contact';
+  const ctaTarget = enabled.includes('menu') ? '#menu' : enabled.includes('services') ? '#services' : enabled.includes('features') ? '#features' : contactTarget;
   out['hero.json'] = {
     eyebrow: n.profile.eyebrow || 'Welcome to',
     title: shortName,
@@ -86,7 +93,7 @@ export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }
       : { label: 'Explore', href: ctaTarget, icon: 'sparkles' },
     ctaSecondary: n.hasBooking
       ? { label: 'Book Now', href: '#reservation', icon: 'calendar-check' }
-      : { label: 'Contact Us', href: '#contact', icon: 'phone' },
+      : { label: 'Contact Us', href: contactTarget, icon: 'phone' },
     info: heroInfo
   };
 
@@ -95,11 +102,11 @@ export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }
     const def = { navbar: { label: 'Home', href: '#home' }, menu: { label: 'Menu', href: '#menu' }, services: { label: 'Services', href: '#services' }, stats: { label: 'Stats', href: '#stats' }, offers: { label: 'Offers', href: '#offers' }, reservation: { label: 'Book', href: '#reservation' }, testimonials: { label: 'Reviews', href: '#testimonials' }, gallery: { label: 'Gallery', href: '#gallery' }, features: { label: 'Why Us', href: '#features' }, faq: { label: 'FAQ', href: '#faq' }, contact: { label: 'Contact', href: '#contact' }, location: { label: 'Location', href: '#location' } }[sid];
     if (def) navItems.push(def);
   }
-  if (!navItems.some((i) => i.href === '#contact')) navItems.push({ label: 'Contact', href: '#contact' });
+  if (!navItems.some((i) => i.href === contactTarget)) navItems.push({ label: 'Contact', href: contactTarget });
 
-  out['navigation.json'] = { items: navItems.slice(0, 7), cta: { ...n.profile.cta, href: n.hasBooking ? '#reservation' : '#contact' } };
+  out['navigation.json'] = { items: navItems.slice(0, 7), cta: { ...n.profile.cta, href: n.hasBooking ? '#reservation' : contactTarget } };
 
-  const serviceItems = n.services.map((s, i) => ({ id: s.id || `svc-${i + 1}`, icon: s.icon || 'sparkles', title: s.name || `Service ${i + 1}`, text: s.description || '', link: '#contact' }));
+  const serviceItems = n.services.map((s, i) => ({ id: s.id || `svc-${i + 1}`, icon: s.icon || 'sparkles', title: s.name || `Service ${i + 1}`, text: s.description || '', link: contactTarget }));
   out['services.json'] = { heading: { eyebrow: 'Our Services', title: 'What we offer' }, items: serviceItems.slice(0, 6) };
 
   const galleryCount = manifest.groups.gallery.length;
@@ -204,7 +211,7 @@ export function buildConfigs(n, { themeTokens, defaultMode, sections, manifest }
     const cats = n.products.length ? uniqueCategories(n.products) : [];
     const dishes = {};
     for (const c of cats) {
-      const items = n.products.filter((p) => p.category && c && p.category.toLowerCase().includes(c.id.toLowerCase()));
+      const items = n.products.filter((p) => p.category && c && slugify(p.category) === c.id);
       dishes[c.id] = items.slice(0, 4).map((p, i) => ({
         id: i + 1,
         name: p.name,

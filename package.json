@@ -10,8 +10,11 @@
     "qa": "node scripts/qa.mjs",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "new:business": "node scripts/new-business.mjs",
+    "business:generate": "node scripts/business-generate.mjs",
     "build:business": "node scripts/build-business.mjs",
     "build:all": "npm run qa && npm run build && npm run sitemap",
+    "site": "node scripts/site.mjs",
+    "agency:site": "node scripts/agency-site.mjs",
     "test:regress": "node AgencyOS/scripts/regress.mjs",
     "test:regress:capture": "node AgencyOS/scripts/regress-capture.mjs",
     "verify:pilots": "node AgencyOS/scripts/verify-pilots.mjs"
