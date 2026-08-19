@@ -73,8 +73,7 @@ export default function Menu() {
             {activeDishes.map((dish) => (
               <div
                 key={dish.id}
-                className="group relative flex items-center gap-4 p-4 md:p-5 rounded-2xl bg-surface/60 border border-ink/10
-                  hover:border-primary/40 hover:bg-surface transition-all duration-500 ease-premium shadow-sm hover:shadow-elevated hover:-translate-y-1"
+                className="group relative flex items-center gap-4 p-4 md:p-5 rounded-2xl bg-surface/60 border border-ink/10 hover:border-primary/40 hover:bg-surface transition-all duration-500 ease-premium shadow-sm hover:shadow-elevated hover:-translate-y-1"
               >
                 {/* 1. Dish image */}
                 <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden shrink-0 bg-base border border-ink/5">
@@ -113,8 +112,7 @@ export default function Menu() {
                     </div>
 
                     <button
-                      className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center
-                        group-hover:bg-primary group-hover:text-base group-active:scale-90 transition-all duration-300 ease-premium shadow-sm font-bold text-lg"
+                      className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-base group-active:scale-90 transition-all duration-300 ease-premium shadow-sm font-bold text-lg"
                       aria-label={t(menu?.addAria) || 'View dish details'}
                     >
                       +

@@ -21,15 +21,11 @@ export default function CategoryCard({
   return (
     <div
       onClick={onClick}
-      className={`group relative rounded-xl overflow-hidden cursor-pointer w-full transition-all duration-500 ease-premium select-none
-        border flex flex-col justify-end min-h-[140px] md:min-h-[160px] p-4
-        bg-surface
-        ${
+      className={`group relative rounded-xl overflow-hidden cursor-pointer w-full transition-all duration-500 ease-premium select-none border flex flex-col justify-end min-h-[140px] md:min-h-[160px] p-4 bg-surface ${
           active
             ? 'border-primary shadow-[0_0_20px_rgb(var(--c-primary)/0.25)] ring-1 ring-primary/40 scale-[1.02]'
             : 'border-ink/10 hover:border-primary/40 hover:shadow-elevated hover:-translate-y-0.5'
-        }
-        ${className}`}
+        } ${className}`}
     >
       {/* 1. Background image */}
       {image ? (
